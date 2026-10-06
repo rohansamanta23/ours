@@ -14,15 +14,21 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 48px}
 h1{font:700 clamp(2rem,6vw,3.2rem)/1.05 "Bricolage Grotesque",system-ui,sans-serif;margin:8px 0 6px;letter-spacing:-.02em}
 .sub{color:var(--mu);margin:0 0 24px;max-width:60ch}
 .pn{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:16px}
-.pn h2{font:700 1.1rem "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 10px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-button,.btn{font:inherit;font-weight:600;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
+button{font:inherit;font-weight:600;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
 button.alt{background:transparent;color:var(--tx);border:1px solid var(--bd)}
 button.on{outline:2px solid var(--ac);outline-offset:2px}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-textarea{width:100%;min-height:72px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;font:12px/1.3 ui-monospace,Menlo,monospace;resize:vertical}
+button:disabled{opacity:.6;cursor:wait}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+textarea,input[type=text]{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;font:12px/1.3 ui-monospace,Menlo,monospace}
+textarea{min-height:64px;resize:vertical}
+input.big{font:700 1.6rem/1.2 "Bricolage Grotesque",ui-monospace,monospace;letter-spacing:.25em;text-transform:uppercase;max-width:320px}
 label.k{display:block;font-weight:600;margin:12px 0 6px}
+label.c{display:flex;gap:8px;align-items:center;margin-top:12px}
 p.h{color:var(--mu);font-size:.9rem;margin:6px 0 0}
+.code{font:700 2.6rem/1.1 "Bricolage Grotesque",ui-monospace,monospace;letter-spacing:.3em}
+details{margin-top:14px}summary{cursor:pointer;font-weight:600}
+.msg{color:var(--ac);font-weight:600;margin:10px 0 0;min-height:1.4em}
 #stage{background:#000;border-radius:14px;overflow:hidden;position:relative}
 #stage.theater{position:fixed;inset:0;z-index:99;border-radius:0}
 #stage video{width:100%;height:auto;max-height:78vh;display:block;background:#000;object-fit:contain}
@@ -30,18 +36,17 @@ p.h{color:var(--mu);font-size:.9rem;margin:6px 0 0}
 #tap{position:absolute;inset:0;display:none;place-items:center;background:#000a;color:#fff;font-weight:700;font-size:1.3rem;cursor:pointer}
 #bar{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0 0;flex-wrap:wrap}
 #st{color:var(--mu);font-size:.9rem}
-.msg{color:var(--ac);font-weight:600;margin:10px 0 0;min-height:1.4em}
 [hidden]{display:none!important}
 </style></head>
 <body><main>
 <h1>Watch Together</h1>
-<p class="sub">Play your own video files in sync with a friend, straight between your browsers. Free, no account, nothing is uploaded to any server.</p>
+<p class="sub">Play your own video files in sync with a friend, straight between your browsers. Free, nothing is uploaded to any server.</p>
 
 <section class="pn" id="setup">
-  <h2>1. Pick your role</h2>
   <div class="row">
     <button id="rHost" class="on">I'm hosting</button>
     <button id="rGuest" class="alt">I'm joining</button>
+    <button id="over" class="alt">Start over</button>
   </div>
 
   <div id="hostBox">
@@ -53,68 +58,131 @@ p.h{color:var(--mu);font-size:.9rem;margin:6px 0 0}
       <button id="mStream" class="alt">Stream from me</button>
     </div>
     <p class="h" id="mHint">Sync: you both pick the same file. Only play, pause and seek travel over the connection, so you each see the original quality.</p>
-    <div style="margin-top:14px"><button id="mk">Create invite code</button></div>
+    <label class="c"><input type="checkbox" id="vc" checked> Voice chat (you can mute any time)</label>
+    <div style="margin-top:14px"><button id="mk">Create invite</button></div>
     <p class="msg" role="status"></p>
-    <label class="k">Send this code to your friend</label>
-    <textarea id="offerOut" readonly placeholder="Your invite code appears here"></textarea>
-    <div class="row" style="margin-top:6px"><button class="alt" data-copy="offerOut">Copy code</button></div>
-    <label class="k">Paste your friend's reply code</label>
-    <textarea id="ansIn" placeholder="Reply code"></textarea>
-    <div class="row" style="margin-top:6px"><button id="fin">Connect</button></div>
+    <div id="hostRes" hidden>
+      <div id="shortBox" hidden>
+        <label class="k">Tell your friend this code</label>
+        <div class="code" id="short"></div>
+        <p class="h">They choose "I'm joining" and type it in. You connect automatically.</p>
+      </div>
+      <details id="longBox"><summary>Long code (backup if the short code doesn't work)</summary>
+        <label class="k">Send this to your friend</label>
+        <textarea id="offerOut" readonly></textarea>
+        <div class="row" style="margin-top:6px"><button class="alt" data-copy="offerOut">Copy code</button></div>
+        <label class="k">Paste their reply code</label>
+        <textarea id="ansIn"></textarea>
+        <div class="row" style="margin-top:6px"><button id="fin">Connect</button></div>
+      </details>
+      <div class="row" style="margin-top:12px"><button class="alt" id="cancel">Cancel invite</button></div>
+    </div>
   </div>
 
   <div id="guestBox" hidden>
     <label class="k" id="gFileLbl">Video file (the same file as the host)</label>
     <input type="file" id="gf" accept="video/*,.mkv">
-    <label class="k">Paste the host's invite code</label>
-    <textarea id="offerIn" placeholder="Invite code"></textarea>
-    <div class="row" style="margin-top:6px"><button id="jn">Create reply code</button></div>
+    <label class="k">Code from the host</label>
+    <input type="text" id="codeIn" class="big" placeholder="K7M2Q" autocomplete="off" spellcheck="false">
+    <p class="h">Type the 5-character code. If the host sent a long code instead, paste it here.</p>
+    <label class="c"><input type="checkbox" id="gm" checked> Use my microphone if the host enabled voice chat</label>
+    <div style="margin-top:14px"><button id="jn">Join</button></div>
     <p class="msg" role="status"></p>
-    <label class="k">Send this reply code back to the host</label>
-    <textarea id="ansOut" readonly placeholder="Your reply code appears here"></textarea>
-    <div class="row" style="margin-top:6px"><button class="alt" data-copy="ansOut">Copy code</button></div>
+    <div id="ansOutBox" hidden>
+      <label class="k">Send this reply code back to the host</label>
+      <textarea id="ansOut" readonly></textarea>
+      <div class="row" style="margin-top:6px"><button class="alt" data-copy="ansOut">Copy code</button></div>
+    </div>
   </div>
 </section>
 
-<section id="stage-wrap">
+<section>
   <div id="stage">
     <video id="v" controls playsinline></video>
     <div id="tap">Tap to play</div>
   </div>
-  <div id="bar"><span id="st">Not connected</span><button class="alt" id="fs">Full screen</button></div>
+  <audio id="ra" autoplay></audio>
+  <input type="file" id="cf" accept="video/*,.mkv" hidden>
+  <div id="bar">
+    <span id="st">Not connected</span>
+    <div class="row">
+      <button class="alt" id="mic" hidden>Mic on</button>
+      <button class="alt" id="chg">Change video</button>
+      <button class="alt" id="fs">Full screen</button>
+      <button class="alt" id="lv">Leave</button>
+    </div>
+  </div>
 </section>
 </main>
 <script>
-const $=id=>document.getElementById(id),v=$('v');
-let pc,dc,role='host',mode='sync',busy=false,tick;
-const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))));
-const dec=s=>JSON.parse(decodeURIComponent(escape(atob(s.trim()))));
+const $=id=>document.getElementById(id),v=$('v'),ra=$('ra');
+let pc,dc,role='host',mode='sync',busy=false,tick,mic=null,micOn=true,room=null,roomNS=null,inc=[],gotAns=false;
+(async()=>{try{roomNS=window.claude&&claude.use?await claude.use('room'):null}catch{}})();
+
 const st=t=>{$('st').textContent=t;document.querySelectorAll('.msg').forEach(m=>m.textContent=t)};
 const pick=(a,b,on)=>{a.classList.toggle('on',on);a.classList.toggle('alt',!on);b.classList.toggle('on',!on);b.classList.toggle('alt',on)};
+const mkcode=()=>Array.from(crypto.getRandomValues(new Uint8Array(5)),b=>'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[b%31]).join('');
+async function pack(o){const s=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream('deflate-raw'));const u=new Uint8Array(await new Response(s).arrayBuffer());let t='';u.forEach(c=>t+=String.fromCharCode(c));return btoa(t)}
+async function unpack(t){const u=Uint8Array.from(atob(t.trim()),c=>c.charCodeAt(0));return JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text())}
 
 $('rHost').onclick=()=>{role='host';pick($('rHost'),$('rGuest'),true);$('hostBox').hidden=false;$('guestBox').hidden=true};
 $('rGuest').onclick=()=>{role='guest';pick($('rHost'),$('rGuest'),false);$('hostBox').hidden=true;$('guestBox').hidden=false};
 $('mSync').onclick=()=>{mode='sync';pick($('mSync'),$('mStream'),true);$('mHint').textContent="Sync: you both pick the same file. Only play, pause and seek travel over the connection, so you each see the original quality."};
 $('mStream').onclick=()=>{mode='stream';pick($('mSync'),$('mStream'),false);$('mHint').textContent="Stream: your friend doesn't need the file. Your video is sent live at up to 25 Mbps. It can start soft and sharpen within a few seconds. Needs a fast upload."};
-$('f').onchange=$('gf').onchange=e=>{const f=e.target.files[0];if(f){v.src=URL.createObjectURL(f);v.srcObject=null}};
+const load=f=>{if(f){v.srcObject=null;v.src=URL.createObjectURL(f)}};
+$('f').onchange=$('gf').onchange=e=>load(e.target.files[0]);
+$('chg').onclick=()=>$('cf').click();
+$('cf').onchange=e=>{const f=e.target.files[0];if(!f)return;load(f);send({t:'file',n:f.name});st('Video changed to '+f.name+(mode==='sync'&&dc?'. Your friend needs to pick the same file.':'.'));e.target.value=''};
 document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const t=$(b.dataset.copy);t.select();try{await navigator.clipboard.writeText(t.value);b.textContent='Copied'}catch{document.execCommand('copy')}});
 
+function reset(){
+  clearInterval(tick);
+  if(pc){pc.onconnectionstatechange=null;try{pc.close()}catch{}}
+  pc=dc=null;inc=[];gotAns=false;
+  if(mic){mic.getTracks().forEach(t=>t.stop());mic=null}
+  if(room){room.leave().catch(()=>{});room=null}
+  if(v.srcObject){v.srcObject=null;v.removeAttribute('src');v.load()}else v.pause();
+  ra.srcObject=null;v.controls=true;
+  ['offerOut','ansIn','codeIn','ansOut'].forEach(i=>$(i).value='');
+  $('hostRes').hidden=$('ansOutBox').hidden=$('shortBox').hidden=$('mic').hidden=true;
+  $('mk').hidden=false;$('chg').hidden=false;$('tap').style.display='none';$('gFileLbl').hidden=$('gf').hidden=false;
+  $('setup').hidden=false;st('Not connected');
+}
+$('over').onclick=$('cancel').onclick=$('lv').onclick=reset;
+
+async function getMic(){
+  try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});$('mic').hidden=false;setMic(true)}
+  catch(e){mic=null;st('Microphone unavailable ('+(e.name||'blocked')+'). Continuing without voice.')}
+}
+function setMic(on){micOn=on;mic.getAudioTracks().forEach(t=>t.enabled=on);$('mic').textContent=on?'Mic on':'Mic muted';$('mic').classList.toggle('alt',on)}
+$('mic').onclick=()=>mic&&setMic(!micOn);
+
+function tune(){pc.getSenders().forEach(async s=>{if(s.track&&s.track.kind==='video'){const p=s.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=25e6;p.degradationPreference='maintain-resolution';try{await s.setParameters(p)}catch{}}})}
 function newPC(){
-  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});inc=[];gotAns=false;
+  pc.ontrack=e=>inc.push(e);
   pc.onconnectionstatechange=()=>{
-    st('Connection: '+pc.connectionState);
-    if(pc.connectionState==='connected'){pc.getSenders().forEach(async s=>{if(s.track&&s.track.kind==='video'){const p=s.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=25e6;p.degradationPreference='maintain-resolution';try{await s.setParameters(p)}catch{}}});$('setup').hidden=true;st(mode==='sync'?'Connected. Press play, you both stay in sync.':'Connected.')}
-    if(pc.connectionState==='failed')st('Connection failed. Both of you may be behind strict networks. Try again.');
+    const s=pc.connectionState;st('Connection: '+s);
+    if(s==='connected'){tune();$('setup').hidden=true;if(room){room.leave().catch(()=>{});room=null}st(mode==='sync'?'Connected. Press play, you both stay in sync.':'Connected.')}
+    if(s==='disconnected'||s==='failed')st('Connection '+s+'. Press Leave and start again if it does not come back.');
   };
-  pc.ontrack=e=>{v.srcObject=e.streams[0];v.controls=false;v.muted=false;$('tap').style.display='grid';$('tap').onclick=()=>{v.play();$('tap').style.display='none'}};
+}
+function route(){
+  const ss=new Set(inc.map(e=>e.streams[0]||new MediaStream([e.track])));
+  ss.forEach(s=>{
+    if(s.getVideoTracks().length){v.srcObject=s;v.controls=false;v.muted=false;$('tap').style.display='grid';$('tap').onclick=()=>{v.play();$('tap').style.display='none'};$('chg').hidden=role==='guest'}
+    else{ra.srcObject=s;ra.play().catch(()=>{})}
+  });
 }
 const ice=()=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();pc.onicegatheringstatechange=()=>pc.iceGatheringState==='complete'&&r();setTimeout(r,4000)});
 
+const send=m=>{if(dc&&dc.readyState==='open')dc.send(JSON.stringify(m))};
 function wire(){
   dc.onopen=()=>{send({t:'hi',d:v.duration||0});if(role==='host'&&mode==='sync')tick=setInterval(()=>!v.paused&&send({t:'tick',time:v.currentTime}),2000)};
   dc.onmessage=async e=>{
     const m=JSON.parse(e.data);
     if(m.t==='hi'){if(mode==='sync'&&m.d&&v.duration&&Math.abs(m.d-v.duration)>1)st('Warning: your files have different lengths. Make sure you both picked the same one.');return}
+    if(m.t==='file'){st('Your friend changed the video to "'+m.n+'". Use Change video to pick the same file.');return}
     if(mode!=='sync')return;
     busy=true;
     try{
@@ -126,48 +194,77 @@ function wire(){
     setTimeout(()=>busy=false,350);
   };
 }
-const send=m=>{if(dc&&dc.readyState==='open')dc.send(JSON.stringify(m))};
 v.addEventListener('play',()=>!busy&&mode==='sync'&&send({t:'play',time:v.currentTime}));
 v.addEventListener('pause',()=>!busy&&mode==='sync'&&send({t:'pause',time:v.currentTime}));
 v.addEventListener('seeked',()=>!busy&&mode==='sync'&&send({t:'seek',time:v.currentTime}));
 
+async function applyAnswer(a){
+  if(gotAns||!pc)return;gotAns=true;
+  try{const o=await unpack(a);await pc.setRemoteDescription(o.d);route();st('Connecting…')}
+  catch{gotAns=false;st('That reply code is not valid.')}
+}
 async function mkGo(){
   if(!v.src){st('Pick a video file first.');return}
   newPC();dc=pc.createDataChannel('sync');wire();
+  if($('vc').checked)await getMic();
+  if(mic)mic.getAudioTracks().forEach(t=>pc.addTrack(t,mic));
   if(mode==='stream'){
     try{await v.play();v.pause();v.currentTime=0}catch{}
     const s=v.captureStream?v.captureStream():v.mozCaptureStream();
-    for(const t of s.getTracks()){
-      if(t.kind==='video')t.contentHint='detail';
-      const snd=pc.addTrack(t,s);
-      if(t.kind==='video'){const p=snd.getParameters();p.encodings=[{maxBitrate:25e6,maxFramerate:60}];p.degradationPreference='maintain-resolution';try{await snd.setParameters(p)}catch{}}
-    }
-    if(!s.getTracks().length){st('Could not capture this video. Try Sync mode or a different browser.');return}
+    if(!s.getTracks().length){st('Could not capture this video. Try Sync mode or an MP4 (H.264) file.');return}
+    for(const t of s.getTracks()){if(t.kind==='video')t.contentHint='detail';pc.addTrack(t,s)}
   }
   await pc.setLocalDescription(await pc.createOffer());
   st('Gathering connection info…');await ice();
-  $('offerOut').value=enc({d:pc.localDescription,m:mode});st('Invite ready. Send it to your friend.');
-};
-$('fin').onclick=async()=>{
-  try{await pc.setRemoteDescription(dec($('ansIn').value).d);st('Connecting…')}catch{st('That reply code is not valid.')}
-};
-async function jnGo(){
-  let o;try{o=dec($('offerIn').value)}catch{st('That invite code is not valid.');return}
-  mode=o.m;newPC();pc.ondatachannel=e=>{dc=e.channel;wire()};
-  await pc.setRemoteDescription(o.d);await pc.setLocalDescription(await pc.createAnswer());
-  st('Gathering connection info…');await ice();
-  $('ansOut').value=enc({d:pc.localDescription});st('Reply ready. Send it back to the host.');
-  if(mode==='stream')$('gFileLbl').hidden=$('gf').hidden=true;
-};
+  const off=await pack({d:pc.localDescription,m:mode});
+  $('offerOut').value=off;$('hostRes').hidden=false;$('mk').hidden=true;$('longBox').open=true;
+  if(roomNS){
+    try{
+      const code=mkcode();room=await roomNS.join('wp-'+code.toLowerCase());
+      await room.presence({o:off});
+      room.onPeers(ch=>{const p=ch.peers.find(x=>!x.isMe&&x.presence&&x.presence.a);if(p)applyAnswer(p.presence.a)});
+      $('short').textContent=code;$('shortBox').hidden=false;$('longBox').open=false;
+      st('Waiting for your friend. Share the code '+code+'.');return;
+    }catch{room=null}
+  }
+  st('Short codes are not available here, so use the long code below.');
+}
+$('fin').onclick=()=>applyAnswer($('ansIn').value);
 
+async function jnGo(){
+  const raw=$('codeIn').value.trim();
+  if(!raw){st('Type the code from the host first.');return}
+  let off=raw;
+  if(raw.length<=10){
+    if(!roomNS){st('Short codes need you to be signed in to Claude with access to this page. Ask the host for the long code.');return}
+    room=await roomNS.join('wp-'+raw.toLowerCase().replace(/[^a-z0-9]/g,''));
+    st('Looking for the host…');
+    off=await new Promise((res,rej)=>{
+      const find=()=>{const p=room&&room.peers().find(x=>!x.isMe&&x.presence&&x.presence.o);if(p)res(p.presence.o)};
+      find();room.onPeers(find);
+      setTimeout(()=>rej(new Error('No host found for that code. Check it, or ask for the long code.')),10000);
+    });
+  }
+  const o=await unpack(off);mode=o.m;newPC();
+  pc.ondatachannel=e=>{dc=e.channel;wire()};
+  await pc.setRemoteDescription(o.d);route();
+  if(mode==='stream')$('gFileLbl').hidden=$('gf').hidden=true;
+  if(o.d.sdp.includes('m=audio')&&$('gm').checked){await getMic();if(mic)mic.getAudioTracks().forEach(t=>pc.addTrack(t,mic))}
+  await pc.setLocalDescription(await pc.createAnswer());
+  st('Gathering connection info…');await ice();
+  const ans=await pack({d:pc.localDescription});
+  if(room){await room.presence({a:ans});st('Connecting…')}
+  else{$('ansOut').value=ans;$('ansOutBox').hidden=false;st('Send the reply code back to the host.')}
+}
 const guard=(btn,fn)=>btn.onclick=async()=>{
   if(!window.RTCPeerConnection){st('This page blocks peer-to-peer connections. Save the page as an HTML file and open it in Chrome, Edge or Firefox.');return}
   const t=btn.textContent;btn.disabled=true;btn.textContent='Working…';
-  try{await fn()}catch(e){st('Error: '+(e&&e.message||e))}
+  try{await fn()}catch(e){st('Error: '+(e&&e.message||e));if(room&&!pc?.connectionState!=='connected'){room.leave().catch(()=>{});room=null}}
   btn.disabled=false;btn.textContent=t;
 };
 guard($('mk'),mkGo);guard($('jn'),jnGo);
 v.onerror=()=>st("Your browser can't play this video format. Convert it to MP4 (H.264) or WebM and pick it again.");
+
 const stage=$('stage');
 function fs(){
   if(document.fullscreenElement||stage.classList.contains('theater')){document.fullscreenElement&&document.exitFullscreen();stage.classList.remove('theater');return}
@@ -175,5 +272,5 @@ function fs(){
   r.catch(()=>stage.classList.add('theater'));
 }
 $('fs').onclick=fs;v.ondblclick=fs;
-addEventListener('keydown',e=>{if(e.key==='Escape')stage.classList.remove('theater');if(e.key==='f'&&e.target.tagName!=='TEXTAREA')fs()});
+addEventListener('keydown',e=>{if(e.key==='Escape')stage.classList.remove('theater');if(e.key==='f'&&!/TEXTAREA|INPUT/.test(e.target.tagName))fs()});
 </script></body></html>
