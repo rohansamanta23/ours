@@ -104,8 +104,9 @@ details{margin-top:14px}summary{cursor:pointer;font-weight:600}
   <audio id="ra" autoplay></audio>
   <input type="file" id="cf" accept="video/*,.mkv" hidden>
   <div id="bar">
-    <span id="st">Not connected</span>
+    <div><div id="st">Not connected</div><div id="vs" class="h"></div></div>
     <div class="row">
+      <button id="snd" hidden>Enable sound</button>
       <button class="alt" id="mic" hidden>Mic on</button>
       <button class="alt" id="chg">Change video</button>
       <button class="alt" id="fs">Full screen</button>
@@ -117,9 +118,10 @@ details{margin-top:14px}summary{cursor:pointer;font-weight:600}
 <script>
 const $=id=>document.getElementById(id),v=$('v'),ra=$('ra');
 let pc,dc,role='host',mode='sync',busy=false,tick,mic=null,micOn=true,room=null,roomNS=null,inc=[],gotAns=false;
-(async()=>{try{roomNS=window.claude&&claude.use?await claude.use('room'):null}catch{}})();
+const roomP=(async()=>{try{roomNS=window.claude&&claude.use?await claude.use('room'):null}catch{}})();
 
 const st=t=>{$('st').textContent=t;document.querySelectorAll('.msg').forEach(m=>m.textContent=t)};
+const vs=t=>$('vs').textContent=t;
 const pick=(a,b,on)=>{a.classList.toggle('on',on);a.classList.toggle('alt',!on);b.classList.toggle('on',!on);b.classList.toggle('alt',on)};
 const mkcode=()=>Array.from(crypto.getRandomValues(new Uint8Array(5)),b=>'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[b%31]).join('');
 async function pack(o){const s=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream('deflate-raw'));const u=new Uint8Array(await new Response(s).arrayBuffer());let t='';u.forEach(c=>t+=String.fromCharCode(c));return btoa(t)}
@@ -145,17 +147,21 @@ function reset(){
   ra.srcObject=null;v.controls=true;
   ['offerOut','ansIn','codeIn','ansOut'].forEach(i=>$(i).value='');
   $('hostRes').hidden=$('ansOutBox').hidden=$('shortBox').hidden=$('mic').hidden=true;
-  $('mk').hidden=false;$('chg').hidden=false;$('tap').style.display='none';$('gFileLbl').hidden=$('gf').hidden=false;
+  $('mk').hidden=false;$('chg').hidden=false;$('snd').hidden=true;vs('');$('tap').style.display='none';$('gFileLbl').hidden=$('gf').hidden=false;
   $('setup').hidden=false;st('Not connected');
 }
 $('over').onclick=$('cancel').onclick=$('lv').onclick=reset;
 
 async function getMic(){
-  try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});$('mic').hidden=false;setMic(true)}
-  catch(e){mic=null;st('Microphone unavailable ('+(e.name||'blocked')+'). Continuing without voice.')}
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw{name:'not supported here'};
+    mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    $('mic').hidden=false;setMic(true);vs('Your mic is ready.');
+  }catch(e){mic=null;vs('Your mic is blocked ('+(e.name||'error')+'). This page may not be allowed to use your microphone, so your friend cannot hear you. You can still hear them if their mic works.')}
 }
 function setMic(on){micOn=on;mic.getAudioTracks().forEach(t=>t.enabled=on);$('mic').textContent=on?'Mic on':'Mic muted';$('mic').classList.toggle('alt',on)}
 $('mic').onclick=()=>mic&&setMic(!micOn);
+$('snd').onclick=()=>{ra.play();$('snd').hidden=true};
 
 function tune(){pc.getSenders().forEach(async s=>{if(s.track&&s.track.kind==='video'){const p=s.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=25e6;p.degradationPreference='maintain-resolution';try{await s.setParameters(p)}catch{}}})}
 function newPC(){
@@ -171,7 +177,13 @@ function route(){
   const ss=new Set(inc.map(e=>e.streams[0]||new MediaStream([e.track])));
   ss.forEach(s=>{
     if(s.getVideoTracks().length){v.srcObject=s;v.controls=false;v.muted=false;$('tap').style.display='grid';$('tap').onclick=()=>{v.play();$('tap').style.display='none'};$('chg').hidden=role==='guest'}
-    else{ra.srcObject=s;ra.play().catch(()=>{})}
+    else{
+      ra.srcObject=s;ra.volume=1;
+      ra.play().then(()=>$('snd').hidden=true).catch(()=>$('snd').hidden=false);
+      const pre=mic?'Your mic is ready. ':'';
+      vs(pre+'Friend audio is connected. Waiting for them to speak.');
+      s.getAudioTracks().forEach(t=>t.onunmute=()=>vs(pre+'Hearing your friend.'));
+    }
   });
 }
 const ice=()=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();pc.onicegatheringstatechange=()=>pc.iceGatheringState==='complete'&&r();setTimeout(r,4000)});
@@ -207,7 +219,7 @@ async function mkGo(){
   if(!v.src){st('Pick a video file first.');return}
   newPC();dc=pc.createDataChannel('sync');wire();
   if($('vc').checked)await getMic();
-  if(mic)mic.getAudioTracks().forEach(t=>pc.addTrack(t,mic));
+  if($('vc').checked){if(mic)pc.addTransceiver(mic.getAudioTracks()[0],{direction:'sendrecv',streams:[mic]});else pc.addTransceiver('audio',{direction:'recvonly'})}
   if(mode==='stream'){
     try{await v.play();v.pause();v.currentTime=0}catch{}
     const s=v.captureStream?v.captureStream():v.mozCaptureStream();
@@ -218,6 +230,8 @@ async function mkGo(){
   st('Gathering connection info…');await ice();
   const off=await pack({d:pc.localDescription,m:mode});
   $('offerOut').value=off;$('hostRes').hidden=false;$('mk').hidden=true;$('longBox').open=true;
+  await Promise.race([roomP,new Promise(r=>setTimeout(r,3000))]);
+  let why='you are not signed in to Claude on this page, or it was opened from a public link';
   if(roomNS){
     try{
       const code=mkcode();room=await roomNS.join('wp-'+code.toLowerCase());
@@ -225,9 +239,9 @@ async function mkGo(){
       room.onPeers(ch=>{const p=ch.peers.find(x=>!x.isMe&&x.presence&&x.presence.a);if(p)applyAnswer(p.presence.a)});
       $('short').textContent=code;$('shortBox').hidden=false;$('longBox').open=false;
       st('Waiting for your friend. Share the code '+code+'.');return;
-    }catch{room=null}
+    }catch(e){room=null;why='the room could not be opened ('+((e&&(e.code||e.message))||'error')+')'}
   }
-  st('Short codes are not available here, so use the long code below.');
+  st('No short code: '+why+'. Use the long code below.');
 }
 $('fin').onclick=()=>applyAnswer($('ansIn').value);
 
