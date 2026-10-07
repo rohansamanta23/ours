@@ -46,6 +46,9 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
 #tap{position:absolute;inset:0;display:none;place-items:center;background:#000a;color:#fff;font:700 1.4rem "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer}
 #gc{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;align-items:center;padding:30px 14px 12px;background:linear-gradient(transparent,#000d);color:#fff}
 #gc button{padding:7px 13px;background:#ffffff2e;color:#fff}
+#gc{transition:opacity .35s}
+#stage.idle #gc{opacity:0;pointer-events:none}
+#stage.idle,#stage.idle video{cursor:none}
 #gc input{flex:1;min-width:60px;accent-color:#fff}
 #gc span{font:12px ui-monospace,Menlo,monospace;min-width:84px;text-align:right}
 #toasts{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:8px;z-index:5;pointer-events:none;max-width:min(330px,82%)}
@@ -54,7 +57,18 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
 .toast.out{opacity:0;transform:translateX(14px);transition:.3s}
 @keyframes tin{from{opacity:0;transform:translateX(18px)}}
 #bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 4px 0;flex-wrap:wrap}
-#who{font-weight:700}#st{color:var(--mu);font-size:.88rem}
+#who{font-weight:700}
+#who::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;background:var(--mu)}
+#who[data-on="1"]::before{background:var(--ok)}
+#logbox{margin-top:18px;padding:16px 18px}
+.lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.lh button{padding:5px 12px;font-size:.8rem}
+#log{max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.ev{display:flex;gap:10px;align-items:baseline;padding:8px 12px;border-radius:12px;background:#8881;border-left:3px solid var(--ac);font-size:.92rem}
+.ev.ok{border-color:var(--ok)}.ev.warn{border-color:var(--wn)}
+.ev time{color:var(--mu);font:12px ui-monospace,Menlo,monospace;flex:none}
+.empty{color:var(--mu);margin:0;font-size:.9rem}
+#st{color:var(--mu);font-size:.88rem}
 #bar button{padding:9px 14px}
 [hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -115,6 +129,10 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
       <button class="ghost" id="lv">Leave</button>
     </div>
   </div>
+  <div class="pn" id="logbox">
+    <div class="lh"><b>Activity</b><button class="ghost" id="clr">Clear</button></div>
+    <div id="log" aria-label="Activity history"><p class="empty">Nothing yet. Joins, leaves and playback changes will be listed here.</p></div>
+  </div>
 </section>
 </main>
 <script>
@@ -150,10 +168,18 @@ const waitRoom=()=>Promise.race([roomP,new Promise(r=>setTimeout(r,5000))]);
 const st=t=>{$('st').textContent=t;document.querySelectorAll('.msg').forEach(m=>m.textContent=t)};
 const fmt=t=>{t=Math.max(0,t|0);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
 const myName=()=>($('nm').value.trim()||'Guest').slice(0,20);
-const who=()=>$('who').textContent=pc&&peer?'You: '+myName()+'  ·  Friend: '+peer:'Not connected';
+const who=()=>{$('who').dataset.on=pc&&peer?'1':'0';$('who').textContent=pc&&peer?'You: '+myName()+'  ·  Friend: '+peer:pc&&gone?'You: '+myName()+'  ·  Friend left':'Not connected'};
+function addLog(t,k){
+  const l=$('log'),e=l.querySelector('.empty');if(e)e.remove();
+  const d=document.createElement('div');d.className='ev '+(k||'');
+  const ts=document.createElement('time');ts.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const sp=document.createElement('span');sp.textContent=t;d.append(ts,sp);l.appendChild(d);l.scrollTop=l.scrollHeight;
+}
+$('clr').onclick=()=>{$('log').innerHTML='<p class="empty">Cleared.</p>'};
 try{$('nm').value=localStorage.getItem('wt-name')||''}catch{}
 $('nm').oninput=()=>{try{localStorage.setItem('wt-name',$('nm').value)}catch{}};
 function toast(t,k){
+  addLog(t,k);
   const d=document.createElement('div');d.className='toast '+(k||'');d.textContent=t;$('toasts').appendChild(d);
   setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),320)},3800);
 }
@@ -175,7 +201,7 @@ $('cp').onclick=async()=>{try{await navigator.clipboard.writeText($('short').tex
 
 function reset(){
   clearInterval(tick);
-  const oldPc=pc;
+  const oldPc=pc;if(pc)addLog('You left the room','warn');
   if(dc&&dc.readyState==='open'){try{dc.send(JSON.stringify({t:'bye'}))}catch{}}
   if(pc){pc.onconnectionstatechange=null;if(dc)dc.onclose=null;setTimeout(()=>{try{oldPc.close()}catch{}},250)}
   pc=dc=null;inc=[];gotAns=false;peer='';gone=false;
@@ -183,7 +209,7 @@ function reset(){
   if(v.srcObject){v.srcObject=null;v.removeAttribute('src');v.load()}else v.pause();
   v.controls=true;$('codeIn').value='';$('hostRes').hidden=$('gc').hidden=true;
   $('mk').hidden=false;$('chg').hidden=false;$('tap').style.display='none';$('gDrop').hidden=false;
-  $('setup').hidden=false;st('Not connected');who();
+  $('setup').hidden=false;$('stage').classList.remove('idle');st('Not connected');who();
 }
 $('over').onclick=$('cancel').onclick=$('lv').onclick=reset;
 
@@ -194,7 +220,7 @@ function newPC(){
   pc.ontrack=e=>inc.push(e);
   pc.onconnectionstatechange=()=>{
     const s=pc.connectionState;
-    if(s==='connected'){tune();$('setup').hidden=true;if(room){room.leave().catch(()=>{});room=null}st(mode==='sync'?'Connected. Press play and you both stay in sync.':'Connected.');who()}
+    if(s==='connected'){addLog('Connected','ok');tune();$('setup').hidden=true;if(room){room.leave().catch(()=>{});room=null}st(mode==='sync'?'Connected. Press play and you both stay in sync.':'Connected.');who()}
     if(s==='failed'){st('Connection failed. Strict networks can block direct connections. Leave and try again.');toast('Connection failed','warn')}
     if(s==='disconnected')st('Connection interrupted…');
   };
@@ -204,7 +230,7 @@ function route(){
     if(e.track.kind!=='video')return;
     v.srcObject=e.streams[0]||new MediaStream([e.track]);v.controls=false;v.muted=false;
     $('tap').style.display='grid';$('tap').onclick=()=>{v.play();$('tap').style.display='none'};
-    $('chg').hidden=role==='guest';$('gc').hidden=role!=='guest';
+    $('chg').hidden=role==='guest';$('gc').hidden=role!=='guest';poke();
   });
 }
 const ice=()=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();pc.onicegatheringstatechange=()=>pc.iceGatheringState==='complete'&&r();setTimeout(r,4000)});
@@ -237,6 +263,7 @@ function wire(){
     }
     if(m.t==='state'&&role==='guest'&&mode==='stream'){
       if(m.p!==lastP&&Date.now()-lastCmd>2000)toast(n+(m.p?' paused':' resumed')+' the video','info');
+      if(m.p!==lastP)poke();
       lastP=m.p;lastT=m.time;$('pp').textContent=m.p?'Play':'Pause';
       if(!m.p&&v.paused)v.play().catch(()=>{});
       if(!drag){$('sk').max=m.dur||1;$('sk').value=m.time;$('tm').textContent=fmt(m.time)+' / '+fmt(m.dur)}
@@ -325,5 +352,11 @@ function fs(){
   r.catch(()=>stage.classList.add('theater'));
 }
 $('fs').onclick=fs;v.ondblclick=fs;
+let idleT;
+function poke(){
+  stage.classList.remove('idle');clearTimeout(idleT);
+  if(!$('gc').hidden)idleT=setTimeout(()=>{if(!drag&&!lastP)stage.classList.add('idle')},3000);
+}
+['mousemove','pointerdown','touchstart','keydown'].forEach(ev=>stage.addEventListener(ev,poke,{passive:true}));
 addEventListener('keydown',e=>{if(e.key==='Escape')stage.classList.remove('theater');if(e.key==='f'&&!/TEXTAREA|INPUT/.test(e.target.tagName))fs()});
 </script></body></html>
