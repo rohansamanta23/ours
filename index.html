@@ -57,7 +57,6 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
 .toast.out{opacity:0;transform:translateX(14px);transition:.3s}
 @keyframes tin{from{opacity:0;transform:translateX(18px)}}
 #rx{position:absolute;top:12px;left:12px;z-index:4;display:flex;gap:2px;padding:4px 8px;border-radius:999px;background:#150f2b33;opacity:.3;transition:opacity .3s,background .3s}
-#rx:hover,#rx:focus-within{opacity:1;background:#150f2bcc}
 #rx button{background:transparent;padding:3px;border-radius:10px;line-height:0}
 #rx svg{width:26px;height:26px;display:block}
 #rx button:hover{transform:scale(1.22)}
@@ -91,6 +90,29 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
 .empty{color:var(--mu);margin:0;font-size:.9rem}
 #st{color:var(--mu);font-size:.88rem}
 #bar button{padding:9px 14px}
+.pn{position:relative}
+.pn::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(280px circle at var(--mx,50%) var(--my,-100%),#ffffff1f,transparent 60%)}
+body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;filter:blur(36px);background:radial-gradient(38% 38% at 20% 30%,var(--g1),transparent),radial-gradient(34% 34% at 80% 20%,var(--g2),transparent),radial-gradient(40% 40% at 60% 88%,#ff7a5a26,transparent);animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(4%,3%) rotate(8deg) scale(1.1)}}
+h1{background:linear-gradient(90deg,var(--tx),var(--ac),#8b7bff,var(--tx));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+@keyframes shine{to{background-position:-300% 0}}
+.logo{animation:bob 4s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-3px) rotate(-5deg)}}
+.pn,#stage,#bar,#hostBox,#guestBox{animation:up .55s cubic-bezier(.2,.8,.2,1) both}
+.ev{animation:up .3s both}
+@keyframes up{from{opacity:0;transform:translateY(14px)}}
+.cta{background:linear-gradient(135deg,var(--ac),#8b7bff);box-shadow:0 10px 28px #e8552f40}
+.cta:hover{box-shadow:0 14px 36px #8b7bff66}
+.seg button{transition:background .2s,color .2s,box-shadow .2s}
+#stage{box-shadow:0 24px 70px #0000004d,0 0 90px color-mix(in srgb,var(--ac) 16%,transparent)}
+.drop{position:relative;transition:border-color .2s,background .2s,transform .2s}
+.drop.over{border-color:var(--ac);transform:scale(1.015)}
+.drop .th{width:100%;max-width:300px;border-radius:12px;margin-bottom:10px;box-shadow:0 10px 26px #0004;animation:up .4s both}
+.drop.ready{border-style:solid;border-color:var(--ok);background:color-mix(in srgb,var(--ok) 11%,transparent)}
+.drop.ready b{color:var(--ok)}
+.code{display:flex;gap:8px;justify-content:center;letter-spacing:0;padding:0}
+.code span{display:inline-block;min-width:1.05em;padding:0 .12em;border:1.5px solid var(--bd);border-radius:14px;background:var(--bg);animation:flip .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*90ms)}
+@keyframes flip{from{opacity:0;transform:rotateX(90deg) translateY(12px)}}
+#rx:hover,#rx:has(button:focus-visible){opacity:1;background:#150f2bcc}
 [hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head>
@@ -112,7 +134,7 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
 
   <div id="hostBox">
     <label class="k">Video</label>
-    <label class="drop" for="f"><b>Choose a video file</b><span id="fn">MP4 or WebM plays best</span></label>
+    <label class="drop" for="f"><img class="th" alt="Video preview" hidden><b>Choose a video file</b><span id="fn">MP4 or WebM plays best</span></label>
     <input type="file" id="f" accept="video/*,.mkv" hidden>
     <label class="k">Playback</label>
     <div class="seg"><button id="mSync" class="on">Sync · best quality</button><button id="mStream">Stream from me</button></div>
@@ -130,7 +152,7 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
   <div id="guestBox" hidden>
     <div id="gDrop">
       <label class="k">Video</label>
-      <label class="drop" for="gf"><b>Choose the same video</b><span id="gfn">The host's file, picked from your own device</span></label>
+      <label class="drop" for="gf"><img class="th" alt="Video preview" hidden><b>Choose the same video</b><span id="gfn">The host's file, picked from your own device</span></label>
       <input type="file" id="gf" accept="video/*,.mkv" hidden>
     </div>
     <label class="k" for="codeIn">Room code</label>
@@ -145,7 +167,7 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
   <div id="stage">
     <video id="v" playsinline></video>
     <div id="tap">Tap to play</div>
-    <div id="gc"><button id="pp" aria-label="Play or pause"></button><button id="bk" aria-label="Back 10 seconds">&minus;10</button><button id="fw" aria-label="Forward 10 seconds">+10</button><input type="range" id="sk" min="0" max="1" step="0.5" value="0" aria-label="Seek"><span id="tm">0:00 / 0:00</span><button id="mt" aria-label="Mute"></button><input type="range" id="vl" min="0" max="1" step="0.05" value="1" aria-label="Volume"></div>
+    <div id="gc"><button id="pp" aria-label="Play or pause"></button><button id="bk" aria-label="Back 10 seconds">&minus;10</button><button id="fw" aria-label="Forward 10 seconds">+10</button><input type="range" id="sk" min="0" max="1" step="0.5" value="0" aria-label="Seek"><span id="tm">0:00 / 0:00</span><button id="mt" aria-label="Mute"></button><input type="range" id="vl" min="0" max="1" step="0.05" value="1" aria-label="Volume"><button id="fs" aria-label="Full screen"></button></div>
     <div id="toasts" role="status" aria-live="polite"></div>
     <div id="ask" hidden><p id="askt"></p><div class="row"><button id="askb">Choose file</button><button class="ghost" id="askx">Later</button></div></div>
     <div id="rx" hidden aria-label="Reactions"></div>
@@ -156,7 +178,6 @@ p.h{color:var(--mu);font-size:.9rem;margin:8px 2px 0}
     <div><div id="who">Not connected</div><div id="st">Not connected</div></div>
     <div class="row">
       <button class="ghost" id="chg">Change video</button>
-      <button class="ghost" id="fs">Full screen</button>
       <button class="ghost" id="lv">Leave</button>
     </div>
   </div>
@@ -198,7 +219,7 @@ const roomP=(async()=>{
 const waitRoom=()=>Promise.race([roomP,new Promise(r=>setTimeout(r,5000))]);
 
 const st=t=>{$('st').textContent=t;document.querySelectorAll('.msg').forEach(m=>m.textContent=t)};
-const fmt=t=>{t=Math.max(0,t|0);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+const fmt=t=>{t=Math.max(0,t|0);const h=Math.floor(t/3600),m=Math.floor(t%3600/60),sc=String(t%60).padStart(2,'0');return h?h+':'+String(m).padStart(2,'0')+':'+sc:m+':'+sc};
 const myName=()=>($('nm').value.trim()||'Guest').slice(0,20);
 const who=()=>{$('who').dataset.on=pc&&peer?'1':'0';$('who').textContent=pc&&peer?'You: '+myName()+'  ·  Friend: '+peer:pc&&gone?'You: '+myName()+'  ·  Friend left':'Not connected'};
 function addLog(t,k){
@@ -235,11 +256,11 @@ const RX=Object.keys(RXI),rxSvg=k=>'<svg viewBox="0 0 48 48" aria-hidden="true">
 function floatRx(k,name){
   const fx=$('fx');if(fx.children.length>30)return;
   const b=document.createElement('div');b.className='fl';
-  const em=document.createElement('span'),nm=document.createElement('small');em.innerHTML=rxSvg(k);nm.textContent=name;b.append(em,nm);
+  const em=document.createElement('span'),nm=document.createElement('small');em.innerHTML=rxSvg(k);nm.textContent=name;nm.hidden=!name;b.append(em,nm);
   b.style.setProperty('--x',Math.random()*40+'px');b.style.setProperty('--dx',(Math.random()*50-25)+'px');b.style.setProperty('--h',Math.max(fx.clientHeight,160)+'px');
   fx.appendChild(b);setTimeout(()=>b.remove(),3600);
 }
-RX.forEach(k=>{const b=document.createElement('button');b.innerHTML=rxSvg(k);b.setAttribute('aria-label','React: '+k);b.onclick=()=>{floatRx(k,'You');send({t:'rx',e:k})};$('rx').appendChild(b)});
+RX.forEach(k=>{const b=document.createElement('button');b.innerHTML=rxSvg(k);b.setAttribute('aria-label','React: '+k);b.onclick=()=>{floatRx(k,'You');send({t:'rx',e:k});b.blur()};$('rx').appendChild(b)});
 $('clr').onclick=()=>{$('log').innerHTML='<p class="empty">Cleared.</p>'};
 try{$('nm').value=localStorage.getItem('wt-name')||''}catch{}
 $('nm').oninput=()=>{try{localStorage.setItem('wt-name',$('nm').value)}catch{}};
@@ -257,7 +278,17 @@ $('rHost').onclick=()=>{role='host';seg($('rHost'),$('rGuest'),true);$('hostBox'
 $('rGuest').onclick=()=>{role='guest';seg($('rHost'),$('rGuest'),false);$('hostBox').hidden=true;$('guestBox').hidden=false};
 $('mSync').onclick=()=>{mode='sync';seg($('mSync'),$('mStream'),true);$('mHint').textContent="You both pick the same file. Only play, pause and seek are shared, so each of you sees the original quality."};
 $('mStream').onclick=()=>{mode='stream';seg($('mSync'),$('mStream'),false);$('mHint').textContent="Your friend doesn't need the file. Your video is sent live at up to 25 Mbps, and they get play, pause and seek buttons. Needs a fast upload."};
-const load=(f,lab)=>{if(f){v.srcObject=null;v.src=URL.createObjectURL(f);lab.textContent=f.name}};
+const load=(f,lab)=>{if(f){v.srcObject=null;v.src=URL.createObjectURL(f);thumb(f,lab.closest('.drop'))}};
+function thumb(f,box){
+  box.classList.add('ready');
+  const nm=box.querySelector('span'),img=box.querySelector('img'),tt=box.querySelector('b');
+  const mb=f.size>1e9?(f.size/1e9).toFixed(1)+' GB':Math.round(f.size/1e6)+' MB';
+  tt.textContent='Video ready · click to change';nm.textContent=f.name+' · '+mb;
+  const t=document.createElement('video'),u=URL.createObjectURL(f);t.muted=true;t.preload='metadata';t.src=u;
+  t.onloadedmetadata=()=>{nm.textContent=f.name+' · '+fmt(t.duration)+' · '+mb;t.currentTime=Math.min(t.duration*.1,8)};
+  t.onseeked=()=>{const c=document.createElement('canvas');c.width=320;c.height=Math.round(320*t.videoHeight/t.videoWidth)||180;c.getContext('2d').drawImage(t,0,0,c.width,c.height);img.src=c.toDataURL('image/jpeg',.72);img.hidden=false;URL.revokeObjectURL(u)};
+  t.onerror=()=>{img.hidden=true;URL.revokeObjectURL(u)};
+}
 $('f').onchange=e=>load(e.target.files[0],$('fn'));
 $('gf').onchange=e=>load(e.target.files[0],$('gfn'));
 $('chg').onclick=()=>$('cf').click();
@@ -307,7 +338,7 @@ function newPC(){
   pc.ontrack=e=>inc.push(e);
   pc.onconnectionstatechange=()=>{
     const s=pc.connectionState;
-    if(s==='connected'){addLog('Connected','ok');$('rx').hidden=false;poke();tune();$('setup').hidden=true;if(room){room.leave().catch(()=>{});room=null}st(mode==='sync'?'Connected. Press play and you both stay in sync.':'Connected.');who()}
+    if(s==='connected'){addLog('Connected','ok');$('rx').hidden=false;poke();for(let i=0;i<4;i++)setTimeout(()=>floatRx('party',''),i*250);tune();$('setup').hidden=true;if(room){room.leave().catch(()=>{});room=null}st(mode==='sync'?'Connected. Press play and you both stay in sync.':'Connected.');who()}
     if(s==='failed'){st('Connection failed. Strict networks can block direct connections. Leave and try again.');toast('Connection failed','warn')}
     if(s==='disconnected')st('Connection interrupted…');
   };
@@ -401,7 +432,7 @@ async function mkGo(){
   const code=mkcode();room=await roomNS.join('wp-'+code.toLowerCase());
   await room.presence({o:off});
   room.onPeers(ch=>{const p=ch.peers.find(x=>!x.isMe&&x.presence&&x.presence.a);if(p)applyAnswer(p.presence.a)});
-  $('short').textContent=code;$('hostRes').hidden=false;$('mk').hidden=true;st('Room ready. Share the code '+code+'.');
+  $('short').replaceChildren(...[...code].map((c,i)=>{const e=document.createElement('span');e.textContent=c;e.style.setProperty('--i',i);return e}));$('hostRes').hidden=false;$('mk').hidden=true;st('Room ready. Share the code '+code+'.');
 }
 async function jnGo(){
   const raw=$('codeIn').value.trim();
@@ -427,9 +458,10 @@ async function jnGo(){
 
 const cmd=(a,time)=>{lastCmd=Date.now();send({t:'cmd',a,time})};
 const ICON={play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',pause:'<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>',vol:'<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',mute:'<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'};
+ICON.fs='<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ppIcon=p=>$('pp').innerHTML=p?ICON.play:ICON.pause;
 const remote=()=>role==='guest'&&mode==='stream';
-ppIcon(true);$('mt').innerHTML=ICON.vol;
+ppIcon(true);$('mt').innerHTML=ICON.vol;$('fs').innerHTML=ICON.fs;
 v.addEventListener('play',()=>!remote()&&ppIcon(false));
 v.addEventListener('pause',()=>!remote()&&ppIcon(true));
 const upd=()=>{if(remote()||drag)return;$('sk').max=v.duration||1;$('sk').value=v.currentTime;$('tm').textContent=fmt(v.currentTime)+' / '+fmt(v.duration||0)};
@@ -476,4 +508,10 @@ addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft')$('bk').click();
   if(e.key==='ArrowRight')$('fw').click();
 });
+document.querySelectorAll('.drop').forEach(d=>{
+  d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('over')});
+  d.addEventListener('dragleave',()=>d.classList.remove('over'));
+  d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('over');const f=e.dataTransfer.files[0];if(!f)return;const i=$(d.getAttribute('for')),dt=new DataTransfer();dt.items.add(f);i.files=dt.files;i.dispatchEvent(new Event('change'))});
+});
+document.querySelectorAll('.pn').forEach(p=>p.addEventListener('pointermove',e=>{const r=p.getBoundingClientRect();p.style.setProperty('--mx',e.clientX-r.left+'px');p.style.setProperty('--my',e.clientY-r.top+'px')}));
 </script></body></html>
