@@ -934,17 +934,6 @@
       html.lite h1,html.lite .logo,html.lite .pn,html.lite #stage,html.lite #bar,html.lite .ev:not(.chat){animation:none}
       html.lite .pn{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
       html.lite #stage{box-shadow:none}
-      #brkOv{position:absolute;inset:0;z-index:7;display:grid;align-content:center;justify-items:center;gap:10px;padding:20px;text-align:center;color:#fff;background:radial-gradient(70% 70% at 50% 40%,#3b1d3f,#100d1c);animation:brkIn .5s both}
-      @keyframes brkIn{from{opacity:0}}
-      #brkOv svg{width:min(150px,34vw);overflow:visible;animation:cup 4s ease-in-out infinite}
-      @keyframes cup{50%{transform:translateY(-6px)}}
-      .stm{fill:none;stroke:#ffd9c9;stroke-width:4;stroke-linecap:round;opacity:0;animation:steam 3s ease-in-out infinite}
-      .stm:nth-of-type(2){animation-delay:.8s}.stm:nth-of-type(3){animation-delay:1.6s}
-      @keyframes steam{0%{opacity:0;transform:translateY(8px)}40%{opacity:.8}100%{opacity:0;transform:translateY(-18px)}}
-      #brkOv h2{margin:0;font:800 clamp(1.6rem,6vw,2.6rem)/1.1 "Bricolage Grotesque",system-ui,sans-serif;animation:bp 3s ease-in-out infinite}
-      @keyframes bp{50%{transform:scale(1.04)}}
-      #brkOv p{margin:0;color:#d9d4ff}
-      #brkTm{font:700 1.1rem ui-monospace,Menlo,monospace}
       #toasts,#rx,#fx{z-index:9}
       :root{--vh:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
       @supports (height:100dvh){:root{--vh:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}}
@@ -1002,6 +991,97 @@
         .seg button{padding:10px 4px;font-size:.9rem}
       }
       @media (max-width:560px) and (max-height:820px){html:not(.inroom) .sub,#setup p.h{display:none}}
+      .foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-top:clamp(8px,1.6vh,14px)}
+      #net{flex:1;min-width:0;font-size:.88rem;color:var(--mu)}
+      #net summary{cursor:pointer;font-weight:600;padding:7px 0}
+      #net .txt{margin-top:8px}
+      /* notifications: small, centered, minimal */
+      #toasts{top:10px;left:50%;right:auto;transform:translateX(-50%);align-items:center;gap:5px;width:max-content;max-width:min(440px,92%)}
+      .toast{display:flex;align-items:center;gap:7px;background:#0b0818b8;color:#ffffffe6;border:0;border-radius:999px;padding:5px 12px;font-size:.78rem;font-weight:500;box-shadow:none;animation:tdn .25s ease}
+      .toast::before{content:"";width:6px;height:6px;border-radius:50%;background:#8b7bff;flex:none}
+      .toast.ok::before{background:var(--ok)}.toast.warn::before{background:var(--wn)}
+      .toast.out{opacity:0;transform:translateY(-6px);transition:.3s}
+      @keyframes tdn{from{opacity:0;transform:translateY(-8px)}}
+      @media (max-width:800px){#toasts{top:54px}}
+      #log .ev{justify-content:center;align-items:center;gap:6px;padding:1px 0;border:0;border-radius:0;background:none;font-size:.74rem;color:var(--mu);text-align:center}
+      #log .ev::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--ac);flex:none}
+      #log .ev.ok::before{background:var(--ok)}#log .ev.warn::before{background:var(--wn)}
+      #log .ev time{font:inherit;opacity:.7}
+      /* chat: bubbles on both sides */
+      #log{gap:4px}
+      .cm{display:flex;margin:2px 0}
+      .cm.me{justify-content:flex-end}.cm.them{justify-content:flex-start}
+      .bub{max-width:82%;display:flex;flex-direction:column;gap:2px;padding:8px 12px 6px;border-radius:18px;font-size:.95rem;line-height:1.35;word-break:break-word;animation:cmIn .3s cubic-bezier(.2,.9,.3,1.25)}
+      .cm.me .bub{background:linear-gradient(135deg,var(--ac),#8b7bff);color:#fff;border-bottom-right-radius:6px;transform-origin:right bottom}
+      .cm.them .bub{background:color-mix(in srgb,var(--tx) 9%,transparent);border:1px solid var(--bd);border-bottom-left-radius:6px;transform-origin:left bottom}
+      .bub b{font-size:.72rem;color:#7a68f5}
+      .bub time{align-self:flex-end;font:11px ui-monospace,Menlo,monospace;opacity:.65}
+      @keyframes cmIn{from{opacity:0;transform:translateY(10px) scale(.92)}}
+      #ctoasts{position:absolute;left:12px;bottom:86px;z-index:9;display:flex;flex-direction:column;align-items:flex-start;gap:6px;max-width:min(300px,74%);pointer-events:none;transition:bottom .35s}
+      #stage.idle #ctoasts{bottom:16px}
+      .ct{display:flex;align-items:flex-end;gap:8px;transform-origin:left bottom;animation:ctIn .4s cubic-bezier(.2,.9,.3,1.25)}
+      .ct i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 .8rem/1 system-ui;font-style:normal;color:#fff;background:linear-gradient(135deg,var(--ac),#8b7bff);box-shadow:0 4px 12px #0005}
+      .ct>div{display:flex;flex-direction:column;background:#fff;color:#1f1a33;padding:7px 12px 8px;border-radius:16px 16px 16px 5px;box-shadow:0 8px 24px #0007;font-size:.9rem;line-height:1.3;word-break:break-word}
+      .ct b{font-size:.7rem;color:#7a68f5}
+      .ct.out{opacity:0;transform:translateY(8px);transition:.35s}
+      @keyframes ctIn{from{opacity:0;transform:translateX(-16px) scale(.8)}}
+      /* leave */
+      #bar #lv{background:#e5484d;color:#fff;border:0;min-width:46px;padding:9px 14px;display:grid;place-items:center;box-shadow:0 6px 16px #e5484d55}
+      #bar #lv:hover{background:#d13a40}
+      #bar #lv svg{width:20px;height:20px;display:block}
+      /* phone fullscreen fallback: rotated landscape */
+      #stage.theater.rot{inset:auto;top:0;left:0;width:100vh;width:100dvh;height:100vw;transform-origin:0 0;transform:translateX(100vw) rotate(90deg);animation:none}
+      /* break screen */
+      #brkOv{position:absolute;inset:0;z-index:7;overflow:hidden;container-type:size;display:grid;place-items:center;color:#fff;text-align:center;background:#120d24;animation:brkIn .6s both}
+      @keyframes brkIn{from{opacity:0;transform:scale(1.04)}}
+      .bgx{position:absolute;inset:0}
+      .bgx i{position:absolute;width:70cqmax;height:70cqmax;border-radius:50%;filter:blur(40px);opacity:.5;will-change:transform;animation:blob 14s ease-in-out infinite alternate}
+      .bgx i:nth-child(1){background:#e8552f;left:-20%;top:-30%}
+      .bgx i:nth-child(2){background:#8b7bff;right:-25%;bottom:-35%;animation-duration:17s;animation-delay:-5s}
+      .bgx i:nth-child(3){background:#ff7aa8;left:30%;top:20%;opacity:.28;animation-delay:-9s}
+      @keyframes blob{to{transform:translate(12%,10%) scale(1.15)}}
+      #brkPts{position:absolute;inset:0;pointer-events:none}
+      #brkPts i{position:absolute;left:var(--x);bottom:-30px;font-style:normal;font-size:var(--s);color:#ffffffb0;animation:rise2 var(--d) linear var(--dl) infinite}
+      #brkPts i::before{content:attr(data-c)}
+      @keyframes rise2{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:.9}90%{opacity:.6}100%{transform:translate(var(--dx),calc(-1*var(--h) - 40px)) rotate(40deg);opacity:0}}
+      .bc{position:relative;z-index:1;display:grid;justify-items:center;gap:clamp(4px,1.4cqh,10px);padding:10px;max-width:100%;max-height:100%;grid-template-areas:"cup" "h" "t" "s" "tip" "row"}
+      .cupw{grid-area:cup;position:relative;width:clamp(72px,32cqmin,170px)}
+      .cupw svg{width:100%;overflow:visible;display:block;animation:cup 5s ease-in-out infinite}
+      @keyframes cup{50%{transform:translateY(-5px) rotate(-1.5deg)}}
+      .halo{position:absolute;inset:-25%;border-radius:50%;background:radial-gradient(circle,#ffb38a66,transparent 65%);animation:halo 3.2s ease-in-out infinite}
+      @keyframes halo{50%{transform:scale(1.18);opacity:.6}}
+      .stm{fill:none;stroke:#ffe3d6;stroke-width:5;stroke-linecap:round;opacity:0;animation:steam 3.2s ease-in-out infinite}
+      .stm:nth-of-type(2){animation-delay:.9s}.stm:nth-of-type(3){animation-delay:1.8s}
+      @keyframes steam{0%{opacity:0;transform:translateY(10px) scaleY(.8)}40%{opacity:.9}100%{opacity:0;transform:translateY(-22px) scaleY(1.1)}}
+      .hrt{position:absolute;left:50%;top:10%;font-size:clamp(14px,6cqmin,28px);color:#ff7aa8;opacity:0;animation:hrt 3.6s ease-out 1s infinite}
+      @keyframes hrt{0%{opacity:0;transform:translate(-50%,10px) scale(.4)}25%{opacity:1}100%{opacity:0;transform:translate(-20%,-70px) scale(1.2)}}
+      #brkH{grid-area:h;margin:0;font:800 clamp(1.25rem,10cqmin,3rem)/1.05 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.02em;text-shadow:0 4px 24px #ff8a6680}
+      #brkH .w{display:inline-block;white-space:nowrap}
+      #brkH .w span{display:inline-block;animation:lt .7s cubic-bezier(.2,.9,.3,1.3) backwards,wave 3.4s ease-in-out infinite;animation-delay:calc(var(--i)*55ms),calc(1.2s + var(--i)*110ms)}
+      @keyframes lt{from{opacity:0;transform:translateY(26px) scale(.5) rotate(-8deg)}}
+      @keyframes wave{0%,60%,100%{transform:none}30%{transform:translateY(-6px)}}
+      #brkTxt{grid-area:t;margin:0;font-weight:700;font-size:clamp(.85rem,3.2cqmin,1.1rem);color:#ffd9c9}
+      #brkSub{grid-area:s;margin:0;font-size:clamp(.75rem,2.8cqmin,.95rem);color:#d9d4ff;opacity:.85}
+      #brkTipw{grid-area:tip;min-height:1.7em;overflow:hidden}
+      #brkTipTx{display:inline-block;font-size:clamp(.8rem,3cqmin,1rem);padding:3px 12px;border-radius:999px;background:#ffffff1f;transition:opacity .35s,transform .35s}
+      #brkTipTx.sw{opacity:0;transform:translateY(8px)}
+      .brkRow{grid-area:row;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:clamp(2px,1.5cqh,10px)}
+      #brkTmw{display:flex;align-items:center;gap:7px;font-size:.9rem;color:#ffffffcc;background:#00000040;padding:8px 14px;border-radius:999px}
+      #brkTmw i{width:8px;height:8px;border-radius:50%;background:#ff6b6b;animation:blink 1.4s infinite}
+      @keyframes blink{50%{opacity:.25}}
+      #brkTm{font:700 1.05rem ui-monospace,Menlo,monospace;color:#fff}
+      #brkEnd{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:11px 20px;border-radius:999px;font-size:1rem;background:linear-gradient(135deg,var(--ac),#8b7bff);color:#fff;box-shadow:0 10px 28px #8b7bff66;animation:endp 2.4s ease-in-out infinite}
+      #brkEnd svg{width:18px;height:18px;fill:currentColor}
+      @keyframes endp{50%{box-shadow:0 10px 34px #ff8a66aa}}
+      @container (max-height:300px){
+        .bc{padding-top:42px;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"cup h" "cup t" "cup row";justify-items:start;text-align:left;align-items:center;column-gap:clamp(12px,4cqw,28px)}
+        #brkTipw,#brkSub{display:none}
+        .cupw{width:clamp(64px,36cqh,110px)}
+        .brkRow{justify-content:flex-start;gap:8px}
+        #brkTmw{padding:6px 10px;font-size:.8rem}
+        #brkEnd{min-height:40px;padding:8px 14px;font-size:.9rem}
+        #brkH{font-size:clamp(1.1rem,11cqh,2rem)}
+      }
     </style>
   </head>
   <body>
@@ -1108,7 +1188,13 @@
           <button id="jn" class="cta">Join the room</button>
           <p class="msg" role="status"></p>
         </div>
-        <div style="text-align: right; margin-top: 14px">
+        <div class="foot">
+          <details id="net">
+            <summary>Mobile data not connecting?</summary>
+            <p class="h">Add free relay credentials (make a free account at dashboard.metered.ca, create an app, generate a credential). Saved on this device only. Do this on the phone.</p>
+            <input id="tu" class="txt" placeholder="Relay username" autocomplete="off" autocapitalize="off" spellcheck="false" />
+            <input id="tc" class="txt" type="password" placeholder="Relay password" autocomplete="off" />
+          </details>
           <button
             class="ghost"
             id="over"
@@ -1153,8 +1239,26 @@
               <button id="fs" aria-label="Full screen"></button>
             </div>
           </div>
-          <div id="brkOv" hidden role="status"><svg viewBox="0 0 120 110" aria-hidden="true"><path class="stm" d="M42 40q-8-10 0-18q8-8 0-16"/><path class="stm" d="M60 40q-8-10 0-18q8-8 0-16"/><path class="stm" d="M78 40q-8-10 0-18q8-8 0-16"/><path d="M26 52h68v22a26 26 0 01-26 26h-16a26 26 0 01-26-26z" fill="url(#gP)"/><path d="M94 58h6a12 12 0 010 24h-8" fill="none" stroke="url(#gP)" stroke-width="7" stroke-linecap="round"/></svg><h2>Time for a break</h2><p id="brkTxt"></p><div id="brkTm"></div><button id="brkEnd">End break</button></div>
+          <div id="brkOv" hidden role="status">
+            <div class="bgx" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div id="brkPts" aria-hidden="true"></div>
+            <div class="bc">
+              <div class="cupw" aria-hidden="true"><div class="halo"></div>
+                <svg viewBox="0 0 140 130"><path class="stm" d="M52 44q-9-11 0-20q9-9 0-18"/><path class="stm" d="M70 44q-9-11 0-20q9-9 0-18"/><path class="stm" d="M88 44q-9-11 0-20q9-9 0-18"/><path d="M30 56h80v26a34 34 0 01-34 34h-12a34 34 0 01-34-34z" fill="url(#gP)"/><path d="M110 64h8a14 14 0 010 28h-10" fill="none" stroke="url(#gP)" stroke-width="8" stroke-linecap="round"/><ellipse cx="70" cy="56" rx="40" ry="8" fill="#5b2a1d" stroke="#ffd9c9" stroke-width="3"/><ellipse cx="70" cy="122" rx="52" ry="7" fill="#ffffff2a"/></svg>
+                <span class="hrt">&#9829;</span>
+              </div>
+              <h2 id="brkH">Time for a break</h2>
+              <p id="brkTxt"></p>
+              <p id="brkSub">The movie is paused for both of you</p>
+              <div id="brkTipw"><span id="brkTipTx"></span></div>
+              <div class="brkRow">
+                <div id="brkTmw"><i></i>Break time <b id="brkTm">0:00</b></div>
+                <button id="brkEnd"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>End break</button>
+              </div>
+            </div>
+          </div>
           <div id="toasts" role="status" aria-live="polite"></div>
+          <div id="ctoasts" aria-live="polite"></div>
           <div id="ask" hidden>
             <p id="askt"></p>
             <div class="row">
@@ -1174,7 +1278,7 @@
           <div class="row">
             <button class="ghost" id="chg">Change video</button>
             <button class="ghost" id="brkBtn">Take a break</button>
-            <button class="ghost" id="lv">Leave</button>
+            <button class="ghost" id="lv" aria-label="Leave the room" title="Leave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></button>
           </div>
         </div>
         <div class="pn" id="logbox">
@@ -1204,7 +1308,42 @@
     <script>
       const $ = (id) => document.getElementById(id),
         v = $("v");
-      let onBreak = false, brkT0 = 0, brkTimer, hb, discT, lastSeen = 0, everConn = false;
+      // ---- Connection relay (TURN) ----
+      // Phones on mobile data and strict Wi-Fi often can't connect directly.
+      // Get free credentials at https://dashboard.metered.ca/signup (create an app,
+      // generate a credential) and paste the username and password here.
+      const TURN = { username: "", credential: "" };
+      const iceServers = () => {
+        const l = [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" },
+          { urls: "stun:stun.relay.metered.ca:80" },
+          {
+            urls: [
+              "turn:eu-0.turn.peerjs.com:3478",
+              "turn:us-0.turn.peerjs.com:3478",
+              "turn:eu-0.turn.peerjs.com:3478?transport=tcp",
+              "turn:us-0.turn.peerjs.com:3478?transport=tcp",
+            ],
+            username: "peerjs",
+            credential: "peerjsp",
+          },
+        ];
+        if (TURN.username && TURN.credential)
+          l.push({
+            urls: [
+              "turn:standard.relay.metered.ca:80",
+              "turn:standard.relay.metered.ca:80?transport=tcp",
+              "turn:standard.relay.metered.ca:443",
+              "turns:standard.relay.metered.ca:443?transport=tcp",
+            ],
+            username: TURN.username,
+            credential: TURN.credential,
+          });
+        return l;
+      };
+      let relay = false, relayT, rsid = "", rq = [], rseq = 0, rin = { s: "", i: 0 };
+      let onBreak = false, brkT0 = 0, brkTimer, brkTip, hb, discT, lastSeen = 0, everConn = false;
       let pc,
         dc,
         role = "host",
@@ -1354,23 +1493,27 @@
         l.scrollTop = l.scrollHeight;
       }
       function addChat(n, x, me) {
-        const l = $("log"),
-          e = l.querySelector(".empty");
+        const l = $("log"), e = l.querySelector(".empty");
         if (e) e.remove();
-        const d = document.createElement("div");
-        d.className = "ev chat" + (me ? " me" : "");
+        const r = document.createElement("div");
+        r.className = "cm " + (me ? "me" : "them");
+        const b = document.createElement("div");
+        b.className = "bub";
+        if (!me) { const nm = document.createElement("b"); nm.textContent = n; b.append(nm); }
+        const tx = document.createElement("span"); tx.textContent = x;
         const ts = document.createElement("time");
-        ts.textContent = new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        const sp = document.createElement("span"),
-          b = document.createElement("b");
-        b.textContent = (me ? "You" : n) + ": ";
-        sp.append(b, document.createTextNode(x));
-        d.append(ts, sp);
-        l.appendChild(d);
+        ts.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        b.append(tx, ts); r.appendChild(b); l.appendChild(r);
         l.scrollTop = l.scrollHeight;
+      }
+      function chatToast(n, x) {
+        const c = $("ctoasts");
+        while (c.children.length >= 3) c.firstChild.remove();
+        const d = document.createElement("div"); d.className = "ct";
+        const av = document.createElement("i"); av.textContent = (n || "?").trim().charAt(0).toUpperCase();
+        const bx = document.createElement("div"), nm = document.createElement("b"), tx = document.createElement("span");
+        nm.textContent = n; tx.textContent = x; bx.append(nm, tx); d.append(av, bx); c.appendChild(d);
+        setTimeout(() => { d.classList.add("out"); setTimeout(() => d.remove(), 350); }, 5500);
       }
       function sendChat() {
         const i = $("ci"),
@@ -1620,7 +1763,8 @@
       };
 
       function reset() {
-        clearInterval(hb); clearTimeout(discT); clearInterval(brkTimer);
+        clearInterval(hb); clearTimeout(discT); clearInterval(brkTimer); clearInterval(brkTip);
+        $("ctoasts").replaceChildren(); $("stage").classList.remove("theater", "rot"); try { screen.orientation.unlock(); } catch {}
         onBreak = false; everConn = false;
         $("brkOv").hidden = true; $("brkBtn").textContent = "Take a break";
         document.documentElement.classList.remove("lite", "inroom");
@@ -1702,9 +1846,88 @@
         st("Your partner left the room.");
         who();
       }
+      function enterRoom(viaRelay) {
+            everConn = true;
+            document.documentElement.classList.add("lite", "inroom");
+            addLog(viaRelay ? "Connected through relay" : "Connected", "ok");
+            $("roomv").classList.remove("gone");
+            $("roomv").animate(
+              [
+                { opacity: 0, transform: "translateY(18px)" },
+                { opacity: 1, transform: "none" },
+              ],
+              { duration: 500, easing: "ease-out" },
+            );
+            scrollTo({ top: 0, behavior: "smooth" });
+            $("rx").hidden = false;
+            poke();
+            for (let i = 0; i < 4; i++)
+              setTimeout(() => floatRx("party", ""), i * 250);
+            if (!viaRelay) tune();
+            $("setup").hidden = true;
+            if (room && !viaRelay) {
+              room.leave().catch(() => {});
+              room = null;
+            }
+            st(
+              mode === "sync"
+                ? "Connected. Press play and you both stay in sync."
+                : "Connected.",
+            );
+            who();
+            if (viaRelay)
+              st("Connected through the relay. Press play and you both stay in sync. Expect a small delay.");
+      }
+      // ---- Relay fallback: carries play/pause/chat through the room when a direct link is impossible ----
+      function relaySend(str) {
+        rq.push({ i: ++rseq, m: str });
+        while (rq.length > 1 && (rq.length > 6 || JSON.stringify(rq).length > 2800)) rq.shift();
+        if (room) room.presence({ q: { s: rsid, l: rq.slice() } }).catch(() => {});
+      }
+      function relayRecv() {
+        if (!relay || !room) return;
+        const p = room.peers().find((x) => !x.isMe && x.presence && x.presence.q);
+        const q = p && p.presence.q;
+        if (!q || !Array.isArray(q.l)) return;
+        if (q.s !== rin.s) rin = { s: q.s, i: 0 };
+        for (const it of q.l) {
+          if (it && typeof it.m === "string" && it.i > rin.i) {
+            rin.i = it.i;
+            try { Promise.resolve(dc && dc.onmessage && dc.onmessage({ data: it.m })).catch(() => {}); } catch {}
+          }
+        }
+      }
+      function startRelay() {
+        if (relay || everConn || !room || mode !== "sync" || roomNS === peerNS) return false;
+        relay = true;
+        clearTimeout(relayT);
+        rsid = Math.random().toString(36).slice(2, 8);
+        if (pc) pc.onconnectionstatechange = null;
+        if (dc) dc.onclose = dc.onmessage = dc.onopen = null;
+        try { pc && pc.close(); } catch {}
+        dc = { readyState: "open", send: relaySend, close() {} };
+        wire();
+        room.presence({ rl: 1, o: null, a: null, q: { s: rsid, l: [] } }).catch(() => {});
+        room.onPeers((ch) => {
+          if (ch.left.some((x) => !x.isMe)) peerLeft();
+          relayRecv();
+        });
+        enterRoom(true);
+        dc.onopen();
+        relayRecv();
+        return true;
+      }
+      const armRelay = () => {
+        clearTimeout(relayT);
+        if (mode === "sync") relayT = setTimeout(startRelay, 12000);
+      };
+      const watchRelay = () =>
+        room.onPeers((ch) => {
+          if (!relay && !everConn && ch.peers.some((x) => !x.isMe && x.presence && x.presence.rl)) startRelay();
+        });
       function newPC() {
         pc = new RTCPeerConnection({
-          iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+          iceServers: iceServers(),
         });
         inc = [];
         gotAns = false;
@@ -1719,39 +1942,16 @@
               who();
               return;
             }
-            everConn = true;
-            document.documentElement.classList.add("lite", "inroom");
-            addLog("Connected", "ok");
-            $("roomv").classList.remove("gone");
-            $("roomv").animate(
-              [
-                { opacity: 0, transform: "translateY(18px)" },
-                { opacity: 1, transform: "none" },
-              ],
-              { duration: 500, easing: "ease-out" },
-            );
-            scrollTo({ top: 0, behavior: "smooth" });
-            $("rx").hidden = false;
-            poke();
-            for (let i = 0; i < 4; i++)
-              setTimeout(() => floatRx("party", ""), i * 250);
-            tune();
-            $("setup").hidden = true;
-            if (room) {
-              room.leave().catch(() => {});
-              room = null;
-            }
-            st(
-              mode === "sync"
-                ? "Connected. Press play and you both stay in sync."
-                : "Connected.",
-            );
-            who();
+            enterRoom(false);
           }
           if (s === "failed") {
             if (everConn) peerLeft();
-            else {
-              st("Connection failed. Strict networks can block direct connections. Leave and try again.");
+            else if (!startRelay()) {
+              st(
+                mode === "stream"
+                  ? "Connection failed. Stream mode needs a direct connection, which your networks block. Go back and choose Sync mode, it works over mobile data."
+                  : "Connection failed. Your networks blocked the connection. Leave and try again.",
+              );
               toast("Connection failed", "warn");
             }
           }
@@ -1848,7 +2048,7 @@
           if (m.t === "chat") {
             const x = String(m.x || "").slice(0, 300);
             addChat(n, x, false);
-            toast(n + ": " + x, "chat", true);
+            chatToast(n, x);
             return;
           }
           if (m.t === "rx") {
@@ -1983,6 +2183,7 @@
           await pc.setRemoteDescription(o.d);
           route();
           st("Connecting…");
+          armRelay();
         } catch {
           gotAns = false;
           st("Could not read your partner's reply. Cancel and try again.");
@@ -2099,19 +2300,45 @@
         st("Connecting…");
       }
 
+      const TIPS = ["Grab a snack", "Stretch your legs", "Sip some water", "Rest your eyes", "Back soon, together"];
       function paintBreak() {
-        $("brkTm").textContent = "Break time " + fmt((Date.now() - brkT0) / 1000);
+        $("brkTm").textContent = fmt((Date.now() - brkT0) / 1000);
+      }
+      function buildBreakFx(by) {
+        const h = $("brkH"); h.replaceChildren();
+        let k = 0;
+        "Time for a break".split(" ").forEach((w, wi, a) => {
+          const ws = document.createElement("span"); ws.className = "w";
+          [...w].forEach((c) => { const sp = document.createElement("span"); sp.textContent = c; sp.style.setProperty("--i", k++); ws.appendChild(sp); });
+          h.appendChild(ws);
+          if (wi < a.length - 1) h.append(" ");
+        });
+        $("brkTxt").textContent = by + " started a break";
+        const pts = $("brkPts"); pts.replaceChildren();
+        const H = Math.max($("brkOv").clientHeight, 200), ch = ["\u2665", "\u2726", "\u2022", "\u2727", "\u2665"];
+        for (let i = 0; i < 16; i++) {
+          const q = document.createElement("i");
+          q.dataset.c = ch[i % ch.length];
+          q.style.cssText = "--x:" + Math.random() * 100 + "%;--s:" + (10 + Math.random() * 16) + "px;--d:" + (6 + Math.random() * 6) + "s;--dl:" + -Math.random() * 8 + "s;--h:" + H + "px;--dx:" + (Math.random() * 60 - 30) + "px";
+          pts.appendChild(q);
+        }
+        let ti = 0; const tp = $("brkTipTx"); tp.textContent = TIPS[0]; tp.classList.remove("sw");
+        brkTip = setInterval(() => {
+          tp.classList.add("sw");
+          setTimeout(() => { ti = (ti + 1) % TIPS.length; tp.textContent = TIPS[ti]; tp.classList.remove("sw"); }, 350);
+        }, 3500);
       }
       function setBreak(on, by, fromPartner) {
         if (on === onBreak) return;
         onBreak = on;
-        clearInterval(brkTimer);
+        clearInterval(brkTimer); clearInterval(brkTip);
         $("brkOv").hidden = !on;
         $("brkBtn").textContent = on ? "End break" : "Take a break";
         if (on) {
           busy = true; v.pause(); setTimeout(() => (busy = false), 500);
           brkT0 = Date.now(); paintBreak(); brkTimer = setInterval(paintBreak, 1000);
-          $("brkTxt").textContent = by + " started a break. The movie stays paused until someone ends it.";
+          buildBreakFx(by);
+          for (let i = 0; i < 4; i++) setTimeout(() => floatRx("party", ""), i * 250);
         }
         toast(by + (on ? " started a break" : " ended the break"), "info");
         if (!fromPartner) send({ t: "brk", on, n: myName() });
@@ -2235,17 +2462,36 @@
         );
 
       const stage = $("stage");
+      const coarse = () => matchMedia("(pointer:coarse)").matches;
+      const portrait = () => innerHeight > innerWidth;
+      async function landscape() {
+        try { await screen.orientation.lock("landscape"); return true; } catch { return false; }
+      }
       function fs() {
         if (document.fullscreenElement || stage.classList.contains("theater")) {
           document.fullscreenElement && document.exitFullscreen();
-          stage.classList.remove("theater");
+          stage.classList.remove("theater", "rot");
+          try { screen.orientation.unlock(); } catch {}
           return;
         }
-        const r = stage.requestFullscreen
-          ? stage.requestFullscreen()
-          : Promise.reject();
-        r.catch(() => stage.classList.add("theater"));
+        const r = stage.requestFullscreen ? stage.requestFullscreen() : Promise.reject();
+        r.then(async () => {
+          if (await landscape()) return;
+          if (coarse() && portrait()) {
+            try { await document.exitFullscreen(); } catch {}
+            stage.classList.add("theater", "rot");
+          }
+        }).catch(() => {
+          stage.classList.add("theater");
+          if (coarse() && portrait()) stage.classList.add("rot");
+        });
       }
+      const syncRot = () => stage.classList.contains("theater") && stage.classList.toggle("rot", coarse() && portrait());
+      addEventListener("resize", syncRot);
+      addEventListener("orientationchange", () => setTimeout(syncRot, 200));
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement && !stage.classList.contains("theater")) { try { screen.orientation.unlock(); } catch {} }
+      });
       $("fs").onclick = fs;
       let ct;
       v.onclick = () => {
@@ -2272,7 +2518,7 @@
         stage.addEventListener(ev, poke, { passive: true }),
       );
       addEventListener("keydown", (e) => {
-        if (e.key === "Escape") stage.classList.remove("theater");
+        if (e.key === "Escape") stage.classList.remove("theater", "rot");
         const tg = e.target.tagName;
         if (/TEXTAREA|INPUT/.test(tg)) return;
         if (e.key === "f") fs();
@@ -2302,6 +2548,19 @@
           i.dispatchEvent(new Event("change"));
         });
       });
+      try {
+        const t = JSON.parse(localStorage.getItem("wt-turn") || "{}");
+        if (t.u) TURN.username = t.u;
+        if (t.c) TURN.credential = t.c;
+      } catch {}
+      $("tu").value = TURN.username;
+      $("tc").value = TURN.credential;
+      $("tu").oninput = $("tc").oninput = () => {
+        TURN.username = $("tu").value.trim();
+        TURN.credential = $("tc").value.trim();
+        try { localStorage.setItem("wt-turn", JSON.stringify({ u: TURN.username, c: TURN.credential })); } catch {}
+      };
+      if (TURN.username) $("net").open = false;
       addEventListener("pagehide", () => send({ t: "bye" }));
     </script>
   </body>
