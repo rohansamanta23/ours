@@ -1082,6 +1082,35 @@
         #brkEnd{min-height:40px;padding:8px 14px;font-size:.9rem}
         #brkH{font-size:clamp(1.1rem,11cqh,2rem)}
       }
+      /* right panel: status + buttons on top, then chat */
+      #roomv:not(.gone){grid-template-rows:minmax(0,1fr)}
+      #roomv:not(.gone) #logbox{grid-row:1}
+      #roomv:not(.gone) #logbox #bar{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;gap:8px;padding:0 0 10px;margin:0 0 10px;border-bottom:1px solid var(--bd)}
+      #roomv:not(.gone) #logbox #who{font-size:.98rem}
+      #roomv:not(.gone) #logbox #st{font-size:.78rem}
+      #roomv:not(.gone) #logbox #bar .row{display:flex;flex-wrap:nowrap;gap:8px;justify-content:stretch}
+      #roomv:not(.gone) #logbox #bar .row button{flex:1;min-width:0;padding:9px 8px;font-size:.85rem;white-space:nowrap}
+      #roomv:not(.gone) #logbox #bar .row #lv{flex:none;min-width:46px}
+      .pl.off{color:#e5484d}
+      @media (max-width:800px){
+        #roomv:not(.gone){grid-template-rows:auto minmax(0,1fr)}
+        #roomv:not(.gone) #logbox{grid-column:1;grid-row:2}
+      }
+      /* partner left: important red alert */
+      #goneb{position:absolute;left:50%;top:50%;z-index:10;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;max-width:min(380px,88%);padding:12px 12px 12px 12px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#e5484d,#b4232a);box-shadow:0 14px 40px #e5484d88,inset 0 0 0 1px #ffffff30;animation:gonein .45s cubic-bezier(.2,.9,.3,1.3)}
+      @keyframes gonein{from{opacity:0;transform:translate(-50%,-44%) scale(.85)}}
+      #goneb .gi{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#ffffff28;animation:gp 1.8s ease-out infinite}
+      @keyframes gp{0%{box-shadow:0 0 0 0 #ffffff66}100%{box-shadow:0 0 0 14px #fff0}}
+      #goneb .gi svg{width:20px;height:20px}
+      #goneb .gt{display:flex;flex-direction:column;min-width:0}
+      #goneb b{font-size:1.05rem;line-height:1.2}
+      #goneb .gs{font-size:.8rem;opacity:.92}
+      #goneb button{flex:none;width:28px;height:28px;padding:0;border-radius:50%;display:grid;place-items:center;background:#ffffff26;color:#fff;font-size:1.1rem;line-height:1}
+      #log .ev.bad{color:#e5484d;font-weight:700;font-size:.8rem}
+      #log .ev.bad::before{background:#e5484d}
+      #log .ev.bad time{font-weight:500}
+      #goneb{width:max-content;max-width:min(380px,92%)}
+      @media (max-width:560px){#goneb{gap:10px;padding:10px}#goneb .gi{width:32px;height:32px}#goneb b{font-size:.95rem}#goneb .gs{font-size:.75rem}}
     </style>
   </head>
   <body>
@@ -1259,6 +1288,7 @@
           </div>
           <div id="toasts" role="status" aria-live="polite"></div>
           <div id="ctoasts" aria-live="polite"></div>
+          <div id="goneb" hidden role="alert"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></div><div class="gt"><b id="goneT"></b><span class="gs" id="goneS"></span></div><button id="goneX" aria-label="Dismiss">&times;</button></div>
           <div id="ask" hidden>
             <p id="askt"></p>
             <div class="row">
@@ -1270,6 +1300,7 @@
           <div id="fx" aria-hidden="true"></div>
         </div>
         <input type="file" id="cf" accept="video/*,.mkv" hidden />
+        <div class="pn" id="logbox">
         <div id="bar">
           <div>
             <div id="who">Not connected</div>
@@ -1281,7 +1312,6 @@
             <button class="ghost" id="lv" aria-label="Leave the room" title="Leave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></button>
           </div>
         </div>
-        <div class="pn" id="logbox">
           <div class="lh">
             <b>Activity &amp; chat</b
             ><button class="ghost" id="clr">Clear</button>
@@ -1468,12 +1498,12 @@
         w.replaceChildren();
         if (!pc) { w.textContent = "Not connected"; return; }
         const on = !!peer && !gone,
-          part = (isOn, txt) => {
-            const sp = document.createElement("span"), d = document.createElement("i");
-            sp.className = "pl"; d.className = "dot" + (isOn ? " on" : "");
-            sp.append(d, txt); return sp;
-          };
-        w.append(part(true, "You: " + myName()), part(on, (peer ? "Partner: " + peer : "Partner") + " · " + (on ? "Online" : peer ? "Offline" : "Connecting…")));
+          sp = document.createElement("span"),
+          d = document.createElement("i");
+        sp.className = "pl" + (on ? "" : " off");
+        d.className = "dot" + (on ? " on" : "");
+        sp.append(d, (peer || "Partner") + " · " + (on ? "Online" : peer ? "Offline" : "Connecting…"));
+        w.append(sp);
       };
       function addLog(t, k) {
         const l = $("log"),
@@ -1764,7 +1794,7 @@
 
       function reset() {
         clearInterval(hb); clearTimeout(discT); clearInterval(brkTimer); clearInterval(brkTip);
-        $("ctoasts").replaceChildren(); $("stage").classList.remove("theater", "rot"); try { screen.orientation.unlock(); } catch {}
+        hideGone(); $("ctoasts").replaceChildren(); $("stage").classList.remove("theater", "rot"); try { screen.orientation.unlock(); } catch {}
         onBreak = false; everConn = false;
         $("brkOv").hidden = true; $("brkBtn").textContent = "Take a break";
         document.documentElement.classList.remove("lite", "inroom");
@@ -1833,7 +1863,14 @@
           }
         });
       }
-      function peerLeft() {
+      function showGone(n, sub) {
+        $("goneT").textContent = n + " left the room";
+        $("goneS").textContent = sub;
+        $("goneb").hidden = false;
+      }
+      function hideGone() { $("goneb").hidden = true; }
+      $("goneX").onclick = hideGone;
+      function peerLeft(why) {
         if (gone) return;
         gone = true;
         clearTimeout(discT);
@@ -1842,9 +1879,12 @@
         setTimeout(() => (busy = false), 500);
         lastP = true;
         ppIcon(true);
-        toast((peer || "Your partner") + " went offline. Video paused.", "warn");
+        const n = peer || "Your partner";
+        addLog(n + " left the room. Video paused.", "bad");
+        showGone(n, why === "bye" ? "Video paused" : "Connection lost. Video paused");
         st("Your partner left the room.");
         who();
+        try { navigator.vibrate && navigator.vibrate([150, 80, 150]); } catch {}
       }
       function enterRoom(viaRelay) {
             everConn = true;
@@ -1938,7 +1978,7 @@
           if (s === "connected") {
             clearTimeout(discT);
             if (everConn) {
-              if (gone) { gone = false; toast((peer || "Your partner") + " is back online", "ok"); }
+              if (gone) { gone = false; hideGone(); toast((peer || "Your partner") + " is back online", "ok"); }
               who();
               return;
             }
@@ -2020,7 +2060,7 @@
             n = peer || "Your partner";
           lastSeen = Date.now();
           if (m.t === "ping") {
-            if (gone) { gone = false; who(); toast(n + " is back online", "ok"); }
+            if (gone) { gone = false; hideGone(); who(); toast(n + " is back online", "ok"); }
             return;
           }
           if (m.t === "hi") {
@@ -2056,7 +2096,7 @@
             return;
           }
           if (m.t === "bye") {
-            peerLeft();
+            peerLeft("bye");
             return;
           }
           if (m.t === "brk") {
