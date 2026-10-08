@@ -1111,6 +1111,68 @@
       #log .ev.bad time{font-weight:500}
       #goneb{width:max-content;max-width:min(380px,92%)}
       @media (max-width:560px){#goneb{gap:10px;padding:10px}#goneb .gi{width:32px;height:32px}#goneb b{font-size:.95rem}#goneb .gs{font-size:.75rem}}
+      /* rejoin card, lucky code, buffering chip */
+      .rs{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:clamp(8px,1.6vh,14px);padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--ac) 12%,transparent);border:1px solid color-mix(in srgb,var(--ac) 35%,transparent)}
+      .rs>div:first-child{min-width:0}.rs b{display:block;font-size:.95rem}.rs span{display:block;color:var(--mu);font-size:.78rem;line-height:1.25}
+      .rsb{display:flex;gap:6px;flex:none}.rsb button{padding:8px 12px;font-size:.85rem}
+      @media (max-width:560px){.rs{padding:8px 10px}.rsb button{padding:7px 10px}}
+      .ticket.lucky{border-style:solid;border-color:#ff8aa8;background:linear-gradient(135deg,#ff8aa826,#8b7bff26);animation:luck 2.4s ease-in-out infinite}
+      .ticket.lucky .tl{color:#e83e6c;font-weight:700}
+      .ticket.lucky .code span{border-color:#ff8aa8}
+      @keyframes luck{0%,100%{box-shadow:0 0 18px #ff8aa855}50%{box-shadow:0 0 38px #8b7bff77}}
+      #bufc{position:absolute;left:50%;top:22%;transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:#0b0818e0;color:#fff;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px #0006;white-space:nowrap}
+      #bufc .sp{width:16px;height:16px;border-radius:50%;border:2.5px solid #ffffff44;border-top-color:#fff;animation:spin .8s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+      /* 3-2-1 countdown */
+      #cdOv{position:absolute;inset:0;z-index:8;display:grid;place-items:center;overflow:hidden;container-type:size;background:radial-gradient(circle,#000a,#000e)}
+      #cdOv>*{grid-area:1/1}
+      #cdOv[data-k="3"]{--c1:#ffd166;--c2:#ff7a5a}
+      #cdOv[data-k="2"]{--c1:#ff8aa8;--c2:#e83e6c}
+      #cdOv[data-k="1"]{--c1:#a89bff;--c2:#5b4be0}
+      #cdOv[data-k="GO"]{--c1:#7be0c3;--c2:#1f9d63}
+      .cdbg{justify-self:stretch;align-self:stretch;background:radial-gradient(circle at center,var(--c1),transparent 62%);opacity:0;animation:cdflash .9s ease-out}
+      @keyframes cdflash{0%{opacity:.75}100%{opacity:0}}
+      .cdring{width:clamp(110px,52cqmin,260px);height:auto;rotate:-90deg}
+      .cdring circle{fill:none;stroke:var(--c1);stroke-width:7;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:440;animation:cdring 1s linear forwards;filter:drop-shadow(0 0 8px var(--c1))}
+      @keyframes cdring{to{stroke-dashoffset:0}}
+      #cdNum{font:800 clamp(4rem,38cqmin,11rem)/1 "Bricolage Grotesque",system-ui,sans-serif;background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px var(--c1));animation:cdpop .9s cubic-bezier(.2,1.4,.4,1) both}
+      #cdOv[data-k="GO"] #cdNum{font-size:clamp(3.2rem,30cqmin,9rem)}
+      @keyframes cdpop{0%{transform:scale(2.4) rotate(-12deg);opacity:0}35%{transform:scale(.92) rotate(3deg);opacity:1}60%{transform:scale(1.06)}100%{transform:scale(1) rotate(0)}}
+      .cdshock{width:20cqmin;height:20cqmin;border-radius:50%;border:5px solid var(--c1);opacity:0;animation:cdshock .9s ease-out}
+      @keyframes cdshock{0%{transform:scale(.4);opacity:.9}100%{transform:scale(6);opacity:0}}
+      .cdsp i{position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:var(--c1);animation:cdspk .8s ease-out forwards}
+      @keyframes cdspk{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+      #cdSub{align-self:end;margin-bottom:6cqh;font-weight:700;color:#ffffffcc;font-size:clamp(.75rem,3cqmin,1rem);letter-spacing:.08em;text-transform:uppercase}
+      /* tic-tac-toe in the break screen */
+      #tttBtn{width:46px;height:46px;padding:0;border-radius:50%;display:grid;place-items:center;background:#ffffff1f;color:#fff}
+      #tttBtn svg{width:24px;height:24px}
+      #brkOv.gaming .bc{display:none}
+      #stage:has(#brkOv.gaming) #rx{display:none}
+      #ttt{position:relative;z-index:1;display:grid;place-items:center;max-width:100%;max-height:100%;padding:10px}
+      .tt{display:grid;justify-items:center;gap:clamp(8px,2cqh,16px);--bs:min(46cqh,70cqw,300px)}
+      #tttB{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:var(--bs)}
+      .cell{aspect-ratio:1;display:grid;place-items:center;padding:6px;border-radius:14px;background:#ffffff14;border:1.5px solid #ffffff26;color:#fff;transition:background .15s,box-shadow .2s}
+      .cell:not(:disabled):hover{background:#ffffff2e}
+      .cell:disabled{cursor:default;transform:none}
+      .cell svg{width:100%;height:100%}
+      .mk{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:drawm .35s ease-out forwards}
+      @keyframes drawm{to{stroke-dashoffset:0}}
+      .cell.win{background:#ffffff30;box-shadow:0 0 22px #ffd166aa;animation:winp .9s ease-in-out infinite}
+      @keyframes winp{50%{transform:scale(1.07)}}
+      .ti{display:grid;justify-items:center;gap:6px;text-align:center}
+      #tttS{font:800 clamp(1rem,5cqmin,1.5rem)/1.1 "Bricolage Grotesque",system-ui,sans-serif}
+      #tttS.won{color:#7be0c3}
+      #tttM{font-size:.8rem;color:#d9d4ff}
+      .trow{display:flex;gap:8px}
+      .trow button{padding:8px 14px;font-size:.85rem;color:#fff}
+      .trow .ghost{border-color:#ffffff40}
+      @container (max-height:300px){
+        .tl2{display:none}
+        #ttt{padding-top:10px}
+        .tt{grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:clamp(12px,4cqw,24px);--bs:min(80cqh,46cqw)}
+        .ti{justify-items:start;text-align:left}
+        #tttBtn{width:40px;height:40px}
+      }
     </style>
   </head>
   <body>
@@ -1148,6 +1210,7 @@
       </div>
 
       <section class="pn" id="setup">
+        <div class="rs" id="resume" hidden><div><b id="rsH">Rejoin your party?</b><span id="rsT"></span></div><div class="rsb"><button id="rsGo">Rejoin</button><button class="ghost" id="rsNo">Forget</button></div></div>
         <label class="k" for="nm" style="margin-top: 0">Your name</label>
         <input
           type="text"
@@ -1182,7 +1245,7 @@
           <button id="mk" class="cta">Create our room</button>
           <p class="msg" role="status"></p>
           <div id="hostRes" class="ticket" hidden>
-            <div class="tl">Room code</div>
+            <div class="tl" id="tl">Room code</div>
             <div class="code" id="short"></div>
             <div class="row">
               <button class="ghost" id="cp">Copy code</button
@@ -1209,10 +1272,10 @@
             type="text"
             id="codeIn"
             class="txt big"
-            placeholder="KMQTZ"
+            placeholder="KMQT"
             autocomplete="off"
             spellcheck="false"
-            maxlength="10"
+            maxlength="4"
           />
           <button id="jn" class="cta">Join the room</button>
           <p class="msg" role="status"></p>
@@ -1263,6 +1326,7 @@
                 aria-label="Volume"
               />
               <span id="tm">0:00 / 0:00</span><span class="sp"></span>
+              <button id="gcCd" aria-label="Start with a countdown" title="3-2-1 start"></button>
               <button id="gcBrk" aria-label="Take a break"></button>
               <button id="sp" aria-label="Playback speed">1&times;</button>
               <button id="fs" aria-label="Full screen"></button>
@@ -1271,6 +1335,12 @@
           <div id="brkOv" hidden role="status">
             <div class="bgx" aria-hidden="true"><i></i><i></i><i></i></div>
             <div id="brkPts" aria-hidden="true"></div>
+            <div id="ttt" hidden>
+              <div class="tt">
+                <div id="tttB" role="group" aria-label="Tic-tac-toe board"></div>
+                <div class="ti"><b id="tttS"></b><span id="tttM"></span><div class="trow"><button id="tttAgain" hidden>Play again</button><button class="ghost" id="tttX">Close</button></div></div>
+              </div>
+            </div>
             <div class="bc">
               <div class="cupw" aria-hidden="true"><div class="halo"></div>
                 <svg viewBox="0 0 140 130"><path class="stm" d="M52 44q-9-11 0-20q9-9 0-18"/><path class="stm" d="M70 44q-9-11 0-20q9-9 0-18"/><path class="stm" d="M88 44q-9-11 0-20q9-9 0-18"/><path d="M30 56h80v26a34 34 0 01-34 34h-12a34 34 0 01-34-34z" fill="url(#gP)"/><path d="M110 64h8a14 14 0 010 28h-10" fill="none" stroke="url(#gP)" stroke-width="8" stroke-linecap="round"/><ellipse cx="70" cy="56" rx="40" ry="8" fill="#5b2a1d" stroke="#ffd9c9" stroke-width="3"/><ellipse cx="70" cy="122" rx="52" ry="7" fill="#ffffff2a"/></svg>
@@ -1281,13 +1351,15 @@
               <p id="brkSub">The movie is paused for both of you</p>
               <div id="brkTipw"><span id="brkTipTx"></span></div>
               <div class="brkRow">
-                <div id="brkTmw"><i></i>Break time <b id="brkTm">0:00</b></div>
-                <button id="brkEnd"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>End break</button>
+                <div id="brkTmw"><i></i><span class="tl2">Break time </span><b id="brkTm">0:00</b></div>
+                <button id="brkEnd"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>End break</button><button id="tttBtn" aria-label="Play tic-tac-toe" title="Tic-tac-toe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><path d="M4.6 4.6l2.8 2.8M7.4 4.6L4.6 7.4"/><circle cx="12" cy="12" r="1.9"/><path d="M16.6 16.6l2.8 2.8M19.4 16.6l-2.8 2.8"/></svg></button>
               </div>
             </div>
           </div>
           <div id="toasts" role="status" aria-live="polite"></div>
           <div id="ctoasts" aria-live="polite"></div>
+          <div id="bufc" hidden role="status"><i class="sp"></i><span id="bufT"></span></div>
+          <div id="cdOv" hidden aria-hidden="true"><div class="cdbg"></div><div class="cdsp"></div><div class="cdshock"></div><svg class="cdring" viewBox="0 0 160 160"><circle cx="80" cy="80" r="70"/></svg><div id="cdNum">3</div><div id="cdSub"></div></div>
           <div id="goneb" hidden role="alert"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></div><div class="gt"><b id="goneT"></b><span class="gs" id="goneS"></span></div><button id="goneX" aria-label="Dismiss">&times;</button></div>
           <div id="ask" hidden>
             <p id="askt"></p>
@@ -1373,6 +1445,8 @@
         return l;
       };
       let relay = false, relayT, rsid = "", rq = [], rseq = 0, rin = { s: "", i: 0 };
+      let curCode = "", forceCode = null, rejoining = false, rejoinWait = false, rejoinTry = false, resumePos = 0, posT, saved = null, inSess = false, sessT, reconn = false, backFlag = false;
+      let myFile = { n: "", z: 0 }, bufMine = false, bufTheirs = false, bufResume = false, bufT, wl = null, cdActive = false, cdT, brkWas = false, tg = null, actx;
       let onBreak = false, brkT0 = 0, brkTimer, brkTip, hb, discT, lastSeen = 0, everConn = false;
       let pc,
         dc,
@@ -1496,7 +1570,7 @@
       const who = () => {
         const w = $("who");
         w.replaceChildren();
-        if (!pc) { w.textContent = "Not connected"; return; }
+        if (!pc && !reconn) { w.textContent = "Not connected"; return; }
         const on = !!peer && !gone,
           sp = document.createElement("span"),
           d = document.createElement("i");
@@ -1638,11 +1712,13 @@
         a.classList.toggle("on", on);
         b.classList.toggle("on", !on);
       };
+      const WORDS = ["LOVE", "KISS", "HUGS", "CUTE", "MINE", "DEAR", "BABE", "SOUL"];
+      const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
       const mkcode = () =>
-        Array.from(
-          crypto.getRandomValues(new Uint8Array(5)),
-          (b) => "ABCDEFGHJKMNPQRSTUVWXYZ"[b % 23],
-        ).join("");
+        rnd(12) === 0
+          ? WORDS[rnd(WORDS.length)]
+          : Array.from({ length: 4 }, () => "ABCDEFGHJKMNPQRSTUVWXYZ"[rnd(23)]).join("");
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       async function pack(o) {
         const s = new Blob([JSON.stringify(o)])
           .stream()
@@ -1691,7 +1767,9 @@
         if (f) {
           v.srcObject = null;
           v.src = URL.createObjectURL(f);
+          myFile = { n: f.name, z: f.size };
           thumb(f, lab.closest(".drop"));
+          if (rejoinWait) { rejoinWait = false; setTimeout(() => $("rsGo").onclick(), 60); }
         }
       };
       function thumb(f, box) {
@@ -1765,7 +1843,7 @@
         send({ t: "file", n: f.name, r: reply ? 1 : 0 });
         v.addEventListener(
           "loadedmetadata",
-          () => send({ t: "dur", d: v.duration }),
+          () => send({ t: "dur", d: v.duration, z: myFile.z }),
           { once: true },
         );
         if (reply) toast("You loaded " + f.name, "ok");
@@ -1793,6 +1871,13 @@
       };
 
       function reset() {
+        reconn = false; inSess = false; backFlag = false; rejoining = false; rejoinTry = false; rejoinWait = false; forceCode = null;
+        clearInterval(sessT); clearTimeout(posT); clearTimeout(relayT);
+        try { localStorage.removeItem("wt-sess"); } catch {}
+        saved = null; $("resume").hidden = true;
+        bufMine = bufTheirs = bufResume = false; hideBuf(); cancelCountdown(); tttEnd(true);
+        relay = false; rq = []; rseq = 0; rin = { s: "", i: 0 }; rsid = "";
+        if (wl) { wl.release().catch(() => {}); wl = null; }
         clearInterval(hb); clearTimeout(discT); clearInterval(brkTimer); clearInterval(brkTip);
         hideGone(); $("ctoasts").replaceChildren(); $("stage").classList.remove("theater", "rot"); try { screen.orientation.unlock(); } catch {}
         onBreak = false; everConn = false;
@@ -1803,7 +1888,7 @@
         if (pc) addLog("You left the room", "warn");
         if (dc && dc.readyState === "open") {
           try {
-            dc.send(JSON.stringify({ t: "bye" }));
+            dc.send(JSON.stringify({ t: "bye", x: 1 }));
           } catch {}
         }
         if (pc) {
@@ -1873,21 +1958,30 @@
       function peerLeft(why) {
         if (gone) return;
         gone = true;
+        backFlag = true;
         clearTimeout(discT);
         busy = true;
         v.pause();
         setTimeout(() => (busy = false), 500);
         lastP = true;
         ppIcon(true);
+        cancelCountdown(); bufTheirs = false; bufResume = false; hideBuf();
         const n = peer || "Your partner";
         addLog(n + " left the room. Video paused.", "bad");
-        showGone(n, why === "bye" ? "Video paused" : "Connection lost. Video paused");
+        showGone(n, why === "bye" || why === "left" ? "Video paused" : "Connection lost. Video paused");
         st("Your partner left the room.");
         who();
         try { navigator.vibrate && navigator.vibrate([150, 80, 150]); } catch {}
+        if (why !== "left" && inSess && !relay) autoReconnect();
       }
       function enterRoom(viaRelay) {
             everConn = true;
+            reconn = false; gone = false; hideGone(); inSess = true; saveSess();
+            clearInterval(sessT); sessT = setInterval(saveSess, 4000); keepAwake();
+            if (rejoining) {
+              clearTimeout(posT);
+              posT = setTimeout(() => { if (rejoining && role === "host" && mode === "sync" && resumePos > 1) v.currentTime = resumePos; rejoining = false; }, 3000);
+            }
             document.documentElement.classList.add("lite", "inroom");
             addLog(viaRelay ? "Connected through relay" : "Connected", "ok");
             $("roomv").classList.remove("gone");
@@ -1971,7 +2065,6 @@
         });
         inc = [];
         gotAns = false;
-        gone = false;
         pc.ontrack = (e) => inc.push(e);
         pc.onconnectionstatechange = () => {
           const s = pc.connectionState;
@@ -2029,7 +2122,8 @@
       };
       function wire() {
         dc.onopen = () => {
-          send({ t: "hi", n: myName(), d: v.duration || 0 });
+          clearInterval(tick);
+          send({ t: "hi", n: myName(), d: v.duration || 0, z: myFile.z });
           lastSeen = Date.now();
           clearInterval(hb);
           hb = setInterval(() => {
@@ -2060,31 +2154,43 @@
             n = peer || "Your partner";
           lastSeen = Date.now();
           if (m.t === "ping") {
-            if (gone) { gone = false; hideGone(); who(); toast(n + " is back online", "ok"); }
+            if (gone) { gone = false; backFlag = false; hideGone(); who(); toast(n + " is back online", "ok"); }
             return;
           }
           if (m.t === "hi") {
             peer = String(m.n || "Partner").slice(0, 20);
-            who();
-            gone = false;
-            toast(
-              role === "host"
-                ? peer + " joined the room"
-                : "You joined " + peer + "'s room",
-              "ok",
-            );
-            if (
-              mode === "sync" &&
-              m.d &&
-              v.duration &&
-              Math.abs(m.d - v.duration) > 1
-            )
-              toast(
-                "Your files have different lengths. Check you both picked the same one.",
-                "warn",
-              );
+            const returned = backFlag;
+            backFlag = false;
+            gone = false; hideGone(); who();
+            toast(returned ? peer + " is back" : role === "host" ? peer + " joined the room" : "You joined " + peer + "'s room", "ok");
+            checkSame(m);
+            if (returned && mode === "sync") send({ t: "pos", time: v.currentTime });
             return;
           }
+          if (m.t === "pos") {
+            clearTimeout(posT);
+            if (rejoining) {
+              rejoining = false;
+              if (typeof m.time === "number" && Math.abs(v.currentTime - m.time) > 1.5) { busy = true; v.currentTime = m.time; setTimeout(() => (busy = false), 700); }
+            }
+            return;
+          }
+          if (m.t === "buf") {
+            if (mode !== "sync") return;
+            if (m.on) {
+              bufTheirs = true;
+              if (!v.paused) { bufResume = true; busy = true; v.pause(); setTimeout(() => (busy = false), 500); }
+              if (typeof m.time === "number" && Math.abs(v.currentTime - m.time) > 0.3) { busy = true; v.currentTime = m.time; setTimeout(() => (busy = false), 700); }
+              showBuf(n + " is buffering…");
+            } else {
+              bufTheirs = false; hideBuf();
+              if (bufResume && !bufMine && !onBreak && !cdActive) { bufResume = false; busy = true; v.play().catch(() => {}); setTimeout(() => (busy = false), 500); }
+              else bufResume = false;
+            }
+            return;
+          }
+          if (m.t === "cd") { startCountdown(String(m.n || "Your partner").slice(0, 20), true); return; }
+          if (m.t === "g") { tttMsg(m); return; }
           if (m.t === "chat") {
             const x = String(m.x || "").slice(0, 300);
             addChat(n, x, false);
@@ -2096,7 +2202,7 @@
             return;
           }
           if (m.t === "bye") {
-            peerLeft("bye");
+            peerLeft(m.x ? "left" : "bye");
             return;
           }
           if (m.t === "brk") {
@@ -2121,16 +2227,7 @@
             return;
           }
           if (m.t === "dur") {
-            if (
-              mode === "sync" &&
-              m.d &&
-              v.duration &&
-              Math.abs(m.d - v.duration) > 1
-            )
-              toast(
-                "The two videos have different lengths. Check you both picked the same file.",
-                "warn",
-              );
+            checkSame(m);
             return;
           }
           if (m.t === "cmd" && role === "host" && mode === "stream") {
@@ -2229,50 +2326,39 @@
           st("Could not read your partner's reply. Cancel and try again.");
         }
       }
-      async function mkGo() {
-        if (!v.src) {
-          st("Choose a video file first.");
-          return;
-        }
-        await waitRoom();
-        if (!roomNS) {
-          st(
-            "Room codes are not available on this page. Open the downloaded copy of the page, or both sign in to Claude on the published one.",
-          );
-          return;
-        }
+      async function hostCore(code, startAt) {
         newPC();
         dc = pc.createDataChannel("sync");
         wire();
         if (mode === "stream") {
-          try {
-            await v.play();
-            v.pause();
-            v.currentTime = 0;
-          } catch {}
-          const s = v.captureStream ? v.captureStream() : v.mozCaptureStream();
-          if (!s.getTracks().length) {
-            st(
-              "Could not capture this video. Try Sync mode or an MP4 (H.264) file.",
-            );
-            return;
-          }
-          for (const t of s.getTracks()) {
-            if (t.kind === "video") t.contentHint = "detail";
-            pc.addTrack(t, s);
-          }
+          try { await v.play(); v.pause(); v.currentTime = startAt || 0; } catch {}
+          const sm = v.captureStream ? v.captureStream() : v.mozCaptureStream();
+          if (!sm.getTracks().length) throw new Error("Could not capture this video. Try Sync mode or an MP4 (H.264) file.");
+          for (const t of sm.getTracks()) { if (t.kind === "video") t.contentHint = "detail"; pc.addTrack(t, sm); }
         }
         await pc.setLocalDescription(await pc.createOffer());
-        st("Preparing your room…");
         await ice();
         const off = await pack({ d: pc.localDescription, m: mode });
-        const code = mkcode();
+        curCode = code;
         room = await roomNS.join("wp-" + code.toLowerCase());
         await room.presence({ o: off });
         room.onPeers((ch) => {
           const p = ch.peers.find((x) => !x.isMe && x.presence && x.presence.a);
           if (p) applyAnswer(p.presence.a);
         });
+      }
+      async function mkGo() {
+        if (!v.src) { st("Choose a video file first."); return; }
+        await waitRoom();
+        if (!roomNS) {
+          st("Room codes are not available on this page. Open the downloaded copy of the page, or both sign in to Claude on the published one.");
+          return;
+        }
+        st("Preparing your room…");
+        const code = forceCode || mkcode();
+        forceCode = null;
+        await hostCore(code, rejoining ? resumePos : 0);
+        const lucky = WORDS.includes(code);
         $("short").replaceChildren(
           ...[...code].map((c, i) => {
             const e = document.createElement("span");
@@ -2281,55 +2367,47 @@
             return e;
           }),
         );
+        $("tl").textContent = lucky ? "A lucky room code" : "Room code";
+        $("hostRes").classList.toggle("lucky", lucky);
         $("hostRes").hidden = false;
         $("mk").hidden = true;
         st("Room ready. Share the code " + code + ".");
       }
       async function jnGo() {
         const raw = $("codeIn").value.trim();
-        if (!raw) {
-          st("Enter the room code first.");
-          return;
-        }
+        if (!raw) { st("Enter the room code first."); return; }
         await waitRoom();
         if (!roomNS) {
-          st(
-            "Room codes are not available on this page. Ask the host to open the downloaded copy with you.",
-          );
+          st("Room codes are not available on this page. Ask the host to open the downloaded copy with you.");
           return;
         }
-        room = await roomNS.join(
-          "wp-" + raw.toLowerCase().replace(/[^a-z]/g, ""),
-        );
-        st("Looking for the room…");
+        const code = raw.toLowerCase().replace(/[^a-z]/g, "");
+        curCode = code.toUpperCase();
+        room = await roomNS.join("wp-" + code);
+        st(rejoinTry ? "Waiting for the room to come back…" : "Looking for the room…");
         const off = await new Promise((res, rej) => {
           const find = () => {
-            const p =
-              room &&
-              room.peers().find((x) => !x.isMe && x.presence && x.presence.o);
+            if (relay) { res(null); return; }
+            const ps = room ? room.peers().filter((x) => !x.isMe && x.presence) : [];
+            const p = ps.find((x) => x.presence.o);
             if (p) res(p.presence.o);
+            else if (ps.some((x) => x.presence.rl)) {
+              if (!v.src) { rej(new Error("Choose the same video file first, then join again.")); return; }
+              mode = "sync";
+              if (startRelay()) res(null);
+            }
           };
           find();
           room.onPeers(find);
-          setTimeout(
-            () =>
-              rej(
-                new Error(
-                  "No room found for that code. Check it and try again.",
-                ),
-              ),
-            10000,
-          );
+          setTimeout(() => rej(new Error("No room found for that code. Check it and try again.")), rejoinTry ? 90000 : 10000);
         });
+        rejoinTry = false;
+        if (!off) return;
         const o = await unpack(off);
         mode = o.m;
-        if (mode === "sync" && !v.src)
-          throw new Error("Choose the same video file first, then join again.");
+        if (mode === "sync" && !v.src) throw new Error("Choose the same video file first, then join again.");
         newPC();
-        pc.ondatachannel = (e) => {
-          dc = e.channel;
-          wire();
-        };
+        pc.ondatachannel = (e) => { dc = e.channel; wire(); };
         await pc.setRemoteDescription(o.d);
         route();
         if (mode === "stream") $("gDrop").hidden = true;
@@ -2338,6 +2416,7 @@
         await ice();
         await room.presence({ a: await pack({ d: pc.localDescription }) });
         st("Connecting…");
+        armRelay();
       }
 
       const TIPS = ["Grab a snack", "Stretch your legs", "Sip some water", "Rest your eyes", "Back soon, together"];
@@ -2375,13 +2454,16 @@
         $("brkOv").hidden = !on;
         $("brkBtn").textContent = on ? "End break" : "Take a break";
         if (on) {
+          brkWas = remote() ? !lastP : !v.paused;
+          cancelCountdown();
           busy = true; v.pause(); setTimeout(() => (busy = false), 500);
           brkT0 = Date.now(); paintBreak(); brkTimer = setInterval(paintBreak, 1000);
           buildBreakFx(by);
           for (let i = 0; i < 4; i++) setTimeout(() => floatRx("party", ""), i * 250);
-        }
+        } else tttEnd(true);
         toast(by + (on ? " started a break" : " ended the break"), "info");
         if (!fromPartner) send({ t: "brk", on, n: myName() });
+        if (!on && !fromPartner && brkWas) startCountdown("You", false);
       }
       $("brkBtn").onclick = $("gcBrk").onclick = $("brkEnd").onclick = () => setBreak(!onBreak, "You", false);
       const cmd = (a, time) => {
@@ -2404,6 +2486,8 @@
       $("fs").innerHTML = ICON.fs;
       ICON.cup = '<svg viewBox="0 0 24 24"><path d="M4 8h13v6a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
       $("gcBrk").innerHTML = ICON.cup;
+      ICON.cd = '<svg viewBox="0 0 24 24"><path d="M9 2h6v2H9zM12 6a8 8 0 100 16 8 8 0 000-16zm0 3v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      $("gcCd").innerHTML = ICON.cd;
       v.addEventListener("play", () => !remote() && ppIcon(false));
       v.addEventListener("pause", () => !remote() && ppIcon(true));
       const pFill = () => {
@@ -2423,7 +2507,7 @@
       v.addEventListener("timeupdate", upd);
       v.addEventListener("loadedmetadata", upd);
       $("pp").onclick = () =>
-        onBreak ? 0 : remote()
+        onBreak || cdActive ? 0 : wantCd() ? startCountdown("You", false) : remote()
           ? cmd(lastP ? "play" : "pause")
           : v.paused
             ? v.play()
@@ -2601,7 +2685,225 @@
         try { localStorage.setItem("wt-turn", JSON.stringify({ u: TURN.username, c: TURN.credential })); } catch {}
       };
       if (TURN.username) $("net").open = false;
-      addEventListener("pagehide", () => send({ t: "bye" }));
+
+      // ---------- same-file warning ----------
+      function checkSame(m) {
+        if (mode !== "sync") return;
+        const sz = m.z && myFile.z && m.z !== myFile.z, dd = m.d && v.duration && Math.abs(m.d - v.duration) > 1;
+        if (sz || dd) toast("Your videos look different (" + (sz ? "file sizes" : "lengths") + " don't match). Check you both picked the same file.", "warn");
+      }
+      // ---------- keep the screen awake ----------
+      async function keepAwake() {
+        try {
+          if ("wakeLock" in navigator && !wl && document.visibilityState === "visible") {
+            wl = await navigator.wakeLock.request("screen");
+            wl.addEventListener("release", () => { wl = null; });
+          }
+        } catch {}
+      }
+      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && inSess) keepAwake(); });
+      // ---------- buffering-aware sync ----------
+      function showBuf(t) { $("bufT").textContent = t; $("bufc").hidden = false; }
+      function hideBuf() { $("bufc").hidden = true; }
+      v.addEventListener("waiting", () => {
+        if (mode !== "sync" || !dc || dc.readyState !== "open" || bufMine || bufTheirs || onBreak || cdActive) return;
+        clearTimeout(bufT);
+        bufT = setTimeout(() => {
+          if (v.paused || v.readyState >= 3 || bufMine) return;
+          bufMine = true;
+          send({ t: "buf", on: 1, time: v.currentTime });
+          showBuf("Buffering… " + (peer || "your partner") + " will wait");
+        }, 700);
+      });
+      const bufOk = () => { clearTimeout(bufT); if (bufMine) { bufMine = false; send({ t: "buf", on: 0 }); hideBuf(); } };
+      v.addEventListener("playing", bufOk);
+      v.addEventListener("canplay", bufOk);
+      // ---------- rejoin after a refresh / dropped connection ----------
+      function saveSess() {
+        try { localStorage.setItem("wt-sess", JSON.stringify({ r: role, m: mode, c: curCode, ts: Date.now(), pos: v.currentTime || 0, fn: myFile.n, fz: myFile.z })); } catch {}
+      }
+      function readSess() {
+        try { const x = JSON.parse(localStorage.getItem("wt-sess") || "null"); if (x && x.c && Date.now() - x.ts < 4 * 3600e3) return x; } catch {}
+        return null;
+      }
+      function dropConn() {
+        clearInterval(tick); clearTimeout(relayT);
+        if (pc) pc.onconnectionstatechange = null;
+        if (dc) dc.onclose = dc.onmessage = dc.onopen = null;
+        try { pc && pc.close(); } catch {}
+        pc = dc = null; inc = []; gotAns = false;
+        relay = false; rq = []; rseq = 0; rin = { s: "", i: 0 }; rsid = "";
+        if (room) { room.leave().catch(() => {}); room = null; }
+      }
+      async function hostLoop() {
+        while (reconn && !everConn) {
+          dropConn();
+          await sleep(1000);
+          try { await hostCore(curCode, v.currentTime); } catch { await sleep(3000); continue; }
+          for (let i = 0; i < 600 && reconn && !everConn && !(pc && pc.connectionState === "failed"); i++) await sleep(500);
+        }
+      }
+      async function guestLoop() {
+        $("codeIn").value = curCode;
+        while (reconn && !everConn) {
+          let ok = false;
+          try { await jnGo(); ok = true; } catch {}
+          if (ok) for (let i = 0; i < 30 && reconn && !everConn; i++) await sleep(500);
+          if (reconn && !everConn) { dropConn(); await sleep(ok ? 1000 : 2500); }
+        }
+      }
+      function autoReconnect() {
+        if (reconn || relay || !inSess || !roomNS) return;
+        reconn = true; everConn = false;
+        st("Waiting for " + (peer || "your partner") + " to come back…");
+        setTimeout(() => { if (reconn) (role === "host" ? hostLoop() : guestLoop()).catch(() => {}); }, 1500);
+      }
+      // ---------- 3-2-1 countdown ----------
+      function wantCd() {
+        return dc && dc.readyState === "open" && !gone && (remote() ? lastP && lastT < 2 : v.paused && v.currentTime < 2);
+      }
+      function beep(f, d) {
+        try {
+          actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+          const o = actx.createOscillator(), gn = actx.createGain(), t = actx.currentTime;
+          o.frequency.value = f; gn.gain.setValueAtTime(0.07, t); gn.gain.exponentialRampToValueAtTime(0.0001, t + d);
+          o.connect(gn); gn.connect(actx.destination); o.start(t); o.stop(t + d);
+        } catch {}
+      }
+      function retrig(el) { el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; }
+      function cdShow(k) {
+        const ov = $("cdOv");
+        ov.dataset.k = k;
+        $("cdNum").textContent = k;
+        ["cdNum"].forEach((i) => retrig($(i)));
+        ov.querySelectorAll(".cdbg,.cdshock,.cdring circle").forEach(retrig);
+        const sp = ov.querySelector(".cdsp"), R = Math.min(ov.clientWidth, ov.clientHeight) * 0.42;
+        sp.replaceChildren();
+        for (let i = 0; i < 14; i++) {
+          const a = (i / 14) * Math.PI * 2 + Math.random() * 0.3, d = document.createElement("i");
+          d.style.setProperty("--dx", Math.cos(a) * R * (0.6 + Math.random() * 0.5) + "px");
+          d.style.setProperty("--dy", Math.sin(a) * R * (0.6 + Math.random() * 0.5) + "px");
+          sp.appendChild(d);
+        }
+        const go = k === "GO";
+        beep(go ? 880 : 440, go ? 0.35 : 0.12);
+        try { navigator.vibrate && navigator.vibrate(go ? [40, 30, 80] : 25); } catch {}
+        if (go) {
+          if (mode === "sync" || role === "host") { busy = true; v.play().catch(() => {}); setTimeout(() => (busy = false), 500); }
+          for (let j = 0; j < 4; j++) setTimeout(() => floatRx("party", ""), j * 200);
+        }
+      }
+      function startCountdown(by, fromPartner) {
+        if (cdActive || gone || onBreak) return;
+        cdActive = true;
+        $("cdOv").hidden = false;
+        $("cdSub").textContent = (fromPartner ? by : "You") + " started the countdown";
+        if (!fromPartner) send({ t: "cd", n: myName() });
+        if (!remote()) { busy = true; v.pause(); setTimeout(() => (busy = false), 500); }
+        const seq = ["3", "2", "1", "GO"];
+        let i = 0;
+        const step = () => { cdShow(seq[i]); i++; cdT = setTimeout(i < seq.length ? step : cancelCountdown, i < seq.length ? 1000 : 1000); };
+        step();
+      }
+      function cancelCountdown() { clearTimeout(cdT); cdActive = false; $("cdOv").hidden = true; }
+      $("gcCd").onclick = () => { if (dc && dc.readyState === "open" && !gone && !onBreak) startCountdown("You", false); };
+      // ---------- tic-tac-toe (inside the break screen) ----------
+      const WINS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+      const MARK = {
+        X: '<svg viewBox="0 0 40 40"><path class="mk" pathLength="1" d="M10 10L30 30M30 10L10 30" stroke="#ffa27a"/></svg>',
+        O: '<svg viewBox="0 0 40 40"><circle class="mk" pathLength="1" cx="20" cy="20" r="11" stroke="#a89bff"/></svg>',
+      };
+      for (let i = 0; i < 9; i++) {
+        const c = document.createElement("button");
+        c.className = "cell"; c.setAttribute("aria-label", "Cell " + (i + 1)); c.onclick = () => tttMove(i);
+        $("tttB").appendChild(c);
+      }
+      function tttRender() {
+        const cells = $("tttB").children;
+        for (let i = 0; i < 9; i++) {
+          const c = cells[i], val = tg ? tg.b[i] : "";
+          if (c.dataset.v !== val) { c.dataset.v = val; c.innerHTML = val ? MARK[val] : ""; }
+          c.classList.toggle("win", !!(tg && tg.line && tg.line.includes(i)));
+          c.disabled = !tg || !!tg.over || !!val || tg.turn !== tg.me;
+        }
+        const S = $("tttS");
+        if (!tg) { S.textContent = ""; return; }
+        const nm = peer || "Partner";
+        S.textContent = tg.over ? (tg.over === "D" ? "It's a draw" : tg.over === tg.me ? "You win!" : nm + " wins") : tg.turn === tg.me ? "Your turn" : nm + "'s turn";
+        S.className = tg.over && tg.over === tg.me ? "won" : "";
+        $("tttM").textContent = "You are " + tg.me + " · " + nm + " is " + (tg.me === "X" ? "O" : "X");
+        $("tttAgain").hidden = !tg.over;
+      }
+      function tttPlace(i, sym) {
+        tg.b[i] = sym;
+        const w = WINS.find((l) => tg.b[l[0]] && tg.b[l[0]] === tg.b[l[1]] && tg.b[l[1]] === tg.b[l[2]]);
+        if (w) { tg.over = sym; tg.line = w; } else if (tg.b.every(Boolean)) tg.over = "D"; else tg.turn = sym === "X" ? "O" : "X";
+        tttRender();
+        if (tg.over && tg.over === tg.me) for (let j = 0; j < 4; j++) setTimeout(() => floatRx("party", ""), j * 200);
+      }
+      function tttMove(i) {
+        if (!tg || tg.over || tg.turn !== tg.me || tg.b[i]) return;
+        tttPlace(i, tg.me);
+        send({ t: "g", a: "mv", i });
+      }
+      function tttOpen(fromPartner) {
+        if (tg) return;
+        tg = { b: Array(9).fill(""), turn: "X", first: "X", me: fromPartner ? "O" : "X", over: null, line: null };
+        $("brkOv").classList.add("gaming");
+        $("ttt").hidden = false;
+        tttRender();
+        if (fromPartner) toast((peer || "Your partner") + " started tic-tac-toe", "info"); else send({ t: "g", a: "open" });
+      }
+      function tttEnd(fromPartner) {
+        const had = !!tg;
+        tg = null;
+        $("brkOv").classList.remove("gaming");
+        $("ttt").hidden = true;
+        tttRender();
+        if (had && !fromPartner) send({ t: "g", a: "end" });
+      }
+      function tttAgain(fromPartner) {
+        if (!tg) return;
+        tg.first = tg.first === "X" ? "O" : "X";
+        tg.b = Array(9).fill(""); tg.turn = tg.first; tg.over = null; tg.line = null;
+        tttRender();
+        if (!fromPartner) send({ t: "g", a: "again" });
+      }
+      function tttMsg(m) {
+        if (!onBreak) return;
+        if (m.a === "open") { tttOpen(true); return; }
+        if (!tg) return;
+        if (m.a === "mv") { const i = m.i | 0; if (i >= 0 && i < 9 && !tg.b[i] && !tg.over && tg.turn !== tg.me) tttPlace(i, tg.turn); }
+        else if (m.a === "again") tttAgain(true);
+        else if (m.a === "end") tttEnd(true);
+      }
+      $("tttBtn").onclick = () => (tg ? tttEnd(false) : tttOpen(false));
+      $("tttX").onclick = () => tttEnd(false);
+      $("tttAgain").onclick = () => tttAgain(false);
+      // ---------- resume card ----------
+      saved = readSess();
+      if (saved) {
+        $("rsH").textContent = "Rejoin " + saved.c + "?";
+        $("rsT").textContent = (saved.pos > 5 ? "You were at " + fmt(saved.pos) : "Pick up where you left off") + (saved.m === "sync" || saved.r === "host" ? " · choose the same video" : "");
+        $("resume").hidden = false;
+      }
+      $("rsNo").onclick = () => { $("resume").hidden = true; saved = null; try { localStorage.removeItem("wt-sess"); } catch {} };
+      $("rsGo").onclick = () => {
+        const sv = saved;
+        if (!sv) return;
+        rejoining = true; resumePos = sv.pos || 0;
+        if (sv.r === "host") { $("rHost").click(); $(sv.m === "stream" ? "mStream" : "mSync").click(); }
+        else { $("rGuest").click(); $("codeIn").value = sv.c; mode = sv.m; }
+        if ((sv.r === "host" || sv.m === "sync") && !v.src) {
+          rejoinWait = true; setTimeout(() => (rejoinWait = false), 120000);
+          $(sv.r === "host" ? "f" : "gf").click();
+          return;
+        }
+        $("resume").hidden = true;
+        if (sv.r === "host") { forceCode = sv.c; $("mk").click(); } else { rejoinTry = true; $("jn").click(); }
+      };
+
+      addEventListener("pagehide", () => { if (inSess) saveSess(); send({ t: "bye" }); });
     </script>
   </body>
 </html>
