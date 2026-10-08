@@ -1,290 +1,4963 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Watch Together</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&display=swap">
-<style>
-:root{--bg:#eceef5;--pn:#fff;--tx:#14172a;--mu:#5b6180;--ac:#3a4bd1;--ac2:#fff;--bd:#d5d9e8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1020;--pn:#181a31;--tx:#eceefc;--mu:#9a9fc4;--ac:#8c9bff;--ac2:#0f1020;--bd:#2b2e50}}
-:root[data-theme="dark"]{--bg:#0f1020;--pn:#181a31;--tx:#eceefc;--mu:#9a9fc4;--ac:#8c9bff;--ac2:#0f1020;--bd:#2b2e50}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:960px;margin:0 auto;padding:24px 16px 48px}
-h1{font:700 clamp(2rem,6vw,3.2rem)/1.05 "Bricolage Grotesque",system-ui,sans-serif;margin:8px 0 6px;letter-spacing:-.02em}
-.sub{color:var(--mu);margin:0 0 24px;max-width:60ch}
-.pn{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:16px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-button{font:inherit;font-weight:600;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
-button.alt{background:transparent;color:var(--tx);border:1px solid var(--bd)}
-button.on{outline:2px solid var(--ac);outline-offset:2px}
-button:disabled{opacity:.6;cursor:wait}
-button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-textarea,input[type=text]{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;font:12px/1.3 ui-monospace,Menlo,monospace}
-textarea{min-height:64px;resize:vertical}
-input.big{font:700 1.6rem/1.2 "Bricolage Grotesque",ui-monospace,monospace;letter-spacing:.25em;text-transform:uppercase;max-width:320px}
-label.k{display:block;font-weight:600;margin:12px 0 6px}
-label.c{display:flex;gap:8px;align-items:center;margin-top:12px}
-p.h{color:var(--mu);font-size:.9rem;margin:6px 0 0}
-.code{font:700 2.6rem/1.1 "Bricolage Grotesque",ui-monospace,monospace;letter-spacing:.3em}
-details{margin-top:14px}summary{cursor:pointer;font-weight:600}
-.msg{color:var(--ac);font-weight:600;margin:10px 0 0;min-height:1.4em}
-#stage{background:#000;border-radius:14px;overflow:hidden;position:relative}
-#stage.theater{position:fixed;inset:0;z-index:99;border-radius:0}
-#stage video{width:100%;height:auto;max-height:78vh;display:block;background:#000;object-fit:contain}
-#stage:fullscreen video,#stage.theater video{max-height:100vh;height:100%}
-#tap{position:absolute;inset:0;display:none;place-items:center;background:#000a;color:#fff;font-weight:700;font-size:1.3rem;cursor:pointer}
-#bar{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0 0;flex-wrap:wrap}
-#st{color:var(--mu);font-size:.9rem}
-[hidden]{display:none!important}
-</style></head>
-<body><main>
-<h1>Watch Together</h1>
-<p class="sub">Play your own video files in sync with a friend, straight between your browsers. Free, nothing is uploaded to any server.</p>
-
-<section class="pn" id="setup">
-  <div class="row">
-    <button id="rHost" class="on">I'm hosting</button>
-    <button id="rGuest" class="alt">I'm joining</button>
-    <button id="over" class="alt">Start over</button>
-  </div>
-
-  <div id="hostBox">
-    <label class="k">Video file</label>
-    <input type="file" id="f" accept="video/*,.mkv">
-    <label class="k">How should it play?</label>
-    <div class="row">
-      <button id="mSync" class="on">Sync (best quality)</button>
-      <button id="mStream" class="alt">Stream from me</button>
-    </div>
-    <p class="h" id="mHint">Sync: you both pick the same file. Only play, pause and seek travel over the connection, so you each see the original quality.</p>
-    <label class="c"><input type="checkbox" id="vc" checked> Voice chat (you can mute any time)</label>
-    <div style="margin-top:14px"><button id="mk">Create invite</button></div>
-    <p class="msg" role="status"></p>
-    <div id="hostRes" hidden>
-      <div id="shortBox" hidden>
-        <label class="k">Tell your friend this code</label>
-        <div class="code" id="short"></div>
-        <p class="h">They choose "I'm joining" and type it in. You connect automatically.</p>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <title>Ours</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f7f1e8;
+        --pn: #fffdf8cc;
+        --tx: #1f1a33;
+        --mu: #6f6a85;
+        --ac: #e8552f;
+        --ac2: #fff;
+        --bd: #e7dccd;
+        --g1: #ffd9c9;
+        --g2: #d9d4ff;
+        --ok: #1f9d63;
+        --wn: #c27a00;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #100d1c;
+          --pn: #1b1630cc;
+          --tx: #f3effc;
+          --mu: #a29cc0;
+          --ac: #ff8a66;
+          --ac2: #1a1020;
+          --bd: #2f2850;
+          --g1: #3b1d3f;
+          --g2: #1c2457;
+          --ok: #4fd49a;
+          --wn: #ffc15a;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #100d1c;
+        --pn: #1b1630cc;
+        --tx: #f3effc;
+        --mu: #a29cc0;
+        --ac: #ff8a66;
+        --ac2: #1a1020;
+        --bd: #2f2850;
+        --g1: #3b1d3f;
+        --g2: #1c2457;
+        --ok: #4fd49a;
+        --wn: #ffc15a;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--tx);
+        font:
+          16px/1.5 system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        background:
+          radial-gradient(900px 520px at 90% -10%, var(--g1), transparent 70%),
+          radial-gradient(800px 520px at -10% 5%, var(--g2), transparent 70%),
+          var(--bg);
+      }
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 28px 16px 56px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 20px;
+        box-shadow: 0 8px 22px #e8552f40;
+      }
+      h1 {
+        font:
+          800 clamp(1.8rem, 5vw, 2.6rem)/1 "Bricolage Grotesque",
+          system-ui,
+          sans-serif;
+        margin: 0;
+        letter-spacing: -0.03em;
+      }
+      .sub {
+        color: var(--mu);
+        margin: 0 0 22px;
+      }
+      .pn {
+        background: var(--pn);
+        border: 1px solid var(--bd);
+        border-radius: 22px;
+        padding: 22px;
+        margin-bottom: 18px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 18px 50px #0000001a;
+      }
+      label.k {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--mu);
+        margin: 18px 0 8px;
+      }
+      .txt {
+        width: 100%;
+        background: transparent;
+        color: var(--tx);
+        border: 1.5px solid var(--bd);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font: inherit;
+      }
+      .txt.big {
+        font:
+          800 1.8rem/1.2 "Bricolage Grotesque",
+          ui-monospace,
+          monospace;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      button {
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        border: 0;
+        border-radius: 14px;
+        padding: 11px 18px;
+        background: var(--ac);
+        color: var(--ac2);
+        transition:
+          transform 0.12s,
+          opacity 0.12s;
+      }
+      button:hover {
+        transform: translateY(-1px);
+      }
+      button:active {
+        transform: none;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      button.ghost {
+        background: transparent;
+        color: var(--tx);
+        border: 1.5px solid var(--bd);
+      }
+      .cta {
+        width: 100%;
+        margin-top: 18px;
+        padding: 14px;
+        font-size: 1.05rem;
+      }
+      .seg {
+        display: flex;
+        gap: 4px;
+        background: #8882;
+        padding: 4px;
+        border-radius: 16px;
+      }
+      .seg button {
+        flex: 1;
+        background: transparent;
+        color: var(--mu);
+        padding: 10px 8px;
+      }
+      .seg button.on {
+        background: var(--pn);
+        color: var(--tx);
+        box-shadow: 0 2px 10px #0002;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      summary:focus-visible,
+      .drop:focus-within {
+        outline: 2px solid var(--ac);
+        outline-offset: 2px;
+      }
+      .drop {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        align-items: center;
+        text-align: center;
+        border: 2px dashed var(--bd);
+        border-radius: 18px;
+        padding: 22px;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+      .drop:hover {
+        border-color: var(--ac);
+      }
+      .drop b {
+        font:
+          700 1.05rem "Bricolage Grotesque",
+          system-ui,
+          sans-serif;
+      }
+      .drop span {
+        color: var(--mu);
+        font-size: 0.9rem;
+        word-break: break-all;
+      }
+      p.h {
+        color: var(--mu);
+        font-size: 0.9rem;
+        margin: 8px 2px 0;
+      }
+      .msg {
+        color: var(--ac);
+        font-weight: 600;
+        margin: 12px 0 0;
+        min-height: 1.3em;
+        font-size: 0.95rem;
+      }
+      .ticket {
+        margin-top: 18px;
+        text-align: center;
+        border: 1.5px dashed var(--ac);
+        border-radius: 20px;
+        padding: 18px;
+        background: linear-gradient(180deg, #ffffff10, transparent);
+      }
+      .ticket .tl {
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mu);
+      }
+      .code {
+        font:
+          800 clamp(2.4rem, 9vw, 3.6rem)/1.1 "Bricolage Grotesque",
+          ui-monospace,
+          monospace;
+        letter-spacing: 0.28em;
+        margin: 6px 0 12px;
+        padding-left: 0.28em;
+      }
+      .wait {
+        color: var(--mu);
+        margin: 14px 0 0;
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+      }
+      .pulse {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--ok);
+        animation: pl 1.4s infinite;
+      }
+      @keyframes pl {
+        0% {
+          box-shadow: 0 0 0 0 #1f9d6370;
+        }
+        100% {
+          box-shadow: 0 0 0 12px #1f9d6300;
+        }
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      #stage {
+        background: #000;
+        border-radius: 22px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 24px 70px #0000004d;
+      }
+      #stage.theater {
+        position: fixed;
+        inset: 0;
+        z-index: 99;
+        border-radius: 0;
+      }
+      #stage video {
+        width: 100%;
+        height: auto;
+        max-height: 78vh;
+        display: block;
+        background: #000;
+        object-fit: contain;
+        min-height: 200px;
+      }
+      #stage:fullscreen video,
+      #stage.theater video {
+        max-height: 100vh;
+        height: 100%;
+      }
+      #gc {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 30px 14px 12px;
+        background: linear-gradient(transparent, #000d);
+        color: #fff;
+      }
+      #gc button {
+        padding: 7px 13px;
+        background: #ffffff2e;
+        color: #fff;
+      }
+      #gc {
+        transition: opacity 0.35s;
+      }
+      #stage.idle #gc {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #stage.idle,
+      #stage.idle video {
+        cursor: none;
+      }
+      #gc input {
+        flex: 1;
+        min-width: 60px;
+        accent-color: #fff;
+      }
+      #gc span {
+        font:
+          12px ui-monospace,
+          Menlo,
+          monospace;
+        min-width: 84px;
+        text-align: right;
+      }
+      #toasts {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 5;
+        pointer-events: none;
+        max-width: min(330px, 82%);
+      }
+      .toast {
+        background: #15102bef;
+        color: #fff;
+        border-left: 4px solid var(--ac);
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 0.92rem;
+        box-shadow: 0 10px 28px #0006;
+        animation: tin 0.28s ease;
+      }
+      .toast.ok {
+        border-color: var(--ok);
+      }
+      .toast.warn {
+        border-color: var(--wn);
+      }
+      .toast.out {
+        opacity: 0;
+        transform: translateX(14px);
+        transition: 0.3s;
+      }
+      @keyframes tin {
+        from {
+          opacity: 0;
+          transform: translateX(18px);
+        }
+      }
+      #rx {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 4;
+        display: flex;
+        gap: 2px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #150f2b33;
+        opacity: 0.3;
+        transition:
+          opacity 0.3s,
+          background 0.3s;
+      }
+      #rx button {
+        background: transparent;
+        padding: 3px;
+        border-radius: 10px;
+        line-height: 0;
+      }
+      #rx svg {
+        width: 26px;
+        height: 26px;
+        display: block;
+      }
+      #rx button:hover {
+        transform: scale(1.22);
+      }
+      #gc svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        display: block;
+      }
+      #gc button {
+        line-height: 1.1;
+      }
+      #gc #vl {
+        flex: none;
+        width: 72px;
+      }
+      @media (max-width: 560px) {
+        #gc #vl {
+          display: none;
+        }
+      }
+      #ask {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 6;
+        width: min(360px, 86%);
+        text-align: center;
+        background: #150f2bf2;
+        color: #fff;
+        border: 1px solid #ffffff22;
+        border-radius: 18px;
+        padding: 18px;
+      }
+      #ask p {
+        margin: 0 0 12px;
+      }
+      #ask .ghost {
+        color: #fff;
+        border-color: #ffffff40;
+      }
+      #stage.idle #rx {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #fx {
+        position: absolute;
+        right: 10px;
+        top: 70px;
+        bottom: 70px;
+        width: 90px;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 3;
+      }
+      .fl {
+        position: absolute;
+        bottom: 0;
+        left: var(--x);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: rise 3.4s ease-out forwards;
+      }
+      .fl span {
+        display: block;
+        width: 40px;
+        height: 40px;
+        filter: drop-shadow(0 4px 8px #0006);
+      }
+      .fl svg {
+        width: 100%;
+        height: 100%;
+      }
+      .fl small {
+        font-size: 0.65rem;
+        color: #fff;
+        background: #0005;
+        border-radius: 8px;
+        padding: 1px 7px;
+      }
+      @keyframes rise {
+        0% {
+          transform: translate(0, 0) scale(0.5);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.75;
+          transform: translate(0, -18px) scale(1.15);
+        }
+        100% {
+          transform: translate(var(--dx), calc(-1 * var(--h))) scale(1);
+          opacity: 0;
+        }
+      }
+      .cr {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .cr .txt {
+        flex: 1;
+        padding: 10px 12px;
+      }
+      .ev.chat {
+        border-color: #8b7bff;
+      }
+      .ev.chat.me {
+        background: #8b7bff22;
+      }
+      .toast.chat {
+        border-color: #8b7bff;
+      }
+      #bar {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 4px 0;
+        flex-wrap: wrap;
+      }
+      #who {
+        font-weight: 700;
+      }
+      #logbox {
+        margin-top: 18px;
+        padding: 16px 18px;
+      }
+      .lh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .lh button {
+        padding: 5px 12px;
+        font-size: 0.8rem;
+      }
+      #log {
+        max-height: 220px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .ev {
+        display: flex;
+        gap: 10px;
+        align-items: baseline;
+        padding: 8px 12px;
+        border-radius: 12px;
+        background: #8881;
+        border-left: 3px solid var(--ac);
+        font-size: 0.92rem;
+      }
+      .ev.ok {
+        border-color: var(--ok);
+      }
+      .ev.warn {
+        border-color: var(--wn);
+      }
+      .ev time {
+        color: var(--mu);
+        font:
+          12px ui-monospace,
+          Menlo,
+          monospace;
+        flex: none;
+      }
+      .empty {
+        color: var(--mu);
+        margin: 0;
+        font-size: 0.9rem;
+      }
+      #st {
+        color: var(--mu);
+        font-size: 0.88rem;
+      }
+      #bar button {
+        padding: 9px 14px;
+      }
+      .pn {
+        position: relative;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -20%;
+        z-index: -1;
+        pointer-events: none;
+        filter: blur(36px);
+        background:
+          radial-gradient(38% 38% at 20% 30%, var(--g1), transparent),
+          radial-gradient(34% 34% at 80% 20%, var(--g2), transparent),
+          radial-gradient(40% 40% at 60% 88%, #ff7a5a26, transparent);
+        animation: drift 22s ease-in-out infinite alternate;
+      }
+      @keyframes drift {
+        to {
+          transform: translate(4%, 3%) rotate(8deg) scale(1.1);
+        }
+      }
+      h1 {
+        background: linear-gradient(
+          90deg,
+          var(--tx),
+          var(--ac),
+          #8b7bff,
+          var(--tx)
+        );
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: shine 9s linear infinite;
+      }
+      @keyframes shine {
+        to {
+          background-position: -300% 0;
+        }
+      }
+      .logo {
+        animation: bob 4s ease-in-out infinite;
+      }
+      @keyframes bob {
+        50% {
+          transform: translateY(-3px) rotate(-5deg);
+        }
+      }
+      .pn,
+      #stage,
+      #bar,
+      #hostBox,
+      #guestBox {
+        animation: up 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+      .ev {
+        animation: up 0.3s both;
+      }
+      @keyframes up {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+      }
+      .cta {
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+        box-shadow: 0 10px 28px #e8552f40;
+      }
+      .cta:hover {
+        box-shadow: 0 14px 36px #8b7bff66;
+      }
+      .seg button {
+        transition:
+          background 0.2s,
+          color 0.2s,
+          box-shadow 0.2s;
+      }
+      #stage {
+        box-shadow:
+          0 24px 70px #0000004d,
+          0 0 90px color-mix(in srgb, var(--ac) 16%, transparent);
+      }
+      .drop {
+        position: relative;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          transform 0.2s;
+      }
+      .drop.over {
+        border-color: var(--ac);
+        transform: scale(1.015);
+      }
+      .drop .th {
+        width: 100%;
+        max-width: 300px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 10px 26px #0004;
+        animation: up 0.4s both;
+      }
+      .drop.ready {
+        border-style: solid;
+        border-color: var(--ok);
+        background: color-mix(in srgb, var(--ok) 11%, transparent);
+      }
+      .drop.ready b {
+        color: var(--ok);
+      }
+      .code {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        letter-spacing: 0;
+        padding: 0;
+      }
+      .code span {
+        display: inline-block;
+        min-width: 1.05em;
+        padding: 0 0.12em;
+        border: 1.5px solid var(--bd);
+        border-radius: 14px;
+        background: var(--bg);
+        animation: flip 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        animation-delay: calc(var(--i) * 90ms);
+      }
+      @keyframes flip {
+        from {
+          opacity: 0;
+          transform: rotateX(90deg) translateY(12px);
+        }
+      }
+      #rx:hover,
+      #rx:has(button:focus-visible) {
+        opacity: 1;
+        background: #150f2bcc;
+      }
+      .gone {
+        position: fixed;
+        left: -99999px;
+        top: 0;
+        width: min(940px, 92vw);
+        opacity: 0;
+        pointer-events: none;
+      }
+      #gc {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 36px 16px 12px;
+        background: linear-gradient(transparent, #000e);
+      }
+      #gc input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        height: 20px;
+        margin: 0;
+        cursor: pointer;
+        min-width: 0;
+      }
+      #gc input[type="range"]::-webkit-slider-runnable-track {
+        height: 5px;
+        border-radius: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--ac) var(--p, 0%),
+          #ffffff3a var(--p, 0%)
+        );
+      }
+      #gc input[type="range"]::-moz-range-track {
+        height: 5px;
+        border-radius: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--ac) var(--p, 0%),
+          #ffffff3a var(--p, 0%)
+        );
+      }
+      #gc input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: #fff;
+        margin-top: -5px;
+        box-shadow: 0 2px 8px #0008;
+        transition: transform 0.15s;
+      }
+      #gc input[type="range"]::-moz-range-thumb {
+        width: 15px;
+        height: 15px;
+        border: 0;
+        border-radius: 50%;
+        background: #fff;
+      }
+      #gc input[type="range"]:hover::-webkit-slider-thumb {
+        transform: scale(1.25);
+      }
+      .cb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .cb .sp {
+        flex: 1;
+      }
+      #gc button {
+        border-radius: 12px;
+        min-height: 36px;
+        min-width: 40px;
+        display: grid;
+        place-items: center;
+        font-size: 0.85rem;
+        touch-action: manipulation;
+      }
+      #gc #pp {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        padding: 0;
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+        color: #fff;
+      }
+      #gc #vl {
+        flex: none;
+        width: 80px;
+      }
+      #gc #tm {
+        min-width: 0;
+        text-align: left;
+        margin-left: 6px;
+        white-space: nowrap;
+      }
+      @media (max-width: 560px) {
+        main {
+          padding: 16px 12px 40px;
+        }
+        .pn {
+          padding: 16px;
+          border-radius: 18px;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+        #gc {
+          padding: 28px 10px 8px;
+        }
+        .cb {
+          gap: 4px;
+        }
+        #gc #vl {
+          display: none;
+        }
+        #gc #tm {
+          font-size: 11px;
+          margin-left: 2px;
+        }
+        #gc button {
+          padding: 6px 8px;
+          min-width: 36px;
+        }
+        #gc #bk,
+        #gc #fw {
+          font-size: 0.8rem;
+        }
+        #rx {
+          top: 8px;
+          left: 8px;
+          padding: 3px 6px;
+        }
+        #rx svg {
+          width: 22px;
+          height: 22px;
+        }
+        #toasts {
+          top: 8px;
+          right: 8px;
+          max-width: 76%;
+        }
+        .toast {
+          font-size: 0.85rem;
+          padding: 8px 11px;
+        }
+        #bar button {
+          flex: 1;
+        }
+        .code {
+          gap: 5px;
+        }
+        .ticket {
+          padding: 14px 10px;
+        }
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+      #who {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        align-items: center;
+      }
+      .pl {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #e5484d;
+        flex: none;
+      }
+      .dot.on {
+        background: var(--ok);
+        animation: pl 1.6s infinite;
+      }
+      html.lite body::before {
+        display: none;
+      }
+      html.lite h1,
+      html.lite .logo,
+      html.lite .pn,
+      html.lite #stage,
+      html.lite #bar,
+      html.lite .ev:not(.chat) {
+        animation: none;
+      }
+      html.lite .pn {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none;
+      }
+      html.lite #stage {
+        box-shadow: none;
+      }
+      #toasts,
+      #rx,
+      #fx {
+        z-index: 9;
+      }
+      :root {
+        --vh: calc(
+          100vh - env(safe-area-inset-top, 0px) -
+            env(safe-area-inset-bottom, 0px)
+        );
+      }
+      @supports (height: 100dvh) {
+        :root {
+          --vh: calc(
+            100dvh - env(safe-area-inset-top, 0px) -
+              env(safe-area-inset-bottom, 0px)
+          );
+        }
+      }
+      body {
+        min-height: var(--vh);
+      }
+      /* start screen: fits one screen */
+      html:not(.inroom) main {
+        min-height: var(--vh);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(10px, 2.4vh, 26px) 16px;
+      }
+      .brand {
+        margin-bottom: 4px;
+      }
+      html:not(.inroom) .sub {
+        margin-bottom: clamp(8px, 1.8vh, 16px);
+      }
+      .perks {
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 10px;
+      }
+      .perks li {
+        position: relative;
+        padding-left: 26px;
+      }
+      .perks li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.45em;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+      }
+      #setup {
+        margin-bottom: 0;
+        padding: clamp(14px, 2.6vh, 22px);
+      }
+      #setup label.k {
+        margin: clamp(8px, 1.8vh, 16px) 0 6px;
+      }
+      #setup > .seg {
+        margin-top: clamp(10px, 1.8vh, 16px) !important;
+      }
+      #setup .drop {
+        padding: clamp(10px, 2vh, 18px);
+      }
+      #setup .drop .th {
+        width: auto;
+        max-width: 100%;
+        max-height: clamp(70px, 14vh, 150px);
+        margin-bottom: 8px;
+      }
+      #setup .txt {
+        padding: clamp(9px, 1.5vh, 12px) 14px;
+      }
+      #setup .cta {
+        margin-top: clamp(10px, 2vh, 16px);
+        padding: clamp(11px, 1.8vh, 14px);
+      }
+      #setup .ticket {
+        margin-top: clamp(10px, 2vh, 16px);
+        padding: clamp(10px, 2vh, 16px);
+      }
+      #setup .code {
+        font-size: clamp(2rem, min(9vw, 7vh), 3.4rem);
+        margin: 4px 0 10px;
+      }
+      #setup .msg {
+        margin-top: 8px;
+      }
+      @media (max-height: 720px) {
+        html:not(.inroom) .sub,
+        #setup p.h {
+          display: none;
+        }
+      }
+      @media (min-width: 900px) {
+        html:not(.inroom) main {
+          max-width: 1060px;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(380px, 440px);
+          column-gap: clamp(28px, 5vw, 72px);
+          align-items: center;
+        }
+        .hero {
+          grid-column: 1;
+        }
+        #setup {
+          grid-column: 2;
+        }
+        html:not(.inroom) .brand h1 {
+          font-size: clamp(2.6rem, 5vw, 3.6rem);
+        }
+        html:not(.inroom) .sub {
+          font-size: 1.1rem;
+          max-width: 30em;
+        }
+        .perks {
+          display: grid;
+        }
+      }
+      /* party room: video, status and chat all in one screen, no page scroll */
+      html.inroom,
+      html.inroom body {
+        height: var(--vh);
+        overflow: hidden;
+      }
+      html.inroom main {
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      html.inroom .hero {
+        display: none;
+      }
+      #roomv:not(.gone) {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(280px, 28vw, 360px);
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 10px 12px;
+      }
+      #roomv:not(.gone) #stage {
+        grid-column: 1;
+        grid-row: 1;
+        min-height: 0;
+      }
+      #roomv:not(.gone) #stage video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        min-height: 0;
+      }
+      #roomv:not(.gone) #bar {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 0;
+      }
+      #roomv:not(.gone) #logbox {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        margin: 0;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      #roomv:not(.gone) .lh {
+        margin-bottom: 8px;
+      }
+      #roomv:not(.gone) #log {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+      }
+      #roomv:not(.gone) .cr {
+        margin-top: 10px;
+      }
+      @media (max-width: 800px) {
+        #roomv:not(.gone) {
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-rows: auto auto minmax(0, 1fr);
+        }
+        #roomv:not(.gone) #stage:not(.theater):not(:fullscreen) {
+          width: 100%;
+          aspect-ratio: 16/9;
+          max-height: 42dvh;
+        }
+        #roomv:not(.gone) #logbox {
+          grid-column: 1;
+          grid-row: 3;
+        }
+        html.inroom main {
+          padding: 8px 10px;
+        }
+      }
+      @media (max-width: 560px) {
+        #gc #mt {
+          display: none;
+        }
+        #gc button {
+          min-width: 34px;
+        }
+        #roomv:not(.gone) #bar {
+          gap: 8px;
+        }
+        #roomv:not(.gone) #who {
+          font-size: 0.9rem;
+          gap: 2px 12px;
+        }
+        #roomv:not(.gone) #bar button {
+          padding: 9px 6px;
+          font-size: 0.85rem;
+          white-space: nowrap;
+        }
+        .seg button {
+          padding: 10px 4px;
+          font-size: 0.9rem;
+        }
+      }
+      @media (max-width: 560px) and (max-height: 820px) {
+        html:not(.inroom) .sub,
+        #setup p.h {
+          display: none;
+        }
+      }
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: clamp(8px, 1.6vh, 14px);
+      }
+      #net {
+        flex: 1;
+        min-width: 0;
+        font-size: 0.88rem;
+        color: var(--mu);
+      }
+      #net summary {
+        cursor: pointer;
+        font-weight: 600;
+        padding: 7px 0;
+      }
+      #net .txt {
+        margin-top: 8px;
+      }
+      /* notifications: small, centered, minimal */
+      #toasts {
+        top: 10px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        align-items: center;
+        gap: 5px;
+        width: max-content;
+        max-width: min(440px, 92%);
+      }
+      .toast {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: #0b0818b8;
+        color: #ffffffe6;
+        border: 0;
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        box-shadow: none;
+        animation: tdn 0.25s ease;
+      }
+      .toast::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #8b7bff;
+        flex: none;
+      }
+      .toast.ok::before {
+        background: var(--ok);
+      }
+      .toast.warn::before {
+        background: var(--wn);
+      }
+      .toast.out {
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: 0.3s;
+      }
+      @keyframes tdn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+      }
+      @media (max-width: 800px) {
+        #toasts {
+          top: 54px;
+        }
+      }
+      #log .ev {
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        padding: 1px 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        font-size: 0.74rem;
+        color: var(--mu);
+        text-align: center;
+      }
+      #log .ev::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--ac);
+        flex: none;
+      }
+      #log .ev.ok::before {
+        background: var(--ok);
+      }
+      #log .ev.warn::before {
+        background: var(--wn);
+      }
+      #log .ev time {
+        font: inherit;
+        opacity: 0.7;
+      }
+      /* chat: bubbles on both sides */
+      #log {
+        gap: 4px;
+      }
+      .cm {
+        display: flex;
+        margin: 2px 0;
+      }
+      .cm.me {
+        justify-content: flex-end;
+      }
+      .cm.them {
+        justify-content: flex-start;
+      }
+      .bub {
+        max-width: 82%;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px 12px 6px;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        word-break: break-word;
+        animation: cmIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.25);
+      }
+      .cm.me .bub {
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+        color: #fff;
+        border-bottom-right-radius: 6px;
+        transform-origin: right bottom;
+      }
+      .cm.them .bub {
+        background: color-mix(in srgb, var(--tx) 9%, transparent);
+        border: 1px solid var(--bd);
+        border-bottom-left-radius: 6px;
+        transform-origin: left bottom;
+      }
+      .bub b {
+        font-size: 0.72rem;
+        color: #7a68f5;
+      }
+      .bub time {
+        align-self: flex-end;
+        font:
+          11px ui-monospace,
+          Menlo,
+          monospace;
+        opacity: 0.65;
+      }
+      @keyframes cmIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.92);
+        }
+      }
+      #ctoasts {
+        position: absolute;
+        left: 12px;
+        bottom: 86px;
+        z-index: 9;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        max-width: min(300px, 74%);
+        pointer-events: none;
+        transition: bottom 0.35s;
+      }
+      #stage.idle #ctoasts {
+        bottom: 16px;
+      }
+      .ct {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        transform-origin: left bottom;
+        animation: ctIn 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.25);
+      }
+      .ct i {
+        flex: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font: 700 0.8rem/1 system-ui;
+        font-style: normal;
+        color: #fff;
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+        box-shadow: 0 4px 12px #0005;
+      }
+      .ct > div {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        color: #1f1a33;
+        padding: 7px 12px 8px;
+        border-radius: 16px 16px 16px 5px;
+        box-shadow: 0 8px 24px #0007;
+        font-size: 0.9rem;
+        line-height: 1.3;
+        word-break: break-word;
+      }
+      .ct b {
+        font-size: 0.7rem;
+        color: #7a68f5;
+      }
+      .ct.out {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: 0.35s;
+      }
+      @keyframes ctIn {
+        from {
+          opacity: 0;
+          transform: translateX(-16px) scale(0.8);
+        }
+      }
+      /* leave */
+      #bar #lv {
+        background: #e5484d;
+        color: #fff;
+        border: 0;
+        min-width: 46px;
+        padding: 9px 14px;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 6px 16px #e5484d55;
+      }
+      #bar #lv:hover {
+        background: #d13a40;
+      }
+      #bar #lv svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+      /* phone fullscreen fallback: rotated landscape */
+      #stage.theater.rot {
+        inset: auto;
+        top: 0;
+        left: 0;
+        width: 100vh;
+        width: 100dvh;
+        height: 100vw;
+        transform-origin: 0 0;
+        transform: translateX(100vw) rotate(90deg);
+        animation: none;
+      }
+      /* break screen */
+      #brkOv {
+        position: absolute;
+        inset: 0;
+        z-index: 7;
+        overflow: hidden;
+        container-type: size;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        text-align: center;
+        background: #120d24;
+        animation: brkIn 0.6s both;
+      }
+      @keyframes brkIn {
+        from {
+          opacity: 0;
+          transform: scale(1.04);
+        }
+      }
+      .bgx {
+        position: absolute;
+        inset: 0;
+      }
+      .bgx i {
+        position: absolute;
+        width: 70cqmax;
+        height: 70cqmax;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.5;
+        will-change: transform;
+        animation: blob 14s ease-in-out infinite alternate;
+      }
+      .bgx i:nth-child(1) {
+        background: #e8552f;
+        left: -20%;
+        top: -30%;
+      }
+      .bgx i:nth-child(2) {
+        background: #8b7bff;
+        right: -25%;
+        bottom: -35%;
+        animation-duration: 17s;
+        animation-delay: -5s;
+      }
+      .bgx i:nth-child(3) {
+        background: #ff7aa8;
+        left: 30%;
+        top: 20%;
+        opacity: 0.28;
+        animation-delay: -9s;
+      }
+      @keyframes blob {
+        to {
+          transform: translate(12%, 10%) scale(1.15);
+        }
+      }
+      #brkPts {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      #brkPts i {
+        position: absolute;
+        left: var(--x);
+        bottom: -30px;
+        font-style: normal;
+        font-size: var(--s);
+        color: #ffffffb0;
+        animation: rise2 var(--d) linear var(--dl) infinite;
+      }
+      #brkPts i::before {
+        content: attr(data-c);
+      }
+      @keyframes rise2 {
+        0% {
+          transform: translate(0, 0) rotate(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.9;
+        }
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translate(var(--dx), calc(-1 * var(--h) - 40px))
+            rotate(40deg);
+          opacity: 0;
+        }
+      }
+      .bc {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        justify-items: center;
+        gap: clamp(4px, 1.4cqh, 10px);
+        padding: 10px;
+        max-width: 100%;
+        max-height: 100%;
+        grid-template-areas: "cup" "h" "t" "s" "tip" "row";
+      }
+      .cupw {
+        grid-area: cup;
+        position: relative;
+        width: clamp(72px, 32cqmin, 170px);
+      }
+      .cupw svg {
+        width: 100%;
+        overflow: visible;
+        display: block;
+        animation: cup 5s ease-in-out infinite;
+      }
+      @keyframes cup {
+        50% {
+          transform: translateY(-5px) rotate(-1.5deg);
+        }
+      }
+      .halo {
+        position: absolute;
+        inset: -25%;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffb38a66, transparent 65%);
+        animation: halo 3.2s ease-in-out infinite;
+      }
+      @keyframes halo {
+        50% {
+          transform: scale(1.18);
+          opacity: 0.6;
+        }
+      }
+      .stm {
+        fill: none;
+        stroke: #ffe3d6;
+        stroke-width: 5;
+        stroke-linecap: round;
+        opacity: 0;
+        animation: steam 3.2s ease-in-out infinite;
+      }
+      .stm:nth-of-type(2) {
+        animation-delay: 0.9s;
+      }
+      .stm:nth-of-type(3) {
+        animation-delay: 1.8s;
+      }
+      @keyframes steam {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scaleY(0.8);
+        }
+        40% {
+          opacity: 0.9;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-22px) scaleY(1.1);
+        }
+      }
+      .hrt {
+        position: absolute;
+        left: 50%;
+        top: 10%;
+        font-size: clamp(14px, 6cqmin, 28px);
+        color: #ff7aa8;
+        opacity: 0;
+        animation: hrt 3.6s ease-out 1s infinite;
+      }
+      @keyframes hrt {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, 10px) scale(0.4);
+        }
+        25% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-20%, -70px) scale(1.2);
+        }
+      }
+      #brkH {
+        grid-area: h;
+        margin: 0;
+        font:
+          800 clamp(1.25rem, 10cqmin, 3rem)/1.05 "Bricolage Grotesque",
+          system-ui,
+          sans-serif;
+        letter-spacing: -0.02em;
+        text-shadow: 0 4px 24px #ff8a6680;
+      }
+      #brkH .w {
+        display: inline-block;
+        white-space: nowrap;
+      }
+      #brkH .w span {
+        display: inline-block;
+        animation:
+          lt 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.3) backwards,
+          wave 3.4s ease-in-out infinite;
+        animation-delay: calc(var(--i) * 55ms), calc(1.2s + var(--i) * 110ms);
+      }
+      @keyframes lt {
+        from {
+          opacity: 0;
+          transform: translateY(26px) scale(0.5) rotate(-8deg);
+        }
+      }
+      @keyframes wave {
+        0%,
+        60%,
+        100% {
+          transform: none;
+        }
+        30% {
+          transform: translateY(-6px);
+        }
+      }
+      #brkTxt {
+        grid-area: t;
+        margin: 0;
+        font-weight: 700;
+        font-size: clamp(0.85rem, 3.2cqmin, 1.1rem);
+        color: #ffd9c9;
+      }
+      #brkSub {
+        grid-area: s;
+        margin: 0;
+        font-size: clamp(0.75rem, 2.8cqmin, 0.95rem);
+        color: #d9d4ff;
+        opacity: 0.85;
+      }
+      #brkTipw {
+        grid-area: tip;
+        min-height: 1.7em;
+        overflow: hidden;
+      }
+      #brkTipTx {
+        display: inline-block;
+        font-size: clamp(0.8rem, 3cqmin, 1rem);
+        padding: 3px 12px;
+        border-radius: 999px;
+        background: #ffffff1f;
+        transition:
+          opacity 0.35s,
+          transform 0.35s;
+      }
+      #brkTipTx.sw {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      .brkRow {
+        grid-area: row;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: clamp(2px, 1.5cqh, 10px);
+      }
+      #brkTmw {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.9rem;
+        color: #ffffffcc;
+        background: #00000040;
+        padding: 8px 14px;
+        border-radius: 999px;
+      }
+      #brkTmw i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ff6b6b;
+        animation: blink 1.4s infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0.25;
+        }
+      }
+      #brkTm {
+        font:
+          700 1.05rem ui-monospace,
+          Menlo,
+          monospace;
+        color: #fff;
+      }
+      #brkEnd {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 11px 20px;
+        border-radius: 999px;
+        font-size: 1rem;
+        background: linear-gradient(135deg, var(--ac), #8b7bff);
+        color: #fff;
+        box-shadow: 0 10px 28px #8b7bff66;
+        animation: endp 2.4s ease-in-out infinite;
+      }
+      #brkEnd svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+      @keyframes endp {
+        50% {
+          box-shadow: 0 10px 34px #ff8a66aa;
+        }
+      }
+      @container (max-height:300px) {
+        .bc {
+          padding-top: 42px;
+          grid-template-columns: auto minmax(0, 1fr);
+          grid-template-areas: "cup h" "cup t" "cup row";
+          justify-items: start;
+          text-align: left;
+          align-items: center;
+          column-gap: clamp(12px, 4cqw, 28px);
+        }
+        #brkTipw,
+        #brkSub {
+          display: none;
+        }
+        .cupw {
+          width: clamp(64px, 36cqh, 110px);
+        }
+        .brkRow {
+          justify-content: flex-start;
+          gap: 8px;
+        }
+        #brkTmw {
+          padding: 6px 10px;
+          font-size: 0.8rem;
+        }
+        #brkEnd {
+          min-height: 40px;
+          padding: 8px 14px;
+          font-size: 0.9rem;
+        }
+        #brkH {
+          font-size: clamp(1.1rem, 11cqh, 2rem);
+        }
+      }
+      /* right panel: status + buttons on top, then chat */
+      #roomv:not(.gone) {
+        grid-template-rows: minmax(0, 1fr);
+      }
+      #roomv:not(.gone) #logbox {
+        grid-row: 1;
+      }
+      #roomv:not(.gone) #logbox #bar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 8px;
+        padding: 0 0 10px;
+        margin: 0 0 10px;
+        border-bottom: 1px solid var(--bd);
+      }
+      #roomv:not(.gone) #logbox #who {
+        font-size: 0.98rem;
+      }
+      #roomv:not(.gone) #logbox #st {
+        font-size: 0.78rem;
+      }
+      #roomv:not(.gone) #logbox #bar .row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        justify-content: stretch;
+      }
+      #roomv:not(.gone) #logbox #bar .row button {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 8px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      #roomv:not(.gone) #logbox #bar .row #lv {
+        flex: none;
+        min-width: 46px;
+      }
+      .pl.off {
+        color: #e5484d;
+      }
+      @media (max-width: 800px) {
+        #roomv:not(.gone) {
+          grid-template-rows: auto minmax(0, 1fr);
+        }
+        #roomv:not(.gone) #logbox {
+          grid-column: 1;
+          grid-row: 2;
+        }
+      }
+      /* partner left: important red alert */
+      #goneb {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 10;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        max-width: min(380px, 88%);
+        padding: 12px 12px 12px 12px;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, #e5484d, #b4232a);
+        box-shadow:
+          0 14px 40px #e5484d88,
+          inset 0 0 0 1px #ffffff30;
+        animation: gonein 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+      }
+      @keyframes gonein {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -44%) scale(0.85);
+        }
+      }
+      #goneb .gi {
+        flex: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #ffffff28;
+        animation: gp 1.8s ease-out infinite;
+      }
+      @keyframes gp {
+        0% {
+          box-shadow: 0 0 0 0 #ffffff66;
+        }
+        100% {
+          box-shadow: 0 0 0 14px #fff0;
+        }
+      }
+      #goneb .gi svg {
+        width: 20px;
+        height: 20px;
+      }
+      #goneb .gt {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      #goneb b {
+        font-size: 1.05rem;
+        line-height: 1.2;
+      }
+      #goneb .gs {
+        font-size: 0.8rem;
+        opacity: 0.92;
+      }
+      #goneb button {
+        flex: none;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #ffffff26;
+        color: #fff;
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+      #log .ev.bad {
+        color: #e5484d;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+      #log .ev.bad::before {
+        background: #e5484d;
+      }
+      #log .ev.bad time {
+        font-weight: 500;
+      }
+      #goneb {
+        width: max-content;
+        max-width: min(380px, 92%);
+      }
+      @media (max-width: 560px) {
+        #goneb {
+          gap: 10px;
+          padding: 10px;
+        }
+        #goneb .gi {
+          width: 32px;
+          height: 32px;
+        }
+        #goneb b {
+          font-size: 0.95rem;
+        }
+        #goneb .gs {
+          font-size: 0.75rem;
+        }
+      }
+      /* rejoin card, lucky code, buffering chip */
+      .rs {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: clamp(8px, 1.6vh, 14px);
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: color-mix(in srgb, var(--ac) 12%, transparent);
+        border: 1px solid color-mix(in srgb, var(--ac) 35%, transparent);
+      }
+      .rs > div:first-child {
+        min-width: 0;
+      }
+      .rs b {
+        display: block;
+        font-size: 0.95rem;
+      }
+      .rs span {
+        display: block;
+        color: var(--mu);
+        font-size: 0.78rem;
+        line-height: 1.25;
+      }
+      .rsb {
+        display: flex;
+        gap: 6px;
+        flex: none;
+      }
+      .rsb button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+      @media (max-width: 560px) {
+        .rs {
+          padding: 8px 10px;
+        }
+        .rsb button {
+          padding: 7px 10px;
+        }
+      }
+      .ticket.lucky {
+        border-style: solid;
+        border-color: #ff8aa8;
+        background: linear-gradient(135deg, #ff8aa826, #8b7bff26);
+        animation: luck 2.4s ease-in-out infinite;
+      }
+      .ticket.lucky .tl {
+        color: #e83e6c;
+        font-weight: 700;
+      }
+      .ticket.lucky .code span {
+        border-color: #ff8aa8;
+      }
+      @keyframes luck {
+        0%,
+        100% {
+          box-shadow: 0 0 18px #ff8aa855;
+        }
+        50% {
+          box-shadow: 0 0 38px #8b7bff77;
+        }
+      }
+      #bufc {
+        position: absolute;
+        left: 50%;
+        top: 22%;
+        transform: translateX(-50%);
+        z-index: 8;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #0b0818e0;
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 8px 24px #0006;
+        white-space: nowrap;
+      }
+      #bufc .sp {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2.5px solid #ffffff44;
+        border-top-color: #fff;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      /* 3-2-1 countdown */
+      #cdOv {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        container-type: size;
+        background: radial-gradient(circle, #000a, #000e);
+      }
+      #cdOv > * {
+        grid-area: 1/1;
+      }
+      #cdOv[data-k="3"] {
+        --c1: #ffd166;
+        --c2: #ff7a5a;
+      }
+      #cdOv[data-k="2"] {
+        --c1: #ff8aa8;
+        --c2: #e83e6c;
+      }
+      #cdOv[data-k="1"] {
+        --c1: #a89bff;
+        --c2: #5b4be0;
+      }
+      #cdOv[data-k="GO"] {
+        --c1: #7be0c3;
+        --c2: #1f9d63;
+      }
+      .cdbg {
+        justify-self: stretch;
+        align-self: stretch;
+        background: radial-gradient(
+          circle at center,
+          var(--c1),
+          transparent 62%
+        );
+        opacity: 0;
+        animation: cdflash 0.9s ease-out;
+      }
+      @keyframes cdflash {
+        0% {
+          opacity: 0.75;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      .cdring {
+        width: clamp(110px, 52cqmin, 260px);
+        height: auto;
+        rotate: -90deg;
+      }
+      .cdring circle {
+        fill: none;
+        stroke: var(--c1);
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-dasharray: 440;
+        stroke-dashoffset: 440;
+        animation: cdring 1s linear forwards;
+        filter: drop-shadow(0 0 8px var(--c1));
+      }
+      @keyframes cdring {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      #cdNum {
+        font:
+          800 clamp(4rem, 38cqmin, 11rem)/1 "Bricolage Grotesque",
+          system-ui,
+          sans-serif;
+        background: linear-gradient(135deg, var(--c1), var(--c2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 6px 24px var(--c1));
+        animation: cdpop 0.9s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+      }
+      #cdOv[data-k="GO"] #cdNum {
+        font-size: clamp(3.2rem, 30cqmin, 9rem);
+      }
+      @keyframes cdpop {
+        0% {
+          transform: scale(2.4) rotate(-12deg);
+          opacity: 0;
+        }
+        35% {
+          transform: scale(0.92) rotate(3deg);
+          opacity: 1;
+        }
+        60% {
+          transform: scale(1.06);
+        }
+        100% {
+          transform: scale(1) rotate(0);
+        }
+      }
+      .cdshock {
+        width: 20cqmin;
+        height: 20cqmin;
+        border-radius: 50%;
+        border: 5px solid var(--c1);
+        opacity: 0;
+        animation: cdshock 0.9s ease-out;
+      }
+      @keyframes cdshock {
+        0% {
+          transform: scale(0.4);
+          opacity: 0.9;
+        }
+        100% {
+          transform: scale(6);
+          opacity: 0;
+        }
+      }
+      .cdsp i {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--c1);
+        animation: cdspk 0.8s ease-out forwards;
+      }
+      @keyframes cdspk {
+        to {
+          transform: translate(var(--dx), var(--dy)) scale(0.2);
+          opacity: 0;
+        }
+      }
+      #cdSub {
+        align-self: end;
+        margin-bottom: 6cqh;
+        font-weight: 700;
+        color: #ffffffcc;
+        font-size: clamp(0.75rem, 3cqmin, 1rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      /* tic-tac-toe in the break screen */
+      #tttBtn {
+        width: 46px;
+        height: 46px;
+        padding: 0;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #ffffff1f;
+        color: #fff;
+      }
+      #tttBtn svg {
+        width: 24px;
+        height: 24px;
+      }
+      #brkOv.gaming .bc {
+        display: none;
+      }
+      #stage:has(#brkOv.gaming) #rx {
+        display: none;
+      }
+      #ttt {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        max-width: 100%;
+        max-height: 100%;
+        padding: 10px;
+      }
+      .tt {
+        display: grid;
+        justify-items: center;
+        gap: clamp(8px, 2cqh, 16px);
+        --bs: min(46cqh, 70cqw, 300px);
+      }
+      #tttB {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        width: var(--bs);
+      }
+      .cell {
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        padding: 6px;
+        border-radius: 14px;
+        background: #ffffff14;
+        border: 1.5px solid #ffffff26;
+        color: #fff;
+        transition:
+          background 0.15s,
+          box-shadow 0.2s;
+      }
+      .cell:not(:disabled):hover {
+        background: #ffffff2e;
+      }
+      .cell:disabled {
+        cursor: default;
+        transform: none;
+      }
+      .cell svg {
+        width: 100%;
+        height: 100%;
+      }
+      .mk {
+        fill: none;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: drawm 0.35s ease-out forwards;
+      }
+      @keyframes drawm {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      .cell.win {
+        background: #ffffff30;
+        box-shadow: 0 0 22px #ffd166aa;
+        animation: winp 0.9s ease-in-out infinite;
+      }
+      @keyframes winp {
+        50% {
+          transform: scale(1.07);
+        }
+      }
+      .ti {
+        display: grid;
+        justify-items: center;
+        gap: 6px;
+        text-align: center;
+      }
+      #tttS {
+        font:
+          800 clamp(1rem, 5cqmin, 1.5rem)/1.1 "Bricolage Grotesque",
+          system-ui,
+          sans-serif;
+      }
+      #tttS.won {
+        color: #7be0c3;
+      }
+      #tttM {
+        font-size: 0.8rem;
+        color: #d9d4ff;
+      }
+      .trow {
+        display: flex;
+        gap: 8px;
+      }
+      .trow button {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        color: #fff;
+      }
+      .trow .ghost {
+        border-color: #ffffff40;
+      }
+      @container (max-height:300px) {
+        .tl2 {
+          display: none;
+        }
+        #ttt {
+          padding-top: 10px;
+        }
+        .tt {
+          grid-template-columns: auto minmax(0, 1fr);
+          align-items: center;
+          column-gap: clamp(12px, 4cqw, 24px);
+          --bs: min(80cqh, 46cqw);
+        }
+        .ti {
+          justify-items: start;
+          text-align: left;
+        }
+        #tttBtn {
+          width: 40px;
+          height: 40px;
+        }
+      }
+      /* icon buttons with hover notes */
+      #roomv:not(.gone) #logbox #bar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 10px;
+      }
+      #roomv:not(.gone) #logbox #bar > div:first-child {
+        min-width: 0;
+        flex: 1;
+      }
+      #roomv:not(.gone) #logbox #bar .row {
+        flex: none;
+        gap: 8px;
+      }
+      #roomv:not(.gone) #logbox #bar .row button.ib {
+        flex: none;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        position: relative;
+        font-size: 0;
+      }
+      .ib svg {
+        width: 22px;
+        height: 22px;
+        display: block;
+      }
+      #bar #lv svg {
+        width: 22px;
+        height: 22px;
+      }
+      .ib.on {
+        background: var(--ac);
+        color: var(--ac2);
+        border-color: transparent;
+      }
+      .ib[data-tip]::after {
+        content: attr(data-tip);
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 30;
+        white-space: nowrap;
+        padding: 5px 10px;
+        border-radius: 8px;
+        background: #1f1a33;
+        color: #fff;
+        font:
+          600 0.78rem/1.2 system-ui,
+          sans-serif;
+        opacity: 0;
+        transform: translateY(-4px);
+        pointer-events: none;
+        transition:
+          opacity 0.15s,
+          transform 0.15s;
+      }
+      .ib:hover::after,
+      .ib:focus-visible::after {
+        opacity: 1;
+        transform: none;
+      }
+      /* partner joined: green */
+      #joinb {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 10;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        max-width: min(380px, 92%);
+        padding: 12px;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, #27b36f, #137a4a);
+        box-shadow:
+          0 14px 40px #1f9d6388,
+          inset 0 0 0 1px #ffffff30;
+        animation: gonein 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+      }
+      #joinb .gi {
+        flex: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #ffffff28;
+        animation: gp 1.8s ease-out infinite;
+      }
+      #joinb .gi svg {
+        width: 20px;
+        height: 20px;
+      }
+      #joinb .gt {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      #joinb b {
+        font-size: 1.05rem;
+        line-height: 1.2;
+      }
+      #joinb .gs {
+        font-size: 0.8rem;
+        opacity: 0.92;
+      }
+      @media (max-width: 560px) {
+        #joinb {
+          gap: 10px;
+          padding: 10px;
+        }
+        #joinb .gi {
+          width: 32px;
+          height: 32px;
+        }
+        #joinb b {
+          font-size: 0.95rem;
+        }
+        #joinb .gs {
+          font-size: 0.75rem;
+        }
+      }
+      #log .ev.good {
+        color: var(--ok);
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+      #log .ev.good::before {
+        background: var(--ok);
+      }
+      #log .ev.good time {
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="gF" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffe48a" />
+          <stop offset="1" stop-color="#ff9f5a" />
+        </linearGradient>
+        <linearGradient id="gH" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff8aa8" />
+          <stop offset="1" stop-color="#e83e6c" />
+        </linearGradient>
+        <linearGradient id="gFi" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffd35c" />
+          <stop offset="1" stop-color="#f0452c" />
+        </linearGradient>
+        <linearGradient id="gP" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffd166" />
+          <stop offset="1" stop-color="#ff6f61" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <main>
+      <div class="hero">
+        <div class="brand">
+          <div class="logo">♥</div>
+          <h1>Ours</h1>
+        </div>
+        <p class="sub">
+          A little cinema for two. Press play together, even from different
+          cities. Free, private, nothing is uploaded.
+        </p>
+        <ul class="perks">
+          <li>Play, pause and seek stay in sync</li>
+          <li>Chat and reactions while you watch</li>
+          <li>Direct peer to peer, nothing is uploaded</li>
+        </ul>
       </div>
-      <details id="longBox"><summary>Long code (backup if the short code doesn't work)</summary>
-        <label class="k">Send this to your friend</label>
-        <textarea id="offerOut" readonly></textarea>
-        <div class="row" style="margin-top:6px"><button class="alt" data-copy="offerOut">Copy code</button></div>
-        <label class="k">Paste their reply code</label>
-        <textarea id="ansIn"></textarea>
-        <div class="row" style="margin-top:6px"><button id="fin">Connect</button></div>
-      </details>
-      <div class="row" style="margin-top:12px"><button class="alt" id="cancel">Cancel invite</button></div>
-    </div>
-  </div>
 
-  <div id="guestBox" hidden>
-    <label class="k" id="gFileLbl">Video file (the same file as the host)</label>
-    <input type="file" id="gf" accept="video/*,.mkv">
-    <label class="k">Code from the host</label>
-    <input type="text" id="codeIn" class="big" placeholder="K7M2Q" autocomplete="off" spellcheck="false">
-    <p class="h">Type the 5-character code. If the host sent a long code instead, paste it here.</p>
-    <label class="c"><input type="checkbox" id="gm" checked> Use my microphone if the host enabled voice chat</label>
-    <div style="margin-top:14px"><button id="jn">Join</button></div>
-    <p class="msg" role="status"></p>
-    <div id="ansOutBox" hidden>
-      <label class="k">Send this reply code back to the host</label>
-      <textarea id="ansOut" readonly></textarea>
-      <div class="row" style="margin-top:6px"><button class="alt" data-copy="ansOut">Copy code</button></div>
-    </div>
-  </div>
-</section>
+      <section class="pn" id="setup">
+        <div class="rs" id="resume" hidden>
+          <div><b id="rsH">Rejoin your party?</b><span id="rsT"></span></div>
+          <div class="rsb">
+            <button id="rsGo">Rejoin</button
+            ><button class="ghost" id="rsNo">Forget</button>
+          </div>
+        </div>
+        <label class="k" for="nm" style="margin-top: 0">Your name</label>
+        <input
+          type="text"
+          id="nm"
+          class="txt"
+          maxlength="20"
+          placeholder="What should your partner call you?"
+          autocomplete="off"
+        />
+        <div class="seg" style="margin-top: 18px">
+          <button id="rHost" class="on">Create a room</button
+          ><button id="rGuest">Join your partner</button>
+        </div>
 
-<section>
-  <div id="stage">
-    <video id="v" controls playsinline></video>
-    <div id="tap">Tap to play</div>
-  </div>
-  <audio id="ra" autoplay></audio>
-  <input type="file" id="cf" accept="video/*,.mkv" hidden>
-  <div id="bar">
-    <div><div id="st">Not connected</div><div id="vs" class="h"></div></div>
-    <div class="row">
-      <button id="snd" hidden>Enable sound</button>
-      <button class="alt" id="mic" hidden>Mic on</button>
-      <button class="alt" id="chg">Change video</button>
-      <button class="alt" id="fs">Full screen</button>
-      <button class="alt" id="lv">Leave</button>
-    </div>
-  </div>
-</section>
-</main>
-<script>
-const $=id=>document.getElementById(id),v=$('v'),ra=$('ra');
-let pc,dc,role='host',mode='sync',busy=false,tick,mic=null,micOn=true,room=null,roomNS=null,inc=[],gotAns=false;
-const roomP=(async()=>{try{roomNS=window.claude&&claude.use?await claude.use('room'):null}catch{}})();
+        <div id="hostBox">
+          <label class="k">Video</label>
+          <label class="drop" for="f"
+            ><img class="th" alt="Video preview" hidden /><b
+              >Choose a video file</b
+            ><span id="fn">MP4 or WebM plays best</span></label
+          >
+          <input type="file" id="f" accept="video/*,.mkv" hidden />
+          <label class="k">Playback</label>
+          <div class="seg">
+            <button id="mSync" class="on">Sync · best quality</button
+            ><button id="mStream">Stream from me</button>
+          </div>
+          <p class="h" id="mHint">
+            You both pick the same file. Only play, pause and seek are shared,
+            so each of you sees the original quality.
+          </p>
+          <button id="mk" class="cta">Create our room</button>
+          <p class="msg" role="status"></p>
+          <div id="hostRes" class="ticket" hidden>
+            <div class="tl" id="tl">Room code</div>
+            <div class="code" id="short"></div>
+            <div class="row">
+              <button class="ghost" id="cp">Copy code</button
+              ><button class="ghost" id="cancel">Cancel</button>
+            </div>
+            <p class="wait"><i class="pulse"></i> Waiting for your partner…</p>
+          </div>
+        </div>
 
-const st=t=>{$('st').textContent=t;document.querySelectorAll('.msg').forEach(m=>m.textContent=t)};
-const vs=t=>$('vs').textContent=t;
-const pick=(a,b,on)=>{a.classList.toggle('on',on);a.classList.toggle('alt',!on);b.classList.toggle('on',!on);b.classList.toggle('alt',on)};
-const mkcode=()=>Array.from(crypto.getRandomValues(new Uint8Array(5)),b=>'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[b%31]).join('');
-async function pack(o){const s=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream('deflate-raw'));const u=new Uint8Array(await new Response(s).arrayBuffer());let t='';u.forEach(c=>t+=String.fromCharCode(c));return btoa(t)}
-async function unpack(t){const u=Uint8Array.from(atob(t.trim()),c=>c.charCodeAt(0));return JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text())}
+        <div id="guestBox" hidden>
+          <div id="gDrop">
+            <label class="k">Video</label>
+            <label class="drop" for="gf"
+              ><img class="th" alt="Video preview" hidden /><b
+                >Choose the same video</b
+              ><span id="gfn"
+                >The host's file, picked from your own device</span
+              ></label
+            >
+            <input type="file" id="gf" accept="video/*,.mkv" hidden />
+          </div>
+          <label class="k" for="codeIn">Room code</label>
+          <input
+            type="text"
+            id="codeIn"
+            class="txt big"
+            placeholder="KMQT"
+            autocomplete="off"
+            spellcheck="false"
+            maxlength="4"
+          />
+          <button id="jn" class="cta">Join the room</button>
+          <p class="msg" role="status"></p>
+        </div>
+        <div class="foot">
+          <details id="net">
+            <summary>Mobile data not connecting?</summary>
+            <p class="h">
+              Add free relay credentials (make a free account at
+              dashboard.metered.ca, create an app, generate a credential). Saved
+              on this device only. Do this on the phone.
+            </p>
+            <input
+              id="tu"
+              class="txt"
+              placeholder="Relay username"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+            <input
+              id="tc"
+              class="txt"
+              type="password"
+              placeholder="Relay password"
+              autocomplete="off"
+            />
+          </details>
+          <button
+            class="ghost"
+            id="over"
+            style="padding: 7px 14px; font-size: 0.85rem"
+          >
+            Start over
+          </button>
+        </div>
+      </section>
 
-$('rHost').onclick=()=>{role='host';pick($('rHost'),$('rGuest'),true);$('hostBox').hidden=false;$('guestBox').hidden=true};
-$('rGuest').onclick=()=>{role='guest';pick($('rHost'),$('rGuest'),false);$('hostBox').hidden=true;$('guestBox').hidden=false};
-$('mSync').onclick=()=>{mode='sync';pick($('mSync'),$('mStream'),true);$('mHint').textContent="Sync: you both pick the same file. Only play, pause and seek travel over the connection, so you each see the original quality."};
-$('mStream').onclick=()=>{mode='stream';pick($('mSync'),$('mStream'),false);$('mHint').textContent="Stream: your friend doesn't need the file. Your video is sent live at up to 25 Mbps. It can start soft and sharpen within a few seconds. Needs a fast upload."};
-const load=f=>{if(f){v.srcObject=null;v.src=URL.createObjectURL(f)}};
-$('f').onchange=$('gf').onchange=e=>load(e.target.files[0]);
-$('chg').onclick=()=>$('cf').click();
-$('cf').onchange=e=>{const f=e.target.files[0];if(!f)return;load(f);send({t:'file',n:f.name});st('Video changed to '+f.name+(mode==='sync'&&dc?'. Your friend needs to pick the same file.':'.'));e.target.value=''};
-document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const t=$(b.dataset.copy);t.select();try{await navigator.clipboard.writeText(t.value);b.textContent='Copied'}catch{document.execCommand('copy')}});
+      <section id="roomv" class="gone">
+        <div id="stage">
+          <video id="v" playsinline></video>
+          <div id="gc">
+            <input
+              type="range"
+              id="sk"
+              min="0"
+              max="1"
+              step="0.5"
+              value="0"
+              aria-label="Seek"
+            />
+            <div class="cb">
+              <button id="pp" aria-label="Play or pause"></button>
+              <button id="bk" aria-label="Back 10 seconds">&minus;10</button>
+              <button id="fw" aria-label="Forward 10 seconds">+10</button>
+              <button id="mt" aria-label="Mute"></button
+              ><input
+                type="range"
+                id="vl"
+                min="0"
+                max="1"
+                step="0.05"
+                value="1"
+                aria-label="Volume"
+              />
+              <span id="tm">0:00 / 0:00</span><span class="sp"></span>
+              <button id="sp" aria-label="Playback speed">1&times;</button>
+              <button id="fs" aria-label="Full screen"></button>
+            </div>
+          </div>
+          <div id="brkOv" hidden role="status">
+            <div class="bgx" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div id="brkPts" aria-hidden="true"></div>
+            <div id="ttt" hidden>
+              <div class="tt">
+                <div
+                  id="tttB"
+                  role="group"
+                  aria-label="Tic-tac-toe board"
+                ></div>
+                <div class="ti">
+                  <b id="tttS"></b><span id="tttM"></span>
+                  <div class="trow">
+                    <button id="tttAgain" hidden>Play again</button
+                    ><button class="ghost" id="tttX">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bc">
+              <div class="cupw" aria-hidden="true">
+                <div class="halo"></div>
+                <svg viewBox="0 0 140 130">
+                  <path class="stm" d="M52 44q-9-11 0-20q9-9 0-18" />
+                  <path class="stm" d="M70 44q-9-11 0-20q9-9 0-18" />
+                  <path class="stm" d="M88 44q-9-11 0-20q9-9 0-18" />
+                  <path
+                    d="M30 56h80v26a34 34 0 01-34 34h-12a34 34 0 01-34-34z"
+                    fill="url(#gP)"
+                  />
+                  <path
+                    d="M110 64h8a14 14 0 010 28h-10"
+                    fill="none"
+                    stroke="url(#gP)"
+                    stroke-width="8"
+                    stroke-linecap="round"
+                  />
+                  <ellipse
+                    cx="70"
+                    cy="56"
+                    rx="40"
+                    ry="8"
+                    fill="#5b2a1d"
+                    stroke="#ffd9c9"
+                    stroke-width="3"
+                  />
+                  <ellipse cx="70" cy="122" rx="52" ry="7" fill="#ffffff2a" />
+                </svg>
+                <span class="hrt">&#9829;</span>
+              </div>
+              <h2 id="brkH">Time for a break</h2>
+              <p id="brkTxt"></p>
+              <p id="brkSub">The movie is paused for both of you</p>
+              <div id="brkTipw"><span id="brkTipTx"></span></div>
+              <div class="brkRow">
+                <div id="brkTmw">
+                  <i></i><span class="tl2">Break time </span
+                  ><b id="brkTm">0:00</b>
+                </div>
+                <button id="brkEnd">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>End
+                  break</button
+                ><button
+                  id="tttBtn"
+                  aria-label="Play tic-tac-toe"
+                  title="Tic-tac-toe"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                    <path d="M4.6 4.6l2.8 2.8M7.4 4.6L4.6 7.4" />
+                    <circle cx="12" cy="12" r="1.9" />
+                    <path d="M16.6 16.6l2.8 2.8M19.4 16.6l-2.8 2.8" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="toasts" role="status" aria-live="polite"></div>
+          <div id="ctoasts" aria-live="polite"></div>
+          <div id="bufc" hidden role="status">
+            <i class="sp"></i><span id="bufT"></span>
+          </div>
+          <div id="cdOv" hidden aria-hidden="true">
+            <div class="cdbg"></div>
+            <div class="cdsp"></div>
+            <div class="cdshock"></div>
+            <svg class="cdring" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="70" />
+            </svg>
+            <div id="cdNum">3</div>
+            <div id="cdSub"></div>
+          </div>
+          <div id="joinb" hidden role="status">
+            <div class="gi">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3" />
+                <path d="M10 8l-4 4 4 4M6 12h11" />
+              </svg>
+            </div>
+            <div class="gt">
+              <b id="joinT"></b><span class="gs" id="joinS"></span>
+            </div>
+          </div>
+          <div id="goneb" hidden role="alert">
+            <div class="gi">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3" />
+                <path d="M16 8l4 4-4 4M20 12H9" />
+              </svg>
+            </div>
+            <div class="gt">
+              <b id="goneT"></b><span class="gs" id="goneS"></span>
+            </div>
+            <button id="goneX" aria-label="Dismiss">&times;</button>
+          </div>
+          <div id="ask" hidden>
+            <p id="askt"></p>
+            <div class="row">
+              <button id="askb">Choose file</button
+              ><button class="ghost" id="askx">Later</button>
+            </div>
+          </div>
+          <div id="rx" hidden aria-label="Reactions"></div>
+          <div id="fx" aria-hidden="true"></div>
+        </div>
+        <input type="file" id="cf" accept="video/*,.mkv" hidden />
+        <div class="pn" id="logbox">
+          <div id="bar">
+            <div>
+              <div id="who">Not connected</div>
+              <div id="st">Not connected</div>
+            </div>
+            <div class="row">
+              <button
+                class="ghost ib"
+                id="chg"
+                data-tip="Change video"
+                aria-label="Change video"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                  <path d="M3 9.5h18M3 14.5h18M8 5v14M16 5v14" />
+                </svg>
+              </button>
+              <button
+                class="ghost ib"
+                id="brkBtn"
+                data-tip="Take a break"
+                aria-label="Take a break"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 9h12v5a5 5 0 01-5 5H9a5 5 0 01-5-5z" />
+                  <path d="M16 11h1.5a2.5 2.5 0 010 5H16M8 3v2M12 3v2" />
+                </svg>
+              </button>
+              <button
+                class="ghost ib"
+                id="lv"
+                data-tip="Leave the room"
+                aria-label="Leave the room"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3" />
+                  <path d="M16 8l4 4-4 4M20 12H9" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="lh">
+            <b>Activity &amp; chat</b
+            ><button class="ghost" id="clr">Clear</button>
+          </div>
+          <div id="log" aria-label="Activity history">
+            <p class="empty">
+              Nothing yet. Joins, leaves, playback changes and chat messages
+              will be listed here.
+            </p>
+          </div>
+          <div class="cr">
+            <input
+              type="text"
+              id="ci"
+              class="txt"
+              maxlength="300"
+              placeholder="Say something sweet…"
+              autocomplete="off"
+            /><button id="cs">Send</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+      const $ = (id) => document.getElementById(id),
+        v = $("v");
+      // ---- Connection relay (TURN) ----
+      // Phones on mobile data and strict Wi-Fi often can't connect directly.
+      // Get free credentials at https://dashboard.metered.ca/signup (create an app,
+      // generate a credential) and paste the username and password here.
+      const TURN = { username: "", credential: "" };
+      // Old-style connection: direct peer-to-peer only, one STUN server, no relay.
+      const iceServers = () => [{ urls: "stun:stun.l.google.com:19302" }];
+      let relay = false,
+        relayT,
+        rsid = "",
+        rq = [],
+        rseq = 0,
+        rin = { s: "", i: 0 };
+      let curCode = "",
+        forceCode = null,
+        rejoining = false,
+        rejoinWait = false,
+        rejoinTry = false,
+        resumePos = 0,
+        posT,
+        saved = null,
+        inSess = false,
+        sessT,
+        reconn = false,
+        backFlag = false;
+      let myFile = { n: "", z: 0 },
+        bufMine = false,
+        bufTheirs = false,
+        bufResume = false,
+        bufT,
+        wl = null,
+        cdActive = false,
+        cdUsed = false,
+        cdT,
+        brkWas = false,
+        tg = null,
+        actx;
+      let onBreak = false,
+        brkT0 = 0,
+        brkTimer,
+        brkTip,
+        hb,
+        discT,
+        lastSeen = 0,
+        everConn = false;
+      let pc,
+        dc,
+        role = "host",
+        mode = "sync",
+        busy = false,
+        tick,
+        lastP = true,
+        lastT = 0,
+        drag = false,
+        lastCmd = 0,
+        room = null,
+        roomNS = null,
+        inc = [],
+        gotAns = false,
+        peer = "",
+        gone = false;
 
-function reset(){
-  clearInterval(tick);
-  if(pc){pc.onconnectionstatechange=null;try{pc.close()}catch{}}
-  pc=dc=null;inc=[];gotAns=false;
-  if(mic){mic.getTracks().forEach(t=>t.stop());mic=null}
-  if(room){room.leave().catch(()=>{});room=null}
-  if(v.srcObject){v.srcObject=null;v.removeAttribute('src');v.load()}else v.pause();
-  ra.srcObject=null;v.controls=true;
-  ['offerOut','ansIn','codeIn','ansOut'].forEach(i=>$(i).value='');
-  $('hostRes').hidden=$('ansOutBox').hidden=$('shortBox').hidden=$('mic').hidden=true;
-  $('mk').hidden=false;$('chg').hidden=false;$('snd').hidden=true;vs('');$('tap').style.display='none';$('gFileLbl').hidden=$('gf').hidden=false;
-  $('setup').hidden=false;st('Not connected');
-}
-$('over').onclick=$('cancel').onclick=$('lv').onclick=reset;
+      // Room-code channel: Claude's room (signed-in viewers) or a free public PeerJS server (downloaded copy).
+      function loadPeer() {
+        return new Promise((ok, no) => {
+          if (window.Peer) return ok();
+          const sc = document.createElement("script");
+          sc.src =
+            "https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js";
+          sc.onload = ok;
+          sc.onerror = no;
+          document.head.appendChild(sc);
+        });
+      }
+      const peerNS = {
+        join: (name) =>
+          new Promise((res, rej) => {
+            let mine = {},
+              other = null,
+              conn = null,
+              pr = null,
+              done = false;
+            const cbs = [];
+            const fin = (f, x) => {
+              if (!done) {
+                done = true;
+                f(x);
+              }
+            };
+            setTimeout(
+              () => fin(rej, new Error("the code server could not be reached")),
+              8000,
+            );
+            const rm = {
+              presence: async (p) => {
+                Object.assign(mine, p);
+                if (conn && conn.open) conn.send(mine);
+              },
+              peers: () => (other ? [{ isMe: false, presence: other }] : []),
+              onPeers: (f) => cbs.push(f),
+              leave: async () => {
+                try {
+                  pr && pr.destroy();
+                } catch {}
+              },
+            };
+            const link = (c) => {
+              if (conn) return;
+              c.on("open", () => {
+                conn = c;
+                c.send(mine);
+              });
+              c.on("data", (d) => {
+                other = Object.assign(other || {}, d);
+                cbs.forEach((f) => f({ peers: rm.peers() }));
+              });
+            };
+            pr = new Peer(name);
+            pr.on("open", () => {
+              pr.on("connection", link);
+              fin(res, rm);
+            });
+            pr.on("error", (e) => {
+              if (e.type === "unavailable-id") {
+                pr.destroy();
+                pr = new Peer();
+                pr.on("open", () => {
+                  link(pr.connect(name, { reliable: true }));
+                  fin(res, rm);
+                });
+                pr.on("error", (x) => fin(rej, x));
+              } else fin(rej, e);
+            });
+          }),
+      };
+      const roomP = (async () => {
+        try {
+          roomNS =
+            window.claude && claude.use ? await claude.use("room") : null;
+        } catch {}
+        if (!roomNS) {
+          try {
+            await loadPeer();
+            roomNS = peerNS;
+          } catch {}
+        }
+      })();
+      const waitRoom = () =>
+        Promise.race([roomP, new Promise((r) => setTimeout(r, 5000))]);
 
-async function getMic(){
-  try{
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw{name:'not supported here'};
-    mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-    $('mic').hidden=false;setMic(true);vs('Your mic is ready.');
-  }catch(e){mic=null;vs('Your mic is blocked ('+(e.name||'error')+'). This page may not be allowed to use your microphone, so your friend cannot hear you. You can still hear them if their mic works.')}
-}
-function setMic(on){micOn=on;mic.getAudioTracks().forEach(t=>t.enabled=on);$('mic').textContent=on?'Mic on':'Mic muted';$('mic').classList.toggle('alt',on)}
-$('mic').onclick=()=>mic&&setMic(!micOn);
-$('snd').onclick=()=>{ra.play();$('snd').hidden=true};
+      const st = (t) => {
+        $("st").textContent = t;
+        document.querySelectorAll(".msg").forEach((m) => (m.textContent = t));
+      };
+      const fmt = (t) => {
+        t = Math.max(0, t | 0);
+        const h = Math.floor(t / 3600),
+          m = Math.floor((t % 3600) / 60),
+          sc = String(t % 60).padStart(2, "0");
+        return h
+          ? h + ":" + String(m).padStart(2, "0") + ":" + sc
+          : m + ":" + sc;
+      };
+      const myName = () => ($("nm").value.trim() || "Guest").slice(0, 20);
+      const who = () => {
+        const w = $("who");
+        w.replaceChildren();
+        if (!pc && !reconn) {
+          w.textContent = "Not connected";
+          return;
+        }
+        const on = !!peer && !gone,
+          sp = document.createElement("span"),
+          d = document.createElement("i");
+        sp.className = "pl" + (on ? "" : " off");
+        d.className = "dot" + (on ? " on" : "");
+        sp.append(
+          d,
+          (peer || "Partner") +
+            " · " +
+            (on ? "Online" : peer ? "Offline" : "Connecting…"),
+        );
+        w.append(sp);
+      };
+      function addLog(t, k) {
+        const l = $("log"),
+          e = l.querySelector(".empty");
+        if (e) e.remove();
+        const d = document.createElement("div");
+        d.className = "ev " + (k || "");
+        const ts = document.createElement("time");
+        ts.textContent = new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const sp = document.createElement("span");
+        sp.textContent = t;
+        d.append(ts, sp);
+        l.appendChild(d);
+        l.scrollTop = l.scrollHeight;
+      }
+      function addChat(n, x, me) {
+        const l = $("log"),
+          e = l.querySelector(".empty");
+        if (e) e.remove();
+        const r = document.createElement("div");
+        r.className = "cm " + (me ? "me" : "them");
+        const b = document.createElement("div");
+        b.className = "bub";
+        if (!me) {
+          const nm = document.createElement("b");
+          nm.textContent = n;
+          b.append(nm);
+        }
+        const tx = document.createElement("span");
+        tx.textContent = x;
+        const ts = document.createElement("time");
+        ts.textContent = new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        b.append(tx, ts);
+        r.appendChild(b);
+        l.appendChild(r);
+        l.scrollTop = l.scrollHeight;
+      }
+      function chatToast(n, x) {
+        const c = $("ctoasts");
+        while (c.children.length >= 3) c.firstChild.remove();
+        const d = document.createElement("div");
+        d.className = "ct";
+        const av = document.createElement("i");
+        av.textContent = (n || "?").trim().charAt(0).toUpperCase();
+        const bx = document.createElement("div"),
+          nm = document.createElement("b"),
+          tx = document.createElement("span");
+        nm.textContent = n;
+        tx.textContent = x;
+        bx.append(nm, tx);
+        d.append(av, bx);
+        c.appendChild(d);
+        setTimeout(() => {
+          d.classList.add("out");
+          setTimeout(() => d.remove(), 350);
+        }, 5500);
+      }
+      function sendChat() {
+        const i = $("ci"),
+          x = i.value.trim().slice(0, 300);
+        if (!x) return;
+        if (!dc || dc.readyState !== "open") {
+          toast("Connect with your partner first", "warn", true);
+          return;
+        }
+        send({ t: "chat", x });
+        addChat(myName(), x, true);
+        i.value = "";
+      }
+      $("cs").onclick = sendChat;
+      $("ci").onkeydown = (e) => {
+        if (e.key === "Enter") sendChat();
+      };
+      const F = '<circle cx="24" cy="24" r="21" fill="url(#gF)"/>';
+      const D =
+        'stroke="#4a2236" stroke-width="2.6" stroke-linecap="round" fill="none"';
+      const RXI = {
+        laugh:
+          F +
+          `<path d="M13 21q4-5 8 0M27 21q4-5 8 0" ${D}/><path d="M14 28q10 13 20 0z" fill="#4a2236"/><path d="M19 36q5-4 10 0q-5 3-10 0z" fill="#ff7a8a"/><path d="M8 23c-3 3-1 6 1 6s3-3-1-6zM40 23c3 3 1 6-1 6s-3-3 1-6z" fill="#6ec6ff"/>`,
+        wow:
+          F +
+          `<path d="M12 14q5-4 9 0M27 14q5-4 9 0" ${D}/><circle cx="17" cy="22" r="3" fill="#4a2236"/><circle cx="31" cy="22" r="3" fill="#4a2236"/><ellipse cx="24" cy="34" rx="5" ry="6.5" fill="#4a2236"/>`,
+        love: '<path d="M24 41C8 30 6 21 6 15.5 6 10 10 7 14.5 7c4 0 7 2.5 9.5 6C26.5 9.5 29.5 7 33.5 7 38 7 42 10 42 15.5 42 21 40 30 24 41z" fill="url(#gH)"/><path d="M13 15q2-5 7-3" stroke="#fff" stroke-opacity=".6" stroke-width="2.6" stroke-linecap="round" fill="none"/>',
+        party:
+          '<path d="M7 42l8-23 15 15z" fill="url(#gP)"/><path d="M19 21l12 12" stroke="#fff" stroke-opacity=".4" stroke-width="2"/><circle cx="31" cy="12" r="2.6" fill="#7be0c3"/><circle cx="40" cy="22" r="2.4" fill="#ffd166"/><circle cx="22" cy="8" r="2.2" fill="#ff7a8a"/><path d="M36 8l3 4M26 15l4 2M38 30l4 1" stroke="#8b7bff" stroke-width="2.4" stroke-linecap="round"/>',
+        fire: '<path d="M24 4c1 8 10 12 10 22a10 10 0 01-20 0c0-4 2-7 4-10 1 3 3 5 5 5-1-6-1-11 1-17z" fill="url(#gFi)"/><path d="M24 27c3 3 6 5 6 9a6 6 0 01-12 0c0-4 3-6 6-9z" fill="#ffe9a8"/>',
+        sad:
+          F +
+          `<path d="M12 15l8 3M36 15l-8 3" ${D}/><circle cx="17" cy="23" r="2.6" fill="#4a2236"/><circle cx="31" cy="23" r="2.6" fill="#4a2236"/><path d="M17 36q7-6 14 0" ${D}/><path d="M16 27c-3 4-2 8 1 8s4-4-1-8z" fill="#6ec6ff"/>`,
+        like: '<path d="M5 22h9v19H5z" fill="#8b7bff"/><path d="M17 22l7-15c3-1 6 1 5 5l-2 7h12c3 0 5 3 4 6l-3 12c-1 3-3 4-5 4H17z" fill="url(#gF)"/>',
+      };
+      const RX = Object.keys(RXI),
+        rxSvg = (k) =>
+          '<svg viewBox="0 0 48 48" aria-hidden="true">' + RXI[k] + "</svg>";
+      function floatRx(k, name) {
+        const fx = $("fx");
+        if (fx.children.length > 30) return;
+        const b = document.createElement("div");
+        b.className = "fl";
+        const em = document.createElement("span"),
+          nm = document.createElement("small");
+        em.innerHTML = rxSvg(k);
+        nm.textContent = name;
+        nm.hidden = !name;
+        b.append(em, nm);
+        b.style.setProperty("--x", Math.random() * 40 + "px");
+        b.style.setProperty("--dx", Math.random() * 50 - 25 + "px");
+        b.style.setProperty("--h", Math.max(fx.clientHeight, 160) + "px");
+        fx.appendChild(b);
+        setTimeout(() => b.remove(), 3600);
+      }
+      RX.forEach((k) => {
+        const b = document.createElement("button");
+        b.innerHTML = rxSvg(k);
+        b.setAttribute("aria-label", "React: " + k);
+        b.onclick = () => {
+          floatRx(k, "You");
+          send({ t: "rx", e: k });
+          b.blur();
+        };
+        $("rx").appendChild(b);
+      });
+      $("clr").onclick = () => {
+        $("log").innerHTML =
+          '<p class="empty">Nothing yet. Joins, leaves, playback changes and chat will appear here.</p>';
+      };
+      try {
+        $("nm").value = localStorage.getItem("wt-name") || "";
+      } catch {}
+      $("nm").oninput = () => {
+        try {
+          localStorage.setItem("wt-name", $("nm").value);
+        } catch {}
+      };
+      function toast(t, k, q) {
+        if (!q) addLog(t, k);
+        const d = document.createElement("div");
+        d.className = "toast " + (k || "");
+        d.textContent = t;
+        $("toasts").appendChild(d);
+        setTimeout(() => {
+          d.classList.add("out");
+          setTimeout(() => d.remove(), 320);
+        }, 3800);
+      }
+      const seg = (a, b, on) => {
+        a.classList.toggle("on", on);
+        b.classList.toggle("on", !on);
+      };
+      const WORDS = [
+        "LOVE",
+        "KISS",
+        "HUGS",
+        "CUTE",
+        "HAGU",
+        "NUDE",
+        "SONU",
+        "SOUL",
+        "PODU",
+        "SEXY",
+        "FUCK",
+        "BOOB",
+        "TITS",
+      ];
+      const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
+      const mkcode = () =>
+        rnd(5) === 0
+          ? WORDS[rnd(WORDS.length)]
+          : Array.from(
+              { length: 4 },
+              () => "ABCDEFGHJKMNPQRSTUVWXYZ"[rnd(23)],
+            ).join("");
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      async function pack(o) {
+        const s = new Blob([JSON.stringify(o)])
+          .stream()
+          .pipeThrough(new CompressionStream("deflate-raw"));
+        const u = new Uint8Array(await new Response(s).arrayBuffer());
+        let t = "";
+        u.forEach((c) => (t += String.fromCharCode(c)));
+        return btoa(t);
+      }
+      async function unpack(t) {
+        const u = Uint8Array.from(atob(t.trim()), (c) => c.charCodeAt(0));
+        return JSON.parse(
+          await new Response(
+            new Blob([u])
+              .stream()
+              .pipeThrough(new DecompressionStream("deflate-raw")),
+          ).text(),
+        );
+      }
 
-function tune(){pc.getSenders().forEach(async s=>{if(s.track&&s.track.kind==='video'){const p=s.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=25e6;p.degradationPreference='maintain-resolution';try{await s.setParameters(p)}catch{}}})}
-function newPC(){
-  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});inc=[];gotAns=false;
-  pc.ontrack=e=>inc.push(e);
-  pc.onconnectionstatechange=()=>{
-    const s=pc.connectionState;st('Connection: '+s);
-    if(s==='connected'){tune();$('setup').hidden=true;if(room){room.leave().catch(()=>{});room=null}st(mode==='sync'?'Connected. Press play, you both stay in sync.':'Connected.')}
-    if(s==='disconnected'||s==='failed')st('Connection '+s+'. Press Leave and start again if it does not come back.');
-  };
-}
-function route(){
-  const ss=new Set(inc.map(e=>e.streams[0]||new MediaStream([e.track])));
-  ss.forEach(s=>{
-    if(s.getVideoTracks().length){v.srcObject=s;v.controls=false;v.muted=false;$('tap').style.display='grid';$('tap').onclick=()=>{v.play();$('tap').style.display='none'};$('chg').hidden=role==='guest'}
-    else{
-      ra.srcObject=s;ra.volume=1;
-      ra.play().then(()=>$('snd').hidden=true).catch(()=>$('snd').hidden=false);
-      const pre=mic?'Your mic is ready. ':'';
-      vs(pre+'Friend audio is connected. Waiting for them to speak.');
-      s.getAudioTracks().forEach(t=>t.onunmute=()=>vs(pre+'Hearing your friend.'));
-    }
-  });
-}
-const ice=()=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();pc.onicegatheringstatechange=()=>pc.iceGatheringState==='complete'&&r();setTimeout(r,4000)});
+      $("rHost").onclick = () => {
+        role = "host";
+        seg($("rHost"), $("rGuest"), true);
+        $("hostBox").hidden = false;
+        $("guestBox").hidden = true;
+      };
+      $("rGuest").onclick = () => {
+        role = "guest";
+        seg($("rHost"), $("rGuest"), false);
+        $("hostBox").hidden = true;
+        $("guestBox").hidden = false;
+      };
+      $("mSync").onclick = () => {
+        mode = "sync";
+        seg($("mSync"), $("mStream"), true);
+        $("mHint").textContent =
+          "You both pick the same file. Only play, pause and seek are shared, so each of you sees the original quality.";
+      };
+      $("mStream").onclick = () => {
+        mode = "stream";
+        seg($("mSync"), $("mStream"), false);
+        $("mHint").textContent =
+          "Your partner doesn't need the file. Your video is sent live at up to 25 Mbps, and they get play, pause and seek buttons. Needs a fast upload.";
+      };
+      const load = (f, lab) => {
+        if (f) {
+          v.srcObject = null;
+          v.src = URL.createObjectURL(f);
+          myFile = { n: f.name, z: f.size };
+          thumb(f, lab.closest(".drop"));
+          if (rejoinWait) {
+            rejoinWait = false;
+            setTimeout(() => $("rsGo").onclick(), 60);
+          }
+        }
+      };
+      function thumb(f, box) {
+        box.classList.add("ready");
+        const nm = box.querySelector("span"),
+          img = box.querySelector("img"),
+          tt = box.querySelector("b");
+        const mb =
+          f.size > 1e9
+            ? (f.size / 1e9).toFixed(1) + " GB"
+            : Math.round(f.size / 1e6) + " MB";
+        tt.textContent = "Video ready · click to change";
+        nm.textContent = f.name + " · " + mb;
+        const t = document.createElement("video"),
+          u = URL.createObjectURL(f);
+        t.muted = true;
+        t.preload = "metadata";
+        t.src = u;
+        t.onloadedmetadata = () => {
+          nm.textContent = f.name + " · " + fmt(t.duration) + " · " + mb;
+          t.currentTime = Math.min(t.duration * 0.1, 8);
+        };
+        t.onseeked = () => {
+          const c = document.createElement("canvas");
+          c.width = 320;
+          c.height = Math.round((320 * t.videoHeight) / t.videoWidth) || 180;
+          c.getContext("2d").drawImage(t, 0, 0, c.width, c.height);
+          img.src = c.toDataURL("image/jpeg", 0.72);
+          img.hidden = false;
+          URL.revokeObjectURL(u);
+        };
+        t.onerror = () => {
+          img.hidden = true;
+          URL.revokeObjectURL(u);
+        };
+      }
+      $("f").onchange = (e) => load(e.target.files[0], $("fn"));
+      $("gf").onchange = (e) => load(e.target.files[0], $("gfn"));
+      $("chg").onclick = () => $("cf").click();
+      let pending = null;
+      async function swapStream() {
+        await new Promise((r) =>
+          v.addEventListener("loadedmetadata", r, { once: true }),
+        );
+        try {
+          await v.play();
+          v.pause();
+          v.currentTime = 0;
+        } catch {}
+        const s = v.captureStream ? v.captureStream() : v.mozCaptureStream();
+        for (const t of s.getTracks()) {
+          if (t.kind === "video") t.contentHint = "detail";
+          const sn = pc
+            .getSenders()
+            .find((x) => x.track && x.track.kind === t.kind);
+          if (sn) await sn.replaceTrack(t);
+        }
+        toast("Video changed for everyone", "ok");
+      }
+      $("cf").onchange = async (e) => {
+        const f = e.target.files[0];
+        e.target.value = "";
+        if (!f) return;
+        const reply = !!pending;
+        pending = null;
+        $("ask").hidden = true;
+        busy = true;
+        load(f, $("fn"));
+        v.pause();
+        setTimeout(() => (busy = false), 500);
+        send({ t: "file", n: f.name, r: reply ? 1 : 0 });
+        v.addEventListener(
+          "loadedmetadata",
+          () => send({ t: "dur", d: v.duration, z: myFile.z }),
+          { once: true },
+        );
+        if (reply) toast("You loaded " + f.name, "ok");
+        else if (role === "host" && mode === "stream" && pc && dc)
+          await swapStream();
+        else
+          toast(
+            "Video changed to " +
+              f.name +
+              (dc ? ". Your partner was asked to pick the same file." : ""),
+            "info",
+          );
+      };
+      $("askb").onclick = () => $("cf").click();
+      $("askx").onclick = () => {
+        $("ask").hidden = true;
+      };
+      $("cp").onclick = async () => {
+        try {
+          await navigator.clipboard.writeText($("short").textContent);
+          toast("Code copied", "ok");
+        } catch {
+          toast("Select the code and copy it by hand", "warn");
+        }
+      };
 
-const send=m=>{if(dc&&dc.readyState==='open')dc.send(JSON.stringify(m))};
-function wire(){
-  dc.onopen=()=>{send({t:'hi',d:v.duration||0});if(role==='host'&&mode==='sync')tick=setInterval(()=>!v.paused&&send({t:'tick',time:v.currentTime}),2000)};
-  dc.onmessage=async e=>{
-    const m=JSON.parse(e.data);
-    if(m.t==='hi'){if(mode==='sync'&&m.d&&v.duration&&Math.abs(m.d-v.duration)>1)st('Warning: your files have different lengths. Make sure you both picked the same one.');return}
-    if(m.t==='file'){st('Your friend changed the video to "'+m.n+'". Use Change video to pick the same file.');return}
-    if(mode!=='sync')return;
-    busy=true;
-    try{
-      if(m.t==='play'){if(Math.abs(v.currentTime-m.time)>.3)v.currentTime=m.time;await v.play()}
-      else if(m.t==='pause'){v.pause();v.currentTime=m.time}
-      else if(m.t==='seek')v.currentTime=m.time;
-      else if(m.t==='tick'&&!v.paused&&Math.abs(v.currentTime-m.time)>.8)v.currentTime=m.time;
-    }catch{}
-    setTimeout(()=>busy=false,350);
-  };
-}
-v.addEventListener('play',()=>!busy&&mode==='sync'&&send({t:'play',time:v.currentTime}));
-v.addEventListener('pause',()=>!busy&&mode==='sync'&&send({t:'pause',time:v.currentTime}));
-v.addEventListener('seeked',()=>!busy&&mode==='sync'&&send({t:'seek',time:v.currentTime}));
+      function reset() {
+        reconn = false;
+        inSess = false;
+        backFlag = false;
+        rejoining = false;
+        rejoinTry = false;
+        rejoinWait = false;
+        forceCode = null;
+        clearInterval(sessT);
+        clearTimeout(posT);
+        clearTimeout(relayT);
+        try {
+          localStorage.removeItem("wt-sess");
+        } catch {}
+        saved = null;
+        $("resume").hidden = true;
+        bufMine = bufTheirs = bufResume = false;
+        hideBuf();
+        cancelCountdown();
+        tttEnd(true);
+        cdUsed = false;
+        hideJoin();
+        relay = false;
+        rq = [];
+        rseq = 0;
+        rin = { s: "", i: 0 };
+        rsid = "";
+        if (wl) {
+          wl.release().catch(() => {});
+          wl = null;
+        }
+        clearInterval(hb);
+        clearTimeout(discT);
+        clearInterval(brkTimer);
+        clearInterval(brkTip);
+        hideGone();
+        $("ctoasts").replaceChildren();
+        $("stage").classList.remove("theater", "rot");
+        try {
+          screen.orientation.unlock();
+        } catch {}
+        onBreak = false;
+        everConn = false;
+        $("brkOv").hidden = true;
+        setBrkBtn(false);
+        document.documentElement.classList.remove("lite", "inroom");
+        clearInterval(tick);
+        const oldPc = pc;
+        if (pc) addLog("You left the room", "warn");
+        if (dc && dc.readyState === "open") {
+          try {
+            dc.send(JSON.stringify({ t: "bye", x: 1 }));
+          } catch {}
+        }
+        if (pc) {
+          pc.onconnectionstatechange = null;
+          if (dc) dc.onclose = null;
+          setTimeout(() => {
+            try {
+              oldPc.close();
+            } catch {}
+          }, 250);
+        }
+        pc = dc = null;
+        inc = [];
+        gotAns = false;
+        peer = "";
+        gone = false;
+        if (room) {
+          room.leave().catch(() => {});
+          room = null;
+        }
+        if (v.srcObject) {
+          v.srcObject = null;
+          v.removeAttribute("src");
+          v.load();
+        } else v.pause();
+        $("codeIn").value = "";
+        $("hostRes").hidden = $("ask").hidden = true;
+        pending = null;
+        ppIcon(true);
+        $("mk").hidden = false;
+        $("chg").hidden = false;
+        $("gDrop").hidden = false;
+        $("toasts").replaceChildren();
+        $("fx").replaceChildren();
+        $("clr").onclick();
+        setRate(1, false);
+        $("setup").hidden = false;
+        $("roomv").classList.add("gone");
+        $("stage").classList.remove("idle");
+        $("rx").hidden = true;
+        st("Not connected");
+        who();
+      }
+      $("over").onclick = $("cancel").onclick = $("lv").onclick = reset;
 
-async function applyAnswer(a){
-  if(gotAns||!pc)return;gotAns=true;
-  try{const o=await unpack(a);await pc.setRemoteDescription(o.d);route();st('Connecting…')}
-  catch{gotAns=false;st('That reply code is not valid.')}
-}
-async function mkGo(){
-  if(!v.src){st('Pick a video file first.');return}
-  newPC();dc=pc.createDataChannel('sync');wire();
-  if($('vc').checked)await getMic();
-  if($('vc').checked){if(mic)pc.addTransceiver(mic.getAudioTracks()[0],{direction:'sendrecv',streams:[mic]});else pc.addTransceiver('audio',{direction:'recvonly'})}
-  if(mode==='stream'){
-    try{await v.play();v.pause();v.currentTime=0}catch{}
-    const s=v.captureStream?v.captureStream():v.mozCaptureStream();
-    if(!s.getTracks().length){st('Could not capture this video. Try Sync mode or an MP4 (H.264) file.');return}
-    for(const t of s.getTracks()){if(t.kind==='video')t.contentHint='detail';pc.addTrack(t,s)}
-  }
-  await pc.setLocalDescription(await pc.createOffer());
-  st('Gathering connection info…');await ice();
-  const off=await pack({d:pc.localDescription,m:mode});
-  $('offerOut').value=off;$('hostRes').hidden=false;$('mk').hidden=true;$('longBox').open=true;
-  await Promise.race([roomP,new Promise(r=>setTimeout(r,3000))]);
-  let why='you are not signed in to Claude on this page, or it was opened from a public link';
-  if(roomNS){
-    try{
-      const code=mkcode();room=await roomNS.join('wp-'+code.toLowerCase());
-      await room.presence({o:off});
-      room.onPeers(ch=>{const p=ch.peers.find(x=>!x.isMe&&x.presence&&x.presence.a);if(p)applyAnswer(p.presence.a)});
-      $('short').textContent=code;$('shortBox').hidden=false;$('longBox').open=false;
-      st('Waiting for your friend. Share the code '+code+'.');return;
-    }catch(e){room=null;why='the room could not be opened ('+((e&&(e.code||e.message))||'error')+')'}
-  }
-  st('No short code: '+why+'. Use the long code below.');
-}
-$('fin').onclick=()=>applyAnswer($('ansIn').value);
+      function tune() {
+        pc.getSenders().forEach(async (s) => {
+          if (s.track && s.track.kind === "video") {
+            const p = s.getParameters();
+            if (!p.encodings || !p.encodings.length) p.encodings = [{}];
+            p.encodings[0].maxBitrate = 25e6;
+            p.degradationPreference = "maintain-resolution";
+            try {
+              await s.setParameters(p);
+            } catch {}
+          }
+        });
+      }
+      let joinTm;
+      function hideJoin() {
+        clearTimeout(joinTm);
+        $("joinb").hidden = true;
+      }
+      function joinedNotice(t) {
+        addLog(t, "good");
+        hideGone();
+        $("joinT").textContent = t;
+        $("joinS").textContent = "You're together now";
+        $("joinb").hidden = false;
+        clearTimeout(joinTm);
+        joinTm = setTimeout(hideJoin, 4500);
+        try {
+          navigator.vibrate && navigator.vibrate(60);
+        } catch {}
+      }
+      function tryPlay() {
+        v.play().catch(() => {
+          if (v.muted) return;
+          v.muted = true;
+          $("mt").innerHTML = ICON.mute;
+          v.play().catch(() => {});
+          toast(
+            "Your browser blocked the sound. Tap the speaker button to turn it on.",
+            "warn",
+          );
+        });
+      }
+      function showGone(n, sub) {
+        $("goneT").textContent = n + " left the room";
+        $("goneS").textContent = sub;
+        $("goneb").hidden = false;
+      }
+      function hideGone() {
+        $("goneb").hidden = true;
+      }
+      $("goneX").onclick = hideGone;
+      function peerLeft(why) {
+        if (gone) return;
+        gone = true;
+        backFlag = true;
+        clearTimeout(discT);
+        busy = true;
+        v.pause();
+        setTimeout(() => (busy = false), 500);
+        lastP = true;
+        ppIcon(true);
+        cancelCountdown();
+        bufTheirs = false;
+        bufResume = false;
+        hideBuf();
+        hideJoin();
+        const n = peer || "Your partner";
+        addLog(n + " left the room. Video paused.", "bad");
+        showGone(
+          n,
+          why === "bye" || why === "left"
+            ? "Video paused"
+            : "Connection lost. Video paused",
+        );
+        st("Your partner left the room.");
+        who();
+        try {
+          navigator.vibrate && navigator.vibrate([150, 80, 150]);
+        } catch {}
+        if (why !== "left" && inSess && !relay) autoReconnect();
+      }
+      function enterRoom(viaRelay) {
+        everConn = true;
+        reconn = false;
+        gone = false;
+        hideGone();
+        inSess = true;
+        saveSess();
+        clearInterval(sessT);
+        sessT = setInterval(saveSess, 4000);
+        keepAwake();
+        if (rejoining) {
+          cdUsed = true;
+          clearTimeout(posT);
+          posT = setTimeout(() => {
+            if (
+              rejoining &&
+              role === "host" &&
+              mode === "sync" &&
+              resumePos > 1
+            )
+              v.currentTime = resumePos;
+            rejoining = false;
+          }, 3000);
+        }
+        document.documentElement.classList.add("lite", "inroom");
+        addLog(viaRelay ? "Connected through relay" : "Connected", "ok");
+        $("roomv").classList.remove("gone");
+        $("roomv").animate(
+          [
+            { opacity: 0, transform: "translateY(18px)" },
+            { opacity: 1, transform: "none" },
+          ],
+          { duration: 500, easing: "ease-out" },
+        );
+        scrollTo({ top: 0, behavior: "smooth" });
+        $("rx").hidden = false;
+        poke();
+        for (let i = 0; i < 4; i++)
+          setTimeout(() => floatRx("party", ""), i * 250);
+        if (!viaRelay) tune();
+        $("setup").hidden = true;
+        if (room && !viaRelay) {
+          room.leave().catch(() => {});
+          room = null;
+        }
+        st(
+          mode === "sync"
+            ? "Connected. Press play and you both stay in sync."
+            : "Connected.",
+        );
+        who();
+        if (viaRelay)
+          st(
+            "Connected through the relay. Press play and you both stay in sync. Expect a small delay.",
+          );
+      }
+      // ---- Relay fallback: carries play/pause/chat through the room when a direct link is impossible ----
+      function relaySend(str) {
+        rq.push({ i: ++rseq, m: str });
+        while (
+          rq.length > 1 &&
+          (rq.length > 6 || JSON.stringify(rq).length > 2800)
+        )
+          rq.shift();
+        if (room)
+          room.presence({ q: { s: rsid, l: rq.slice() } }).catch(() => {});
+      }
+      function relayRecv() {
+        if (!relay || !room) return;
+        const p = room
+          .peers()
+          .find((x) => !x.isMe && x.presence && x.presence.q);
+        const q = p && p.presence.q;
+        if (!q || !Array.isArray(q.l)) return;
+        if (q.s !== rin.s) rin = { s: q.s, i: 0 };
+        for (const it of q.l) {
+          if (it && typeof it.m === "string" && it.i > rin.i) {
+            rin.i = it.i;
+            try {
+              Promise.resolve(
+                dc && dc.onmessage && dc.onmessage({ data: it.m }),
+              ).catch(() => {});
+            } catch {}
+          }
+        }
+      }
+      function startRelay() {
+        return false; // relay fallback disabled (old-style direct connection only)
+        if (relay || everConn || !room || mode !== "sync" || roomNS === peerNS)
+          return false;
+        relay = true;
+        clearTimeout(relayT);
+        rsid = Math.random().toString(36).slice(2, 8);
+        if (pc) pc.onconnectionstatechange = null;
+        if (dc) dc.onclose = dc.onmessage = dc.onopen = null;
+        try {
+          pc && pc.close();
+        } catch {}
+        dc = { readyState: "open", send: relaySend, close() {} };
+        wire();
+        room
+          .presence({ rl: 1, o: null, a: null, q: { s: rsid, l: [] } })
+          .catch(() => {});
+        room.onPeers((ch) => {
+          if (ch.left.some((x) => !x.isMe)) peerLeft();
+          relayRecv();
+        });
+        enterRoom(true);
+        dc.onopen();
+        relayRecv();
+        return true;
+      }
+      const armRelay = () => {
+        clearTimeout(relayT);
+        if (mode === "sync") relayT = setTimeout(startRelay, 12000);
+      };
+      const watchRelay = () =>
+        room.onPeers((ch) => {
+          if (
+            !relay &&
+            !everConn &&
+            ch.peers.some((x) => !x.isMe && x.presence && x.presence.rl)
+          )
+            startRelay();
+        });
+      function newPC() {
+        pc = new RTCPeerConnection({
+          iceServers: iceServers(),
+        });
+        inc = [];
+        gotAns = false;
+        pc.ontrack = (e) => inc.push(e);
+        pc.onconnectionstatechange = () => {
+          const s = pc.connectionState;
+          if (s === "connected") {
+            clearTimeout(discT);
+            if (everConn) {
+              if (gone) {
+                gone = false;
+                hideGone();
+                joinedNotice((peer || "Your partner") + " is back online");
+              }
+              who();
+              return;
+            }
+            enterRoom(false);
+          }
+          if (s === "failed") {
+            if (everConn) peerLeft();
+            else if (!startRelay()) {
+              st(
+                mode === "stream"
+                  ? "Connection failed. Stream mode needs a direct connection, which your networks block. Go back and choose Sync mode, it works over mobile data."
+                  : "Connection failed. Your networks blocked the connection. Leave and try again.",
+              );
+              toast("Connection failed", "warn");
+            }
+          }
+          if (s === "disconnected") {
+            st("Connection interrupted…");
+            if (everConn) {
+              clearTimeout(discT);
+              discT = setTimeout(peerLeft, 4000);
+            }
+          }
+        };
+      }
+      function route() {
+        inc.forEach((e) => {
+          if (e.track.kind !== "video") return;
+          v.srcObject = e.streams[0] || new MediaStream([e.track]);
+          v.controls = false;
+          v.muted = false;
+          $("chg").hidden = role === "guest";
+          poke();
+        });
+      }
+      const ice = () =>
+        new Promise((r) => {
+          if (pc.iceGatheringState === "complete") return r();
+          pc.onicegatheringstatechange = () =>
+            pc.iceGatheringState === "complete" && r();
+          setTimeout(r, 4000);
+        });
 
-async function jnGo(){
-  const raw=$('codeIn').value.trim();
-  if(!raw){st('Type the code from the host first.');return}
-  let off=raw;
-  if(raw.length<=10){
-    if(!roomNS){st('Short codes need you to be signed in to Claude with access to this page. Ask the host for the long code.');return}
-    room=await roomNS.join('wp-'+raw.toLowerCase().replace(/[^a-z0-9]/g,''));
-    st('Looking for the host…');
-    off=await new Promise((res,rej)=>{
-      const find=()=>{const p=room&&room.peers().find(x=>!x.isMe&&x.presence&&x.presence.o);if(p)res(p.presence.o)};
-      find();room.onPeers(find);
-      setTimeout(()=>rej(new Error('No host found for that code. Check it, or ask for the long code.')),10000);
-    });
-  }
-  const o=await unpack(off);mode=o.m;newPC();
-  pc.ondatachannel=e=>{dc=e.channel;wire()};
-  await pc.setRemoteDescription(o.d);route();
-  if(mode==='stream')$('gFileLbl').hidden=$('gf').hidden=true;
-  if(o.d.sdp.includes('m=audio')&&$('gm').checked){await getMic();if(mic)mic.getAudioTracks().forEach(t=>pc.addTrack(t,mic))}
-  await pc.setLocalDescription(await pc.createAnswer());
-  st('Gathering connection info…');await ice();
-  const ans=await pack({d:pc.localDescription});
-  if(room){await room.presence({a:ans});st('Connecting…')}
-  else{$('ansOut').value=ans;$('ansOutBox').hidden=false;st('Send the reply code back to the host.')}
-}
-const guard=(btn,fn)=>btn.onclick=async()=>{
-  if(!window.RTCPeerConnection){st('This page blocks peer-to-peer connections. Save the page as an HTML file and open it in Chrome, Edge or Firefox.');return}
-  const t=btn.textContent;btn.disabled=true;btn.textContent='Working…';
-  try{await fn()}catch(e){st('Error: '+(e&&e.message||e));if(room&&!pc?.connectionState!=='connected'){room.leave().catch(()=>{});room=null}}
-  btn.disabled=false;btn.textContent=t;
-};
-guard($('mk'),mkGo);guard($('jn'),jnGo);
-v.onerror=()=>st("Your browser can't play this video format. Convert it to MP4 (H.264) or WebM and pick it again.");
+      const send = (m) => {
+        if (dc && dc.readyState === "open") dc.send(JSON.stringify(m));
+      };
+      function wire() {
+        dc.onopen = () => {
+          clearInterval(tick);
+          send({ t: "hi", n: myName(), d: v.duration || 0, z: myFile.z });
+          lastSeen = Date.now();
+          clearInterval(hb);
+          hb = setInterval(() => {
+            send({ t: "ping" });
+            if (!gone && Date.now() - lastSeen > 10000) peerLeft();
+          }, 2000);
+          if (role === "host" && mode === "sync")
+            tick = setInterval(
+              () => !v.paused && send({ t: "tick", time: v.currentTime }),
+              2000,
+            );
+          if (role === "host" && mode === "stream")
+            tick = setInterval(
+              () =>
+                send({
+                  t: "state",
+                  time: v.currentTime,
+                  dur: v.duration || 0,
+                  p: v.paused,
+                  r: rate,
+                }),
+              500,
+            );
+        };
+        dc.onclose = peerLeft;
+        dc.onmessage = async (e) => {
+          const m = JSON.parse(e.data),
+            n = peer || "Your partner";
+          lastSeen = Date.now();
+          if (m.t === "ping") {
+            if (gone) {
+              gone = false;
+              backFlag = false;
+              hideGone();
+              who();
+              joinedNotice(n + " is back online");
+            }
+            return;
+          }
+          if (m.t === "hi") {
+            peer = String(m.n || "Partner").slice(0, 20);
+            const returned = backFlag;
+            backFlag = false;
+            gone = false;
+            hideGone();
+            who();
+            joinedNotice(
+              returned
+                ? peer + " is back"
+                : role === "host"
+                  ? peer + " joined the room"
+                  : "You joined " + peer + "'s room",
+            );
+            checkSame(m);
+            if (returned && mode === "sync")
+              send({ t: "pos", time: v.currentTime });
+            return;
+          }
+          if (m.t === "pos") {
+            clearTimeout(posT);
+            if (rejoining) {
+              rejoining = false;
+              if (
+                typeof m.time === "number" &&
+                Math.abs(v.currentTime - m.time) > 1.5
+              ) {
+                busy = true;
+                v.currentTime = m.time;
+                setTimeout(() => (busy = false), 700);
+              }
+            }
+            return;
+          }
+          if (m.t === "buf") {
+            if (mode !== "sync") return;
+            if (m.on) {
+              bufTheirs = true;
+              if (!v.paused) {
+                bufResume = true;
+                busy = true;
+                v.pause();
+                setTimeout(() => (busy = false), 500);
+              }
+              if (
+                typeof m.time === "number" &&
+                Math.abs(v.currentTime - m.time) > 0.3
+              ) {
+                busy = true;
+                v.currentTime = m.time;
+                setTimeout(() => (busy = false), 700);
+              }
+              showBuf(n + " is buffering…");
+            } else {
+              bufTheirs = false;
+              hideBuf();
+              if (bufResume && !bufMine && !onBreak && !cdActive) {
+                bufResume = false;
+                busy = true;
+                v.play().catch(() => {});
+                setTimeout(() => (busy = false), 500);
+              } else bufResume = false;
+            }
+            return;
+          }
+          if (m.t === "cd") {
+            startCountdown(String(m.n || "Your partner").slice(0, 20), true);
+            return;
+          }
+          if (m.t === "g") {
+            tttMsg(m);
+            return;
+          }
+          if (m.t === "chat") {
+            const x = String(m.x || "").slice(0, 300);
+            addChat(n, x, false);
+            chatToast(n, x);
+            return;
+          }
+          if (m.t === "rx") {
+            if (RX.includes(m.e)) floatRx(m.e, n);
+            return;
+          }
+          if (m.t === "bye") {
+            peerLeft(m.x ? "left" : "bye");
+            return;
+          }
+          if (m.t === "brk") {
+            setBreak(m.on, String(m.n || "Your partner").slice(0, 20), true);
+            return;
+          }
+          if (m.t === "file") {
+            if (m.r) toast(n + " loaded " + m.n, "ok");
+            else if (mode === "sync") {
+              pending = m.n;
+              busy = true;
+              v.pause();
+              setTimeout(() => (busy = false), 500);
+              $("askt").textContent =
+                n +
+                " switched to \u201c" +
+                m.n +
+                "\u201d. Pick the same file to keep watching together.";
+              $("ask").hidden = false;
+              toast(n + " changed the video", "info");
+            } else toast(n + " changed the video", "info");
+            return;
+          }
+          if (m.t === "dur") {
+            checkSame(m);
+            return;
+          }
+          if (m.t === "cmd" && role === "host" && mode === "stream") {
+            try {
+              if (m.a === "play") {
+                await v.play();
+                toast(n + " resumed the video", "info");
+              } else if (m.a === "pause") {
+                v.pause();
+                toast(n + " paused the video", "info");
+              } else if (m.a === "seek") {
+                v.currentTime = Math.max(
+                  0,
+                  Math.min(m.time, v.duration || m.time),
+                );
+                toast(n + " jumped to " + fmt(v.currentTime), "info");
+              } else if (m.a === "rate") {
+                setRate(m.time, false);
+                toast(n + " set speed to " + m.time + "\u00d7", "info");
+              }
+            } catch {}
+            return;
+          }
+          if (m.t === "state" && role === "guest" && mode === "stream") {
+            if (m.p !== lastP && Date.now() - lastCmd > 2000)
+              toast(n + (m.p ? " paused" : " resumed") + " the video", "info");
+            if (m.p !== lastP) poke();
+            lastP = m.p;
+            lastT = m.time;
+            ppIcon(m.p);
+            showRate(m.r || 1);
+            if (!m.p && v.paused && !onBreak) tryPlay();
+            if (!drag) {
+              $("sk").max = m.dur || 1;
+              $("sk").value = m.time;
+              pFill();
+              $("tm").textContent = fmt(m.time) + " / " + fmt(m.dur);
+            }
+            return;
+          }
+          if (mode !== "sync" || (onBreak && m.t === "play")) return;
+          busy = true;
+          try {
+            if (m.t === "play") {
+              if (Math.abs(v.currentTime - m.time) > 0.3)
+                v.currentTime = m.time;
+              await v.play();
+              toast(n + " pressed play", "info");
+            } else if (m.t === "pause") {
+              v.pause();
+              v.currentTime = m.time;
+              toast(n + " paused at " + fmt(m.time), "info");
+            } else if (m.t === "seek") {
+              v.currentTime = m.time;
+              toast(n + " jumped to " + fmt(m.time), "info");
+            } else if (m.t === "rate") {
+              setRate(m.r, false);
+              toast(n + " set speed to " + m.r + "\u00d7", "info");
+            } else if (
+              m.t === "tick" &&
+              !v.paused &&
+              Math.abs(v.currentTime - m.time) > 0.8
+            )
+              v.currentTime = m.time;
+          } catch {}
+          setTimeout(() => (busy = false), 350);
+        };
+      }
+      v.addEventListener(
+        "play",
+        () =>
+          !busy && mode === "sync" && send({ t: "play", time: v.currentTime }),
+      );
+      v.addEventListener(
+        "pause",
+        () =>
+          !busy && mode === "sync" && send({ t: "pause", time: v.currentTime }),
+      );
+      v.addEventListener(
+        "seeked",
+        () =>
+          !busy && mode === "sync" && send({ t: "seek", time: v.currentTime }),
+      );
 
-const stage=$('stage');
-function fs(){
-  if(document.fullscreenElement||stage.classList.contains('theater')){document.fullscreenElement&&document.exitFullscreen();stage.classList.remove('theater');return}
-  const r=stage.requestFullscreen?stage.requestFullscreen():Promise.reject();
-  r.catch(()=>stage.classList.add('theater'));
-}
-$('fs').onclick=fs;v.ondblclick=fs;
-addEventListener('keydown',e=>{if(e.key==='Escape')stage.classList.remove('theater');if(e.key==='f'&&!/TEXTAREA|INPUT/.test(e.target.tagName))fs()});
-</script></body></html>
+      async function applyAnswer(a) {
+        if (gotAns || !pc) return;
+        gotAns = true;
+        try {
+          const o = await unpack(a);
+          await pc.setRemoteDescription(o.d);
+          route();
+          st("Connecting…");
+          armRelay();
+        } catch {
+          gotAns = false;
+          st("Could not read your partner's reply. Cancel and try again.");
+        }
+      }
+      async function hostCore(code, startAt) {
+        newPC();
+        dc = pc.createDataChannel("sync");
+        wire();
+        if (mode === "stream") {
+          try {
+            await v.play();
+            v.pause();
+            v.currentTime = startAt || 0;
+          } catch {}
+          const sm = v.captureStream ? v.captureStream() : v.mozCaptureStream();
+          if (!sm.getTracks().length)
+            throw new Error(
+              "Could not capture this video. Try Sync mode or an MP4 (H.264) file.",
+            );
+          for (const t of sm.getTracks()) {
+            if (t.kind === "video") t.contentHint = "detail";
+            pc.addTrack(t, sm);
+          }
+        }
+        await pc.setLocalDescription(await pc.createOffer());
+        await ice();
+        const off = await pack({ d: pc.localDescription, m: mode });
+        curCode = code;
+        room = await roomNS.join("wp-" + code.toLowerCase());
+        await room.presence({ o: off });
+        room.onPeers((ch) => {
+          const p = ch.peers.find((x) => !x.isMe && x.presence && x.presence.a);
+          if (p) applyAnswer(p.presence.a);
+        });
+      }
+      async function mkGo() {
+        if (!v.src) {
+          st("Choose a video file first.");
+          return;
+        }
+        await waitRoom();
+        if (!roomNS) {
+          st(
+            "Room codes are not available on this page. Open the downloaded copy of the page, or both sign in to Claude on the published one.",
+          );
+          return;
+        }
+        st("Preparing your room…");
+        const code = forceCode || mkcode();
+        forceCode = null;
+        await hostCore(code, rejoining ? resumePos : 0);
+        const lucky = WORDS.includes(code);
+        $("short").replaceChildren(
+          ...[...code].map((c, i) => {
+            const e = document.createElement("span");
+            e.textContent = c;
+            e.style.setProperty("--i", i);
+            return e;
+          }),
+        );
+        $("tl").textContent = lucky ? "A lucky room code" : "Room code";
+        $("hostRes").classList.toggle("lucky", lucky);
+        $("hostRes").hidden = false;
+        $("mk").hidden = true;
+        st("Room ready. Share the code " + code + ".");
+      }
+      async function jnGo() {
+        const raw = $("codeIn").value.trim();
+        if (!raw) {
+          st("Enter the room code first.");
+          return;
+        }
+        await waitRoom();
+        if (!roomNS) {
+          st(
+            "Room codes are not available on this page. Ask the host to open the downloaded copy with you.",
+          );
+          return;
+        }
+        const code = raw.toLowerCase().replace(/[^a-z]/g, "");
+        curCode = code.toUpperCase();
+        room = await roomNS.join("wp-" + code);
+        st(
+          rejoinTry
+            ? "Waiting for the room to come back…"
+            : "Looking for the room…",
+        );
+        const off = await new Promise((res, rej) => {
+          const find = () => {
+            if (relay) {
+              res(null);
+              return;
+            }
+            const ps = room
+              ? room.peers().filter((x) => !x.isMe && x.presence)
+              : [];
+            const p = ps.find((x) => x.presence.o);
+            if (p) res(p.presence.o);
+            else if (ps.some((x) => x.presence.rl)) {
+              if (!v.src) {
+                rej(
+                  new Error(
+                    "Choose the same video file first, then join again.",
+                  ),
+                );
+                return;
+              }
+              mode = "sync";
+              if (startRelay()) res(null);
+            }
+          };
+          find();
+          room.onPeers(find);
+          setTimeout(
+            () =>
+              rej(
+                new Error(
+                  "No room found for that code. Check it and try again.",
+                ),
+              ),
+            rejoinTry ? 90000 : 10000,
+          );
+        });
+        rejoinTry = false;
+        if (!off) return;
+        const o = await unpack(off);
+        mode = o.m;
+        if (mode === "sync" && !v.src)
+          throw new Error("Choose the same video file first, then join again.");
+        newPC();
+        pc.ondatachannel = (e) => {
+          dc = e.channel;
+          wire();
+        };
+        await pc.setRemoteDescription(o.d);
+        route();
+        if (mode === "stream") $("gDrop").hidden = true;
+        await pc.setLocalDescription(await pc.createAnswer());
+        st("Joining…");
+        await ice();
+        await room.presence({ a: await pack({ d: pc.localDescription }) });
+        st("Connecting…");
+        armRelay();
+      }
+
+      const TIPS = [
+        "Grab a snack",
+        "Stretch your legs",
+        "Sip some water",
+        "Rest your eyes",
+        "Back soon, together",
+      ];
+      function setBrkBtn(on) {
+        const b = $("brkBtn");
+        b.dataset.tip = on ? "End break" : "Take a break";
+        b.setAttribute("aria-label", b.dataset.tip);
+        b.classList.toggle("on", on);
+      }
+      function paintBreak() {
+        $("brkTm").textContent = fmt((Date.now() - brkT0) / 1000);
+      }
+      function buildBreakFx(by) {
+        const h = $("brkH");
+        h.replaceChildren();
+        let k = 0;
+        "Time for a break".split(" ").forEach((w, wi, a) => {
+          const ws = document.createElement("span");
+          ws.className = "w";
+          [...w].forEach((c) => {
+            const sp = document.createElement("span");
+            sp.textContent = c;
+            sp.style.setProperty("--i", k++);
+            ws.appendChild(sp);
+          });
+          h.appendChild(ws);
+          if (wi < a.length - 1) h.append(" ");
+        });
+        $("brkTxt").textContent = by + " started a break";
+        const pts = $("brkPts");
+        pts.replaceChildren();
+        const H = Math.max($("brkOv").clientHeight, 200),
+          ch = ["\u2665", "\u2726", "\u2022", "\u2727", "\u2665"];
+        for (let i = 0; i < 16; i++) {
+          const q = document.createElement("i");
+          q.dataset.c = ch[i % ch.length];
+          q.style.cssText =
+            "--x:" +
+            Math.random() * 100 +
+            "%;--s:" +
+            (10 + Math.random() * 16) +
+            "px;--d:" +
+            (6 + Math.random() * 6) +
+            "s;--dl:" +
+            -Math.random() * 8 +
+            "s;--h:" +
+            H +
+            "px;--dx:" +
+            (Math.random() * 60 - 30) +
+            "px";
+          pts.appendChild(q);
+        }
+        let ti = 0;
+        const tp = $("brkTipTx");
+        tp.textContent = TIPS[0];
+        tp.classList.remove("sw");
+        brkTip = setInterval(() => {
+          tp.classList.add("sw");
+          setTimeout(() => {
+            ti = (ti + 1) % TIPS.length;
+            tp.textContent = TIPS[ti];
+            tp.classList.remove("sw");
+          }, 350);
+        }, 3500);
+      }
+      function setBreak(on, by, fromPartner) {
+        if (on === onBreak) return;
+        onBreak = on;
+        clearInterval(brkTimer);
+        clearInterval(brkTip);
+        $("brkOv").hidden = !on;
+        setBrkBtn(on);
+        if (on) {
+          brkWas = remote() ? !lastP : !v.paused;
+          cancelCountdown();
+          busy = true;
+          v.pause();
+          setTimeout(() => (busy = false), 500);
+          brkT0 = Date.now();
+          paintBreak();
+          brkTimer = setInterval(paintBreak, 1000);
+          buildBreakFx(by);
+          for (let i = 0; i < 4; i++)
+            setTimeout(() => floatRx("party", ""), i * 250);
+        } else tttEnd(true);
+        toast(by + (on ? " started a break" : " ended the break"), "info");
+        if (!fromPartner) send({ t: "brk", on, n: myName() });
+      }
+      $("brkBtn").onclick = $("brkEnd").onclick = () =>
+        setBreak(!onBreak, "You", false);
+      const cmd = (a, time) => {
+        lastCmd = Date.now();
+        send({ t: "cmd", a, time });
+      };
+      const ICON = {
+        play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+        pause:
+          '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>',
+        vol: '<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+        mute: '<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+      };
+      ICON.fs =
+        '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const ppIcon = (p) => ($("pp").innerHTML = p ? ICON.play : ICON.pause);
+      const remote = () => role === "guest" && mode === "stream";
+      ppIcon(true);
+      $("mt").innerHTML = ICON.vol;
+      $("fs").innerHTML = ICON.fs;
+      v.addEventListener("play", () => !remote() && ppIcon(false));
+      v.addEventListener("pause", () => !remote() && ppIcon(true));
+      const pFill = () => {
+        const k = $("sk");
+        k.style.setProperty(
+          "--p",
+          (k.max > 0 ? (k.value / k.max) * 100 : 0) + "%",
+        );
+      };
+      const upd = () => {
+        if (remote() || drag) return;
+        $("sk").max = v.duration || 1;
+        $("sk").value = v.currentTime;
+        pFill();
+        $("tm").textContent = fmt(v.currentTime) + " / " + fmt(v.duration || 0);
+      };
+      v.addEventListener("timeupdate", upd);
+      v.addEventListener("loadedmetadata", upd);
+      $("pp").onclick = () =>
+        onBreak || cdActive
+          ? 0
+          : wantCd()
+            ? startCountdown("You", false)
+            : remote()
+              ? cmd(lastP ? "play" : "pause")
+              : v.paused
+                ? v.play()
+                : v.pause();
+      $("bk").onclick = () =>
+        remote()
+          ? cmd("seek", lastT - 10)
+          : (v.currentTime = Math.max(0, v.currentTime - 10));
+      $("fw").onclick = () =>
+        remote()
+          ? cmd("seek", lastT + 10)
+          : (v.currentTime = Math.min(v.duration || 1e9, v.currentTime + 10));
+      $("sk").oninput = () => {
+        drag = true;
+        pFill();
+        $("tm").textContent = fmt($("sk").value) + " / " + fmt($("sk").max);
+      };
+      $("sk").onchange = () => {
+        remote()
+          ? cmd("seek", +$("sk").value)
+          : (v.currentTime = +$("sk").value);
+        setTimeout(() => (drag = false), 800);
+      };
+      $("mt").onclick = () => {
+        v.muted = !v.muted;
+        $("mt").innerHTML = v.muted ? ICON.mute : ICON.vol;
+      };
+      $("vl").oninput = () => {
+        v.volume = +$("vl").value;
+        v.muted = false;
+        $("mt").innerHTML = ICON.vol;
+      };
+      const RATES = [0.75, 1, 1.25, 1.5, 2];
+      let rate = 1;
+      const showRate = (r) => {
+        rate = r;
+        $("sp").innerHTML = r + "&times;";
+      };
+      function setRate(r, tell) {
+        v.playbackRate = r;
+        showRate(r);
+        if (tell && mode === "sync") send({ t: "rate", r });
+      }
+      $("sp").onclick = () => {
+        const r = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
+        remote() ? cmd("rate", r) : setRate(r, true);
+      };
+      const guard = (btn, fn) =>
+        (btn.onclick = async () => {
+          if (!window.RTCPeerConnection) {
+            st(
+              "This page blocks peer-to-peer connections. Open the downloaded copy in Chrome, Edge or Firefox.",
+            );
+            return;
+          }
+          const t = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = "Working…";
+          try {
+            await fn();
+          } catch (e) {
+            st("Error: " + ((e && e.message) || e));
+            if (room) {
+              room.leave().catch(() => {});
+              room = null;
+            }
+          }
+          btn.disabled = false;
+          btn.textContent = t;
+        });
+      guard($("mk"), mkGo);
+      guard($("jn"), jnGo);
+      v.onerror = () =>
+        st(
+          "Your browser can't play this video format. Convert it to MP4 (H.264) or WebM and pick it again.",
+        );
+
+      const stage = $("stage");
+      const coarse = () => matchMedia("(pointer:coarse)").matches;
+      const portrait = () => innerHeight > innerWidth;
+      async function landscape() {
+        try {
+          await screen.orientation.lock("landscape");
+          return true;
+        } catch {
+          return false;
+        }
+      }
+      function fs() {
+        if (document.fullscreenElement || stage.classList.contains("theater")) {
+          document.fullscreenElement && document.exitFullscreen();
+          stage.classList.remove("theater", "rot");
+          try {
+            screen.orientation.unlock();
+          } catch {}
+          return;
+        }
+        const r = stage.requestFullscreen
+          ? stage.requestFullscreen()
+          : Promise.reject();
+        r.then(async () => {
+          if (await landscape()) return;
+          if (coarse() && portrait()) {
+            try {
+              await document.exitFullscreen();
+            } catch {}
+            stage.classList.add("theater", "rot");
+          }
+        }).catch(() => {
+          stage.classList.add("theater");
+          if (coarse() && portrait()) stage.classList.add("rot");
+        });
+      }
+      const syncRot = () =>
+        stage.classList.contains("theater") &&
+        stage.classList.toggle("rot", coarse() && portrait());
+      addEventListener("resize", syncRot);
+      addEventListener("orientationchange", () => setTimeout(syncRot, 200));
+      document.addEventListener("fullscreenchange", () => {
+        if (
+          !document.fullscreenElement &&
+          !stage.classList.contains("theater")
+        ) {
+          try {
+            screen.orientation.unlock();
+          } catch {}
+        }
+      });
+      $("fs").onclick = fs;
+      let ct;
+      v.onclick = () => {
+        clearTimeout(ct);
+        ct = setTimeout(() => $("pp").click(), 230);
+      };
+      v.ondblclick = () => {
+        clearTimeout(ct);
+        fs();
+      };
+      let idleT;
+      function poke() {
+        stage.classList.remove("idle");
+        clearTimeout(idleT);
+        const playing = () =>
+          role === "guest" && mode === "stream" ? !lastP : !v.paused;
+        if (pc)
+          idleT = setTimeout(() => {
+            if (!drag && playing()) stage.classList.add("idle");
+          }, 3000);
+      }
+      v.addEventListener("play", poke);
+      ["mousemove", "pointerdown", "touchstart", "keydown"].forEach((ev) =>
+        stage.addEventListener(ev, poke, { passive: true }),
+      );
+      addEventListener("keydown", (e) => {
+        if (e.key === "Escape") stage.classList.remove("theater", "rot");
+        const tg = e.target.tagName;
+        if (/TEXTAREA|INPUT/.test(tg)) return;
+        if (e.key === "f") fs();
+        if (tg === "BUTTON" || onBreak) return;
+        if (e.key === " ") {
+          e.preventDefault();
+          $("pp").click();
+        }
+        if (e.key === "ArrowLeft") $("bk").click();
+        if (e.key === "ArrowRight") $("fw").click();
+      });
+      document.querySelectorAll(".drop").forEach((d) => {
+        d.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          d.classList.add("over");
+        });
+        d.addEventListener("dragleave", () => d.classList.remove("over"));
+        d.addEventListener("drop", (e) => {
+          e.preventDefault();
+          d.classList.remove("over");
+          const f = e.dataTransfer.files[0];
+          if (!f) return;
+          const i = $(d.getAttribute("for")),
+            dt = new DataTransfer();
+          dt.items.add(f);
+          i.files = dt.files;
+          i.dispatchEvent(new Event("change"));
+        });
+      });
+      try {
+        const t = JSON.parse(localStorage.getItem("wt-turn") || "{}");
+        if (t.u) TURN.username = t.u;
+        if (t.c) TURN.credential = t.c;
+      } catch {}
+      $("tu").value = TURN.username;
+      $("tc").value = TURN.credential;
+      $("tu").oninput = $("tc").oninput = () => {
+        TURN.username = $("tu").value.trim();
+        TURN.credential = $("tc").value.trim();
+        try {
+          localStorage.setItem(
+            "wt-turn",
+            JSON.stringify({ u: TURN.username, c: TURN.credential }),
+          );
+        } catch {}
+      };
+      if (TURN.username) $("net").open = false;
+
+      // ---------- same-file warning ----------
+      function checkSame(m) {
+        if (mode !== "sync") return;
+        const sz = m.z && myFile.z && m.z !== myFile.z,
+          dd = m.d && v.duration && Math.abs(m.d - v.duration) > 1;
+        if (sz || dd)
+          toast(
+            "Your videos look different (" +
+              (sz ? "file sizes" : "lengths") +
+              " don't match). Check you both picked the same file.",
+            "warn",
+          );
+      }
+      // ---------- keep the screen awake ----------
+      async function keepAwake() {
+        try {
+          if (
+            "wakeLock" in navigator &&
+            !wl &&
+            document.visibilityState === "visible"
+          ) {
+            wl = await navigator.wakeLock.request("screen");
+            wl.addEventListener("release", () => {
+              wl = null;
+            });
+          }
+        } catch {}
+      }
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && inSess) keepAwake();
+      });
+      // ---------- buffering-aware sync ----------
+      function showBuf(t) {
+        $("bufT").textContent = t;
+        $("bufc").hidden = false;
+      }
+      function hideBuf() {
+        $("bufc").hidden = true;
+      }
+      v.addEventListener("waiting", () => {
+        if (
+          mode !== "sync" ||
+          !dc ||
+          dc.readyState !== "open" ||
+          bufMine ||
+          bufTheirs ||
+          onBreak ||
+          cdActive
+        )
+          return;
+        clearTimeout(bufT);
+        bufT = setTimeout(() => {
+          if (v.paused || v.readyState >= 3 || bufMine) return;
+          bufMine = true;
+          send({ t: "buf", on: 1, time: v.currentTime });
+          showBuf("Buffering… " + (peer || "your partner") + " will wait");
+        }, 700);
+      });
+      const bufOk = () => {
+        clearTimeout(bufT);
+        if (bufMine) {
+          bufMine = false;
+          send({ t: "buf", on: 0 });
+          hideBuf();
+        }
+      };
+      v.addEventListener("playing", bufOk);
+      v.addEventListener("canplay", bufOk);
+      // ---------- rejoin after a refresh / dropped connection ----------
+      function saveSess() {
+        try {
+          localStorage.setItem(
+            "wt-sess",
+            JSON.stringify({
+              r: role,
+              m: mode,
+              c: curCode,
+              ts: Date.now(),
+              pos: v.currentTime || 0,
+              fn: myFile.n,
+              fz: myFile.z,
+            }),
+          );
+        } catch {}
+      }
+      function readSess() {
+        try {
+          const x = JSON.parse(localStorage.getItem("wt-sess") || "null");
+          if (x && x.c && Date.now() - x.ts < 4 * 3600e3) return x;
+        } catch {}
+        return null;
+      }
+      function dropConn() {
+        clearInterval(tick);
+        clearTimeout(relayT);
+        if (pc) pc.onconnectionstatechange = null;
+        if (dc) dc.onclose = dc.onmessage = dc.onopen = null;
+        try {
+          pc && pc.close();
+        } catch {}
+        pc = dc = null;
+        inc = [];
+        gotAns = false;
+        relay = false;
+        rq = [];
+        rseq = 0;
+        rin = { s: "", i: 0 };
+        rsid = "";
+        if (room) {
+          room.leave().catch(() => {});
+          room = null;
+        }
+      }
+      async function hostLoop() {
+        while (reconn && !everConn) {
+          dropConn();
+          await sleep(1000);
+          try {
+            await hostCore(curCode, v.currentTime);
+          } catch {
+            await sleep(3000);
+            continue;
+          }
+          for (
+            let i = 0;
+            i < 600 &&
+            reconn &&
+            !everConn &&
+            !(pc && pc.connectionState === "failed");
+            i++
+          )
+            await sleep(500);
+        }
+      }
+      async function guestLoop() {
+        $("codeIn").value = curCode;
+        while (reconn && !everConn) {
+          let ok = false;
+          try {
+            await jnGo();
+            ok = true;
+          } catch {}
+          if (ok)
+            for (let i = 0; i < 30 && reconn && !everConn; i++)
+              await sleep(500);
+          if (reconn && !everConn) {
+            dropConn();
+            await sleep(ok ? 1000 : 2500);
+          }
+        }
+      }
+      function autoReconnect() {
+        if (reconn || relay || !inSess || !roomNS) return;
+        reconn = true;
+        everConn = false;
+        st("Waiting for " + (peer || "your partner") + " to come back…");
+        setTimeout(() => {
+          if (reconn)
+            (role === "host" ? hostLoop() : guestLoop()).catch(() => {});
+        }, 1500);
+      }
+      // ---------- 3-2-1 countdown ----------
+      function wantCd() {
+        return (
+          !cdUsed &&
+          dc &&
+          dc.readyState === "open" &&
+          !gone &&
+          (remote() ? lastP : v.paused)
+        );
+      }
+      function beep(f, d) {
+        try {
+          actx =
+            actx || new (window.AudioContext || window.webkitAudioContext)();
+          const o = actx.createOscillator(),
+            gn = actx.createGain(),
+            t = actx.currentTime;
+          o.frequency.value = f;
+          gn.gain.setValueAtTime(0.07, t);
+          gn.gain.exponentialRampToValueAtTime(0.0001, t + d);
+          o.connect(gn);
+          gn.connect(actx.destination);
+          o.start(t);
+          o.stop(t + d);
+        } catch {}
+      }
+      function retrig(el) {
+        el.style.animation = "none";
+        void el.offsetWidth;
+        el.style.animation = "";
+      }
+      function cdShow(k) {
+        const ov = $("cdOv");
+        ov.dataset.k = k;
+        $("cdNum").textContent = k;
+        ["cdNum"].forEach((i) => retrig($(i)));
+        ov.querySelectorAll(".cdbg,.cdshock,.cdring circle").forEach(retrig);
+        const sp = ov.querySelector(".cdsp"),
+          R = Math.min(ov.clientWidth, ov.clientHeight) * 0.42;
+        sp.replaceChildren();
+        for (let i = 0; i < 14; i++) {
+          const a = (i / 14) * Math.PI * 2 + Math.random() * 0.3,
+            d = document.createElement("i");
+          d.style.setProperty(
+            "--dx",
+            Math.cos(a) * R * (0.6 + Math.random() * 0.5) + "px",
+          );
+          d.style.setProperty(
+            "--dy",
+            Math.sin(a) * R * (0.6 + Math.random() * 0.5) + "px",
+          );
+          sp.appendChild(d);
+        }
+        const go = k === "GO";
+        beep(go ? 880 : 440, go ? 0.35 : 0.12);
+        try {
+          navigator.vibrate && navigator.vibrate(go ? [40, 30, 80] : 25);
+        } catch {}
+        if (go) {
+          if (mode === "sync" || role === "host") {
+            busy = true;
+            v.play().catch(() => {});
+            setTimeout(() => (busy = false), 500);
+          }
+          for (let j = 0; j < 4; j++)
+            setTimeout(() => floatRx("party", ""), j * 200);
+        }
+      }
+      function startCountdown(by, fromPartner) {
+        if (cdActive || gone || onBreak) return;
+        cdActive = true;
+        cdUsed = true;
+        $("cdOv").hidden = false;
+        $("cdSub").textContent =
+          (fromPartner ? by : "You") + " started the countdown";
+        if (!fromPartner) send({ t: "cd", n: myName() });
+        if (!remote()) {
+          busy = true;
+          v.pause();
+          setTimeout(() => (busy = false), 500);
+        }
+        const seq = ["3", "2", "1", "GO"];
+        let i = 0;
+        const step = () => {
+          cdShow(seq[i]);
+          i++;
+          cdT = setTimeout(
+            i < seq.length ? step : cancelCountdown,
+            i < seq.length ? 1000 : 1000,
+          );
+        };
+        step();
+      }
+      function cancelCountdown() {
+        clearTimeout(cdT);
+        cdActive = false;
+        $("cdOv").hidden = true;
+      }
+      // ---------- tic-tac-toe (inside the break screen) ----------
+      const WINS = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+      const MARK = {
+        X: '<svg viewBox="0 0 40 40"><path class="mk" pathLength="1" d="M10 10L30 30M30 10L10 30" stroke="#ffa27a"/></svg>',
+        O: '<svg viewBox="0 0 40 40"><circle class="mk" pathLength="1" cx="20" cy="20" r="11" stroke="#a89bff"/></svg>',
+      };
+      for (let i = 0; i < 9; i++) {
+        const c = document.createElement("button");
+        c.className = "cell";
+        c.setAttribute("aria-label", "Cell " + (i + 1));
+        c.onclick = () => tttMove(i);
+        $("tttB").appendChild(c);
+      }
+      function tttRender() {
+        const cells = $("tttB").children;
+        for (let i = 0; i < 9; i++) {
+          const c = cells[i],
+            val = tg ? tg.b[i] : "";
+          if (c.dataset.v !== val) {
+            c.dataset.v = val;
+            c.innerHTML = val ? MARK[val] : "";
+          }
+          c.classList.toggle("win", !!(tg && tg.line && tg.line.includes(i)));
+          c.disabled = !tg || !!tg.over || !!val || tg.turn !== tg.me;
+        }
+        const S = $("tttS");
+        if (!tg) {
+          S.textContent = "";
+          return;
+        }
+        const nm = peer || "Partner";
+        S.textContent = tg.over
+          ? tg.over === "D"
+            ? "It's a draw"
+            : tg.over === tg.me
+              ? "You win!"
+              : nm + " wins"
+          : tg.turn === tg.me
+            ? "Your turn"
+            : nm + "'s turn";
+        S.className = tg.over && tg.over === tg.me ? "won" : "";
+        $("tttM").textContent =
+          "You are " +
+          tg.me +
+          " · " +
+          nm +
+          " is " +
+          (tg.me === "X" ? "O" : "X");
+        $("tttAgain").hidden = !tg.over;
+      }
+      function tttPlace(i, sym) {
+        tg.b[i] = sym;
+        const w = WINS.find(
+          (l) =>
+            tg.b[l[0]] &&
+            tg.b[l[0]] === tg.b[l[1]] &&
+            tg.b[l[1]] === tg.b[l[2]],
+        );
+        if (w) {
+          tg.over = sym;
+          tg.line = w;
+        } else if (tg.b.every(Boolean)) tg.over = "D";
+        else tg.turn = sym === "X" ? "O" : "X";
+        tttRender();
+        if (tg.over && tg.over === tg.me)
+          for (let j = 0; j < 4; j++)
+            setTimeout(() => floatRx("party", ""), j * 200);
+      }
+      function tttMove(i) {
+        if (!tg || tg.over || tg.turn !== tg.me || tg.b[i]) return;
+        tttPlace(i, tg.me);
+        send({ t: "g", a: "mv", i });
+      }
+      function tttOpen(fromPartner) {
+        if (tg) return;
+        tg = {
+          b: Array(9).fill(""),
+          turn: "X",
+          first: "X",
+          me: fromPartner ? "O" : "X",
+          over: null,
+          line: null,
+        };
+        $("brkOv").classList.add("gaming");
+        $("ttt").hidden = false;
+        tttRender();
+        if (fromPartner)
+          toast((peer || "Your partner") + " started tic-tac-toe", "info");
+        else send({ t: "g", a: "open" });
+      }
+      function tttEnd(fromPartner) {
+        const had = !!tg;
+        tg = null;
+        $("brkOv").classList.remove("gaming");
+        $("ttt").hidden = true;
+        tttRender();
+        if (had && !fromPartner) send({ t: "g", a: "end" });
+      }
+      function tttAgain(fromPartner) {
+        if (!tg) return;
+        tg.first = tg.first === "X" ? "O" : "X";
+        tg.b = Array(9).fill("");
+        tg.turn = tg.first;
+        tg.over = null;
+        tg.line = null;
+        tttRender();
+        if (!fromPartner) send({ t: "g", a: "again" });
+      }
+      function tttMsg(m) {
+        if (!onBreak) return;
+        if (m.a === "open") {
+          tttOpen(true);
+          return;
+        }
+        if (!tg) return;
+        if (m.a === "mv") {
+          const i = m.i | 0;
+          if (i >= 0 && i < 9 && !tg.b[i] && !tg.over && tg.turn !== tg.me)
+            tttPlace(i, tg.turn);
+        } else if (m.a === "again") tttAgain(true);
+        else if (m.a === "end") tttEnd(true);
+      }
+      $("tttBtn").onclick = () => (tg ? tttEnd(false) : tttOpen(false));
+      $("tttX").onclick = () => tttEnd(false);
+      $("tttAgain").onclick = () => tttAgain(false);
+      // ---------- resume card ----------
+      saved = readSess();
+      if (saved) {
+        $("rsH").textContent = "Rejoin " + saved.c + "?";
+        $("rsT").textContent =
+          (saved.pos > 5
+            ? "You were at " + fmt(saved.pos)
+            : "Pick up where you left off") +
+          (saved.m === "sync" || saved.r === "host"
+            ? " · choose the same video"
+            : "");
+        $("resume").hidden = false;
+      }
+      $("rsNo").onclick = () => {
+        $("resume").hidden = true;
+        saved = null;
+        try {
+          localStorage.removeItem("wt-sess");
+        } catch {}
+      };
+      $("rsGo").onclick = () => {
+        const sv = saved;
+        if (!sv) return;
+        rejoining = true;
+        resumePos = sv.pos || 0;
+        if (sv.r === "host") {
+          $("rHost").click();
+          $(sv.m === "stream" ? "mStream" : "mSync").click();
+        } else {
+          $("rGuest").click();
+          $("codeIn").value = sv.c;
+          mode = sv.m;
+        }
+        if ((sv.r === "host" || sv.m === "sync") && !v.src) {
+          rejoinWait = true;
+          setTimeout(() => (rejoinWait = false), 120000);
+          $(sv.r === "host" ? "f" : "gf").click();
+          return;
+        }
+        $("resume").hidden = true;
+        if (sv.r === "host") {
+          forceCode = sv.c;
+          $("mk").click();
+        } else {
+          rejoinTry = true;
+          $("jn").click();
+        }
+      };
+
+      addEventListener("pagehide", () => {
+        if (inSess) saveSess();
+        send({ t: "bye" });
+      });
+    </script>
+  </body>
+</html>
