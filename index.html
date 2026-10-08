@@ -1721,7 +1721,7 @@
       const WORDS = ["LOVE", "KISS", "HUGS", "CUTE", "HAGU", "NUDE", "SONU", "SOUL","PODU","SEXY", "FUCK", "BOOB", "TITS"];
       const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
       const mkcode = () =>
-        rnd(12) === 0
+        rnd(5) === 0
           ? WORDS[rnd(WORDS.length)]
           : Array.from({ length: 4 }, () => "ABCDEFGHJKMNPQRSTUVWXYZ"[rnd(23)]).join("");
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
