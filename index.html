@@ -323,19 +323,6 @@
         max-height: 100vh;
         height: 100%;
       }
-      #tap {
-        position: absolute;
-        inset: 0;
-        display: none;
-        place-items: center;
-        background: #000a;
-        color: #fff;
-        font:
-          700 1.4rem "Bricolage Grotesque",
-          system-ui,
-          sans-serif;
-        cursor: pointer;
-      }
       #gc {
         position: absolute;
         left: 0;
@@ -1173,6 +1160,27 @@
         .ti{justify-items:start;text-align:left}
         #tttBtn{width:40px;height:40px}
       }
+      /* icon buttons with hover notes */
+      #roomv:not(.gone) #logbox #bar{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:10px}
+      #roomv:not(.gone) #logbox #bar>div:first-child{min-width:0;flex:1}
+      #roomv:not(.gone) #logbox #bar .row{flex:none;gap:8px}
+      #roomv:not(.gone) #logbox #bar .row button.ib{flex:none;width:44px;height:44px;min-width:44px;padding:0;display:grid;place-items:center;border-radius:14px;position:relative;font-size:0}
+      .ib svg{width:22px;height:22px;display:block}
+      #bar #lv svg{width:22px;height:22px}
+      .ib.on{background:var(--ac);color:var(--ac2);border-color:transparent}
+      .ib[data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 8px);right:0;z-index:30;white-space:nowrap;padding:5px 10px;border-radius:8px;background:#1f1a33;color:#fff;font:600 .78rem/1.2 system-ui,sans-serif;opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .15s,transform .15s}
+      .ib:hover::after,.ib:focus-visible::after{opacity:1;transform:none}
+      /* partner joined: green */
+      #joinb{position:absolute;left:50%;top:50%;z-index:10;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;width:max-content;max-width:min(380px,92%);padding:12px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#27b36f,#137a4a);box-shadow:0 14px 40px #1f9d6388,inset 0 0 0 1px #ffffff30;animation:gonein .45s cubic-bezier(.2,.9,.3,1.3)}
+      #joinb .gi{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#ffffff28;animation:gp 1.8s ease-out infinite}
+      #joinb .gi svg{width:20px;height:20px}
+      #joinb .gt{display:flex;flex-direction:column;min-width:0}
+      #joinb b{font-size:1.05rem;line-height:1.2}
+      #joinb .gs{font-size:.8rem;opacity:.92}
+      @media (max-width:560px){#joinb{gap:10px;padding:10px}#joinb .gi{width:32px;height:32px}#joinb b{font-size:.95rem}#joinb .gs{font-size:.75rem}}
+      #log .ev.good{color:var(--ok);font-weight:700;font-size:.8rem}
+      #log .ev.good::before{background:var(--ok)}
+      #log .ev.good time{font-weight:500}
     </style>
   </head>
   <body>
@@ -1300,7 +1308,6 @@
       <section id="roomv" class="gone">
         <div id="stage">
           <video id="v" playsinline></video>
-          <div id="tap">Tap to play</div>
           <div id="gc">
             <input
               type="range"
@@ -1326,8 +1333,6 @@
                 aria-label="Volume"
               />
               <span id="tm">0:00 / 0:00</span><span class="sp"></span>
-              <button id="gcCd" aria-label="Start with a countdown" title="3-2-1 start"></button>
-              <button id="gcBrk" aria-label="Take a break"></button>
               <button id="sp" aria-label="Playback speed">1&times;</button>
               <button id="fs" aria-label="Full screen"></button>
             </div>
@@ -1360,6 +1365,7 @@
           <div id="ctoasts" aria-live="polite"></div>
           <div id="bufc" hidden role="status"><i class="sp"></i><span id="bufT"></span></div>
           <div id="cdOv" hidden aria-hidden="true"><div class="cdbg"></div><div class="cdsp"></div><div class="cdshock"></div><svg class="cdring" viewBox="0 0 160 160"><circle cx="80" cy="80" r="70"/></svg><div id="cdNum">3</div><div id="cdSub"></div></div>
+          <div id="joinb" hidden role="status"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3"/><path d="M10 8l-4 4 4 4M6 12h11"/></svg></div><div class="gt"><b id="joinT"></b><span class="gs" id="joinS"></span></div></div>
           <div id="goneb" hidden role="alert"><div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></div><div class="gt"><b id="goneT"></b><span class="gs" id="goneS"></span></div><button id="goneX" aria-label="Dismiss">&times;</button></div>
           <div id="ask" hidden>
             <p id="askt"></p>
@@ -1379,9 +1385,9 @@
             <div id="st">Not connected</div>
           </div>
           <div class="row">
-            <button class="ghost" id="chg">Change video</button>
-            <button class="ghost" id="brkBtn">Take a break</button>
-            <button class="ghost" id="lv" aria-label="Leave the room" title="Leave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></button>
+            <button class="ghost ib" id="chg" data-tip="Change video" aria-label="Change video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18M3 14.5h18M8 5v14M16 5v14"/></svg></button>
+            <button class="ghost ib" id="brkBtn" data-tip="Take a break" aria-label="Take a break"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 010 5H16M8 3v2M12 3v2"/></svg></button>
+            <button class="ghost ib" id="lv" data-tip="Leave the room" aria-label="Leave the room"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H6a2 2 0 00-2 2v12a2 2 0 002 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></button>
           </div>
         </div>
           <div class="lh">
@@ -1446,7 +1452,7 @@
       };
       let relay = false, relayT, rsid = "", rq = [], rseq = 0, rin = { s: "", i: 0 };
       let curCode = "", forceCode = null, rejoining = false, rejoinWait = false, rejoinTry = false, resumePos = 0, posT, saved = null, inSess = false, sessT, reconn = false, backFlag = false;
-      let myFile = { n: "", z: 0 }, bufMine = false, bufTheirs = false, bufResume = false, bufT, wl = null, cdActive = false, cdT, brkWas = false, tg = null, actx;
+      let myFile = { n: "", z: 0 }, bufMine = false, bufTheirs = false, bufResume = false, bufT, wl = null, cdActive = false, cdUsed = false, cdT, brkWas = false, tg = null, actx;
       let onBreak = false, brkT0 = 0, brkTimer, brkTip, hb, discT, lastSeen = 0, everConn = false;
       let pc,
         dc,
@@ -1712,7 +1718,7 @@
         a.classList.toggle("on", on);
         b.classList.toggle("on", !on);
       };
-      const WORDS = ["LOVE", "KISS", "HUGS", "CUTE", "MINE", "DEAR", "BABE", "SOUL"];
+      const WORDS = ["LOVE", "KISS", "HUGS", "CUTE", "HAGU", "NUDE", "SONU", "SOUL","PODU","SEXY", "FUCK", "BOOB", "TITS"];
       const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
       const mkcode = () =>
         rnd(12) === 0
@@ -1875,13 +1881,13 @@
         clearInterval(sessT); clearTimeout(posT); clearTimeout(relayT);
         try { localStorage.removeItem("wt-sess"); } catch {}
         saved = null; $("resume").hidden = true;
-        bufMine = bufTheirs = bufResume = false; hideBuf(); cancelCountdown(); tttEnd(true);
+        bufMine = bufTheirs = bufResume = false; hideBuf(); cancelCountdown(); tttEnd(true); cdUsed = false; hideJoin();
         relay = false; rq = []; rseq = 0; rin = { s: "", i: 0 }; rsid = "";
         if (wl) { wl.release().catch(() => {}); wl = null; }
         clearInterval(hb); clearTimeout(discT); clearInterval(brkTimer); clearInterval(brkTip);
         hideGone(); $("ctoasts").replaceChildren(); $("stage").classList.remove("theater", "rot"); try { screen.orientation.unlock(); } catch {}
         onBreak = false; everConn = false;
-        $("brkOv").hidden = true; $("brkBtn").textContent = "Take a break";
+        $("brkOv").hidden = true; setBrkBtn(false);
         document.documentElement.classList.remove("lite", "inroom");
         clearInterval(tick);
         const oldPc = pc;
@@ -1920,7 +1926,6 @@
         ppIcon(true);
         $("mk").hidden = false;
         $("chg").hidden = false;
-        $("tap").style.display = "none";
         $("gDrop").hidden = false;
         $("toasts").replaceChildren();
         $("fx").replaceChildren();
@@ -1948,6 +1953,27 @@
           }
         });
       }
+      let joinTm;
+      function hideJoin() { clearTimeout(joinTm); $("joinb").hidden = true; }
+      function joinedNotice(t) {
+        addLog(t, "good");
+        hideGone();
+        $("joinT").textContent = t;
+        $("joinS").textContent = "You're together now";
+        $("joinb").hidden = false;
+        clearTimeout(joinTm);
+        joinTm = setTimeout(hideJoin, 4500);
+        try { navigator.vibrate && navigator.vibrate(60); } catch {}
+      }
+      function tryPlay() {
+        v.play().catch(() => {
+          if (v.muted) return;
+          v.muted = true;
+          $("mt").innerHTML = ICON.mute;
+          v.play().catch(() => {});
+          toast("Your browser blocked the sound. Tap the speaker button to turn it on.", "warn");
+        });
+      }
       function showGone(n, sub) {
         $("goneT").textContent = n + " left the room";
         $("goneS").textContent = sub;
@@ -1965,7 +1991,7 @@
         setTimeout(() => (busy = false), 500);
         lastP = true;
         ppIcon(true);
-        cancelCountdown(); bufTheirs = false; bufResume = false; hideBuf();
+        cancelCountdown(); bufTheirs = false; bufResume = false; hideBuf(); hideJoin();
         const n = peer || "Your partner";
         addLog(n + " left the room. Video paused.", "bad");
         showGone(n, why === "bye" || why === "left" ? "Video paused" : "Connection lost. Video paused");
@@ -1979,6 +2005,7 @@
             reconn = false; gone = false; hideGone(); inSess = true; saveSess();
             clearInterval(sessT); sessT = setInterval(saveSess, 4000); keepAwake();
             if (rejoining) {
+              cdUsed = true;
               clearTimeout(posT);
               posT = setTimeout(() => { if (rejoining && role === "host" && mode === "sync" && resumePos > 1) v.currentTime = resumePos; rejoining = false; }, 3000);
             }
@@ -2071,7 +2098,7 @@
           if (s === "connected") {
             clearTimeout(discT);
             if (everConn) {
-              if (gone) { gone = false; hideGone(); toast((peer || "Your partner") + " is back online", "ok"); }
+              if (gone) { gone = false; hideGone(); joinedNotice((peer || "Your partner") + " is back online"); }
               who();
               return;
             }
@@ -2100,11 +2127,6 @@
           v.srcObject = e.streams[0] || new MediaStream([e.track]);
           v.controls = false;
           v.muted = false;
-          $("tap").style.display = "grid";
-          $("tap").onclick = () => {
-            v.play();
-            $("tap").style.display = "none";
-          };
           $("chg").hidden = role === "guest";
           poke();
         });
@@ -2154,7 +2176,7 @@
             n = peer || "Your partner";
           lastSeen = Date.now();
           if (m.t === "ping") {
-            if (gone) { gone = false; backFlag = false; hideGone(); who(); toast(n + " is back online", "ok"); }
+            if (gone) { gone = false; backFlag = false; hideGone(); who(); joinedNotice(n + " is back online"); }
             return;
           }
           if (m.t === "hi") {
@@ -2162,7 +2184,7 @@
             const returned = backFlag;
             backFlag = false;
             gone = false; hideGone(); who();
-            toast(returned ? peer + " is back" : role === "host" ? peer + " joined the room" : "You joined " + peer + "'s room", "ok");
+            joinedNotice(returned ? peer + " is back" : role === "host" ? peer + " joined the room" : "You joined " + peer + "'s room");
             checkSame(m);
             if (returned && mode === "sync") send({ t: "pos", time: v.currentTime });
             return;
@@ -2259,7 +2281,7 @@
             lastT = m.time;
             ppIcon(m.p);
             showRate(m.r || 1);
-            if (!m.p && v.paused && !onBreak) v.play().catch(() => {});
+            if (!m.p && v.paused && !onBreak) tryPlay();
             if (!drag) {
               $("sk").max = m.dur || 1;
               $("sk").value = m.time;
@@ -2420,6 +2442,12 @@
       }
 
       const TIPS = ["Grab a snack", "Stretch your legs", "Sip some water", "Rest your eyes", "Back soon, together"];
+      function setBrkBtn(on) {
+        const b = $("brkBtn");
+        b.dataset.tip = on ? "End break" : "Take a break";
+        b.setAttribute("aria-label", b.dataset.tip);
+        b.classList.toggle("on", on);
+      }
       function paintBreak() {
         $("brkTm").textContent = fmt((Date.now() - brkT0) / 1000);
       }
@@ -2452,7 +2480,7 @@
         onBreak = on;
         clearInterval(brkTimer); clearInterval(brkTip);
         $("brkOv").hidden = !on;
-        $("brkBtn").textContent = on ? "End break" : "Take a break";
+        setBrkBtn(on);
         if (on) {
           brkWas = remote() ? !lastP : !v.paused;
           cancelCountdown();
@@ -2463,9 +2491,8 @@
         } else tttEnd(true);
         toast(by + (on ? " started a break" : " ended the break"), "info");
         if (!fromPartner) send({ t: "brk", on, n: myName() });
-        if (!on && !fromPartner && brkWas) startCountdown("You", false);
       }
-      $("brkBtn").onclick = $("gcBrk").onclick = $("brkEnd").onclick = () => setBreak(!onBreak, "You", false);
+      $("brkBtn").onclick = $("brkEnd").onclick = () => setBreak(!onBreak, "You", false);
       const cmd = (a, time) => {
         lastCmd = Date.now();
         send({ t: "cmd", a, time });
@@ -2484,10 +2511,6 @@
       ppIcon(true);
       $("mt").innerHTML = ICON.vol;
       $("fs").innerHTML = ICON.fs;
-      ICON.cup = '<svg viewBox="0 0 24 24"><path d="M4 8h13v6a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
-      $("gcBrk").innerHTML = ICON.cup;
-      ICON.cd = '<svg viewBox="0 0 24 24"><path d="M9 2h6v2H9zM12 6a8 8 0 100 16 8 8 0 000-16zm0 3v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      $("gcCd").innerHTML = ICON.cd;
       v.addEventListener("play", () => !remote() && ppIcon(false));
       v.addEventListener("pause", () => !remote() && ppIcon(true));
       const pFill = () => {
@@ -2760,7 +2783,7 @@
       }
       // ---------- 3-2-1 countdown ----------
       function wantCd() {
-        return dc && dc.readyState === "open" && !gone && (remote() ? lastP && lastT < 2 : v.paused && v.currentTime < 2);
+        return !cdUsed && dc && dc.readyState === "open" && !gone && (remote() ? lastP : v.paused);
       }
       function beep(f, d) {
         try {
@@ -2795,7 +2818,7 @@
       }
       function startCountdown(by, fromPartner) {
         if (cdActive || gone || onBreak) return;
-        cdActive = true;
+        cdActive = true; cdUsed = true;
         $("cdOv").hidden = false;
         $("cdSub").textContent = (fromPartner ? by : "You") + " started the countdown";
         if (!fromPartner) send({ t: "cd", n: myName() });
@@ -2806,7 +2829,6 @@
         step();
       }
       function cancelCountdown() { clearTimeout(cdT); cdActive = false; $("cdOv").hidden = true; }
-      $("gcCd").onclick = () => { if (dc && dc.readyState === "open" && !gone && !onBreak) startCountdown("You", false); };
       // ---------- tic-tac-toe (inside the break screen) ----------
       const WINS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
       const MARK = {
