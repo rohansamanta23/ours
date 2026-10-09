@@ -1185,6 +1185,71 @@
       #cb:empty{display:none}
       #cb.good{color:var(--ok)}
       #cb.slow{color:var(--wn)}
+      /* activity area */
+      .lw{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+      .lw #log{flex:1;min-height:0}
+      #newpill{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:5;padding:6px 14px;border-radius:999px;font-size:.78rem;font-weight:700;background:var(--ac);color:var(--ac2);border:0;box-shadow:0 6px 18px #0003}
+      .lh .ib{width:34px;height:34px;padding:0;display:grid;place-items:center;border-radius:12px;position:relative;font-size:0}
+      .lh .ib svg{width:18px;height:18px}
+      .cm+.cm.cont{margin-top:-2px}
+      .cm.me.cont .bub{border-top-right-radius:6px}
+      .cm.them.cont .bub{border-top-left-radius:6px}
+      .cm.me:has(+ .cm.me.cont) .bub{border-bottom-right-radius:6px}
+      .cm.them:has(+ .cm.them.cont) .bub{border-bottom-left-radius:6px}
+      .qc{display:flex;gap:6px;margin-top:8px}
+      .qc button{padding:5px 12px;border-radius:999px;font-size:.78rem;font-weight:600;color:var(--tx)}
+      #gc .qs{display:none}
+      #stage:fullscreen #gc .qs,#stage.theater #gc .qs{display:inline-grid}
+      #gc .qs{padding:6px 12px;font-size:.8rem;border-radius:999px}
+      /* pop-ups on the right */
+      #ctoasts{left:auto;right:104px;align-items:flex-end}
+      .ct{flex-direction:row-reverse;transform-origin:right bottom;animation:ctInR .4s cubic-bezier(.2,.9,.3,1.25)}
+      .ct>div{border-radius:16px 16px 5px 16px}
+      @keyframes ctInR{from{opacity:0;transform:translateX(16px) scale(.8)}}
+      .ct.qk>div{background:linear-gradient(135deg,var(--ac),#8b7bff);color:#fff}
+      .ct.qk b{color:#ffffffcc}
+      /* joined / left: top-middle, colored */
+      #goneb,#joinb{top:10px;left:50%;transform:translateX(-50%);gap:10px;padding:7px 12px 7px 8px;border-radius:14px;animation:noteIn .35s ease}
+      @keyframes noteIn{from{opacity:0;transform:translate(-50%,-10px)}}
+      #goneb{box-shadow:0 8px 24px #e5484d66,inset 0 0 0 1px #ffffff30}
+      #joinb{background:linear-gradient(135deg,#2a9d6a,#1d7a52);box-shadow:0 3px 10px #1f9d6333}
+      #goneb .gi,#joinb .gi{width:28px;height:28px}
+      #joinb .gi{animation:none}
+      #goneb .gi svg,#joinb .gi svg{width:16px;height:16px}
+      #goneb b,#joinb b{font-size:.92rem}
+      #goneb .gs,#joinb .gs{font-size:.74rem}
+      #goneb button{width:24px;height:24px;font-size:1rem}
+      #stage:has(#goneb:not([hidden])) #toasts,#stage:has(#joinb:not([hidden])) #toasts{top:64px}
+      @media (max-width:800px){
+        #goneb,#joinb{top:54px}
+        #stage:has(#goneb:not([hidden])) #toasts,#stage:has(#joinb:not([hidden])) #toasts{top:108px}
+      }
+      /* rock paper scissors */
+      #tttBtn,#rpsBtn{width:46px;height:46px;padding:0;border-radius:50%;display:grid;place-items:center;background:#ffffff1f;color:#fff}
+      #rpsBtn svg{width:24px;height:24px}
+      #rps{position:relative;z-index:1;display:grid;place-items:center;max-width:100%;max-height:100%;padding:10px}
+      .rp{display:grid;justify-items:center;gap:clamp(8px,2cqh,16px)}
+      #rpsS{font:800 clamp(1rem,5cqmin,1.5rem)/1.1 "Bricolage Grotesque",system-ui,sans-serif;min-height:1.1em}
+      #rpsS.won{color:#7be0c3}
+      .rpc,.rpr{display:flex;align-items:center;gap:clamp(8px,2cqw,16px)}
+      .rb,.rv{width:clamp(54px,min(22cqh,24cqw),104px);aspect-ratio:1;display:grid;place-items:center;padding:0;border-radius:18px;color:#fff}
+      .rb{background:#ffffff14;border:1.5px solid #ffffff26;transition:background .15s,transform .15s,box-shadow .2s}
+      .rb:not(:disabled):hover{background:#ffffff2e;transform:translateY(-2px)}
+      .rb.sel{background:#ffffff33;border-color:#a89bff;box-shadow:0 0 18px #a89bff99}
+      .rb:disabled{cursor:default}
+      .rv{background:#ffffff1f;animation:rvIn .45s cubic-bezier(.2,1.3,.4,1)}
+      @keyframes rvIn{from{transform:scale(.4) rotate(-20deg);opacity:0}}
+      .rb svg,.rv svg{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+      .rpr span{font-weight:800;opacity:.7}
+      .rpf{display:flex;align-items:center;gap:12px;color:#d9d4ff;font-size:.85rem}
+      .rpf button{padding:8px 14px;font-size:.85rem;color:#fff;border-color:#ffffff40}
+      @container (max-height:300px){
+        #rps{padding-top:10px}
+        .rb,.rv{width:clamp(44px,26cqh,70px)}
+        .rp{gap:6px}
+        #tttBtn,#rpsBtn{width:38px;height:38px}
+        .brkRow{gap:6px}
+      }
     </style>
   </head>
   <body>
@@ -1337,6 +1402,8 @@
                 aria-label="Volume"
               />
               <span id="tm">0:00 / 0:00</span><span class="sp"></span>
+              <button class="qs" data-q="pause?">pause?</button>
+              <button class="qs" data-q="rewind?">rewind?</button>
               <button id="sp" aria-label="Playback speed">1&times;</button>
               <button id="fs" aria-label="Full screen"></button>
             </div>
@@ -1344,6 +1411,14 @@
           <div id="brkOv" hidden role="status">
             <div class="bgx" aria-hidden="true"><i></i><i></i><i></i></div>
             <div id="brkPts" aria-hidden="true"></div>
+            <div id="rps" hidden>
+              <div class="rp">
+                <b id="rpsS"></b>
+                <div id="rpsC" class="rpc"></div>
+                <div id="rpsR" class="rpr" hidden><div class="rv" id="rpsMine"></div><span>vs</span><div class="rv" id="rpsTheirs"></div></div>
+                <div class="rpf"><span id="rpsSc"></span><button class="ghost" id="rpsX">Close</button></div>
+              </div>
+            </div>
             <div id="ttt" hidden>
               <div class="tt">
                 <div id="tttB" role="group" aria-label="Tic-tac-toe board"></div>
@@ -1361,7 +1436,7 @@
               <div id="brkTipw"><span id="brkTipTx"></span></div>
               <div class="brkRow">
                 <div id="brkTmw"><i></i><span class="tl2">Break time </span><b id="brkTm">0:00</b></div>
-                <button id="brkEnd"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>End break</button><button id="tttBtn" aria-label="Play tic-tac-toe" title="Tic-tac-toe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><path d="M4.6 4.6l2.8 2.8M7.4 4.6L4.6 7.4"/><circle cx="12" cy="12" r="1.9"/><path d="M16.6 16.6l2.8 2.8M19.4 16.6l-2.8 2.8"/></svg></button>
+                <button id="brkEnd"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>End break</button><button id="tttBtn" aria-label="Play tic-tac-toe" title="Tic-tac-toe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><path d="M4.6 4.6l2.8 2.8M7.4 4.6L4.6 7.4"/><circle cx="12" cy="12" r="1.9"/><path d="M16.6 16.6l2.8 2.8M19.4 16.6l-2.8 2.8"/></svg></button><button id="rpsBtn" aria-label="Play rock paper scissors" title="Rock paper scissors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><path d="M8 8.5L20 18M8 15.5L20 6"/></svg></button>
               </div>
             </div>
           </div>
@@ -1397,14 +1472,18 @@
         </div>
           <div class="lh">
             <b>Activity &amp; chat</b
-            ><button class="ghost" id="clr">Clear</button>
+            ><button class="ghost ib sm" id="clr" data-tip="Clear chat" aria-label="Clear chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/></svg></button>
           </div>
+          <div class="lw">
           <div id="log" aria-label="Activity history">
             <p class="empty">
               Nothing yet. Joins, leaves, playback changes and chat messages
               will be listed here.
             </p>
           </div>
+            <button class="ghost" id="newpill" hidden>New message &darr;</button>
+          </div>
+          <div class="qc"><button class="ghost" data-q="pause?">pause?</button><button class="ghost" data-q="rewind?">rewind?</button></div>
           <div class="cr">
             <input
               type="text"
@@ -1591,45 +1670,64 @@
         sp.append(d, (peer || "Partner") + " · " + (on ? "Online" : peer ? "Offline" : "Connecting…"));
         w.append(sp);
       };
+      function nearBottom(l) { return l.scrollHeight - l.scrollTop - l.clientHeight < 70; }
       function addLog(t, k) {
-        const l = $("log"),
-          e = l.querySelector(".empty");
+        const l = $("log"), e = l.querySelector(".empty");
         if (e) e.remove();
+        const stick = nearBottom(l);
         const d = document.createElement("div");
         d.className = "ev " + (k || "");
         const ts = document.createElement("time");
-        ts.textContent = new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+        ts.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         const sp = document.createElement("span");
         sp.textContent = t;
         d.append(ts, sp);
         l.appendChild(d);
-        l.scrollTop = l.scrollHeight;
+        if (stick) l.scrollTop = l.scrollHeight;
+      }
+      // playback events: a short popup, and ONE log line that keeps updating
+      function pbToast(t) {
+        toast(t, "info", true);
+        const l = $("log"), e = l.querySelector(".empty");
+        if (e) e.remove();
+        const stick = nearBottom(l), old = l.querySelector(".ev.pb");
+        if (old) old.remove();
+        const d = document.createElement("div");
+        d.className = "ev pb";
+        const ts = document.createElement("time");
+        ts.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const sp = document.createElement("span");
+        sp.textContent = t;
+        d.append(ts, sp);
+        l.appendChild(d);
+        if (stick) l.scrollTop = l.scrollHeight;
       }
       function addChat(n, x, me) {
         const l = $("log"), e = l.querySelector(".empty");
         if (e) e.remove();
+        const stick = me || nearBottom(l), now = Date.now(), last = l.lastElementChild;
+        const cont = !!(last && last.classList.contains("cm") && last.classList.contains(me ? "me" : "them") && now - (+last.dataset.t || 0) < 300000);
         const r = document.createElement("div");
-        r.className = "cm " + (me ? "me" : "them");
+        r.className = "cm " + (me ? "me" : "them") + (cont ? " cont" : "");
+        r.dataset.t = now;
         const b = document.createElement("div");
         b.className = "bub";
-        if (!me) { const nm = document.createElement("b"); nm.textContent = n; b.append(nm); }
+        if (!me && !cont) { const nm = document.createElement("b"); nm.textContent = n; b.append(nm); }
         const tx = document.createElement("span"); tx.textContent = x;
         const ts = document.createElement("time");
         ts.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        if (cont) { const pt = last.querySelector("time"); if (pt) pt.hidden = true; }
         b.append(tx, ts); r.appendChild(b); l.appendChild(r);
-        l.scrollTop = l.scrollHeight;
+        if (stick) { l.scrollTop = l.scrollHeight; $("newpill").hidden = true; } else $("newpill").hidden = false;
       }
-      function chatToast(n, x) {
+      function chatToast(n, x, q) {
         const c = $("ctoasts");
         while (c.children.length >= 3) c.firstChild.remove();
-        const d = document.createElement("div"); d.className = "ct";
+        const d = document.createElement("div"); d.className = "ct" + (q ? " qk" : "");
         const av = document.createElement("i"); av.textContent = (n || "?").trim().charAt(0).toUpperCase();
         const bx = document.createElement("div"), nm = document.createElement("b"), tx = document.createElement("span");
         nm.textContent = n; tx.textContent = x; bx.append(nm, tx); d.append(av, bx); c.appendChild(d);
-        setTimeout(() => { d.classList.add("out"); setTimeout(() => d.remove(), 350); }, 5500);
+        setTimeout(() => { d.classList.add("out"); setTimeout(() => d.remove(), 350); }, q ? 7000 : 5500);
       }
       function sendChat() {
         const i = $("ci"),
@@ -1698,6 +1796,7 @@
         $("rx").appendChild(b);
       });
       $("clr").onclick = () => {
+        $("newpill").hidden = true;
         $("log").innerHTML =
           '<p class="empty">Nothing yet. Joins, leaves, playback changes and chat will appear here.</p>';
       };
@@ -1887,7 +1986,7 @@
         clearInterval(sessT); clearTimeout(posT); clearTimeout(relayT); clearInterval(cbT); badge("");
         try { localStorage.removeItem("wt-sess"); } catch {}
         saved = null; $("resume").hidden = true;
-        bufMine = bufTheirs = bufResume = false; hideBuf(); cancelCountdown(); tttEnd(true); cdUsed = false; hideJoin();
+        bufMine = bufTheirs = bufResume = false; hideBuf(); cancelCountdown(); tttEnd(true); rpsEnd(true); cdUsed = false; hideJoin();
         relay = false; rq = []; rseq = 0; rin = { s: "", i: 0 }; rsid = "";
         if (wl) { wl.release().catch(() => {}); wl = null; }
         clearInterval(hb); clearTimeout(discT); clearInterval(brkTimer); clearInterval(brkTip);
@@ -1968,7 +2067,7 @@
         $("joinS").textContent = "You're together now";
         $("joinb").hidden = false;
         clearTimeout(joinTm);
-        joinTm = setTimeout(hideJoin, 4500);
+        joinTm = setTimeout(hideJoin, 3500);
         try { navigator.vibrate && navigator.vibrate(60); } catch {}
       }
       function tryPlay() {
@@ -2112,7 +2211,7 @@
           const l = rs.get(pair.localCandidateId), rm = rs.get(pair.remoteCandidateId);
           const relayed = (l && l.candidateType === "relay") || (rm && rm.candidateType === "relay");
           const ms = Math.round((pair.currentRoundTripTime || 0) * 1000);
-          badge((relayed ? "Relay" : "Direct") + (ms ? " · " + ms + " ms" : ""), relayed || ms > 250 ? "slow" : "good");
+          if (relayed) badge("Relay", "slow"); else if (ms > 250) badge("Slow · " + ms + " ms", "slow"); else badge("Direct" + (ms ? " · " + ms + " ms" : ""), "good");
         } catch {}
       }
       function newPC() {
@@ -2250,7 +2349,7 @@
           if (m.t === "chat") {
             const x = String(m.x || "").slice(0, 300);
             addChat(n, x, false);
-            chatToast(n, x);
+            chatToast(n, x, m.q);
             return;
           }
           if (m.t === "rx") {
@@ -2290,26 +2389,26 @@
             try {
               if (m.a === "play") {
                 await v.play();
-                toast(n + " resumed the video", "info");
+                pbToast(n + " resumed the video");
               } else if (m.a === "pause") {
                 v.pause();
-                toast(n + " paused the video", "info");
+                pbToast(n + " paused the video");
               } else if (m.a === "seek") {
                 v.currentTime = Math.max(
                   0,
                   Math.min(m.time, v.duration || m.time),
                 );
-                toast(n + " jumped to " + fmt(v.currentTime), "info");
+                pbToast(n + " jumped to " + fmt(v.currentTime));
               } else if (m.a === "rate") {
                 setRate(m.time, false);
-                toast(n + " set speed to " + m.time + "\u00d7", "info");
+                pbToast(n + " set speed to " + m.time + "\u00d7");
               }
             } catch {}
             return;
           }
           if (m.t === "state" && role === "guest" && mode === "stream") {
             if (m.p !== lastP && Date.now() - lastCmd > 2000)
-              toast(n + (m.p ? " paused" : " resumed") + " the video", "info");
+              pbToast(n + (m.p ? " paused" : " resumed") + " the video");
             if (m.p !== lastP) poke();
             lastP = m.p;
             lastT = m.time;
@@ -2331,17 +2430,17 @@
               if (Math.abs(v.currentTime - m.time) > 0.3)
                 v.currentTime = m.time;
               await v.play();
-              toast(n + " pressed play", "info");
+              pbToast(n + " pressed play");
             } else if (m.t === "pause") {
               v.pause();
               v.currentTime = m.time;
-              toast(n + " paused at " + fmt(m.time), "info");
+              pbToast(n + " paused at " + fmt(m.time));
             } else if (m.t === "seek") {
               v.currentTime = m.time;
-              toast(n + " jumped to " + fmt(m.time), "info");
+              pbToast(n + " jumped to " + fmt(m.time));
             } else if (m.t === "rate") {
               setRate(m.r, false);
-              toast(n + " set speed to " + m.r + "\u00d7", "info");
+              pbToast(n + " set speed to " + m.r + "\u00d7");
             } else if (
               m.t === "tick" &&
               !v.paused &&
@@ -2522,7 +2621,7 @@
           brkT0 = Date.now(); paintBreak(); brkTimer = setInterval(paintBreak, 1000);
           buildBreakFx(by);
           for (let i = 0; i < 4; i++) setTimeout(() => floatRx("party", ""), i * 250);
-        } else tttEnd(true);
+        } else { tttEnd(true); rpsEnd(true); }
         toast(by + (on ? " started a break" : " ended the break"), "info");
         if (!fromPartner) send({ t: "brk", on, n: myName() });
       }
@@ -2904,8 +3003,9 @@
       }
       function tttOpen(fromPartner) {
         if (tg) return;
+        if (rp) rpsEnd(true);
         tg = { b: Array(9).fill(""), turn: "X", first: "X", me: fromPartner ? "O" : "X", over: null, line: null };
-        $("brkOv").classList.add("gaming");
+        gamingSync();
         $("ttt").hidden = false;
         tttRender();
         if (fromPartner) toast((peer || "Your partner") + " started tic-tac-toe", "info"); else send({ t: "g", a: "open" });
@@ -2913,7 +3013,7 @@
       function tttEnd(fromPartner) {
         const had = !!tg;
         tg = null;
-        $("brkOv").classList.remove("gaming");
+        gamingSync();
         $("ttt").hidden = true;
         tttRender();
         if (had && !fromPartner) send({ t: "g", a: "end" });
@@ -2927,12 +3027,91 @@
       }
       function tttMsg(m) {
         if (!onBreak) return;
+        if (m.k === "rps") { rpsMsg(m); return; }
         if (m.a === "open") { tttOpen(true); return; }
         if (!tg) return;
         if (m.a === "mv") { const i = m.i | 0; if (i >= 0 && i < 9 && !tg.b[i] && !tg.over && tg.turn !== tg.me) tttPlace(i, tg.turn); }
         else if (m.a === "again") tttAgain(true);
         else if (m.a === "end") tttEnd(true);
       }
+      // ---------- rock paper scissors ----------
+      const RPSI = {
+        r: '<svg viewBox="0 0 24 24"><path d="M5 14l2-6 5-3 6 4 1 6-5 4-7-1z"/></svg>',
+        p: '<svg viewBox="0 0 24 24"><path d="M7 3h8l3 3v15H7z"/><path d="M15 3v3h3M10 11h5M10 15h5"/></svg>',
+        s: '<svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><path d="M8 8.5L20 18M8 15.5L20 6"/></svg>',
+      };
+      const RPSW = { r: "s", s: "p", p: "r" };
+      let rp = null;
+      function gamingSync() { $("brkOv").classList.toggle("gaming", !!(tg || rp)); }
+      for (const k of ["r", "p", "s"]) {
+        const b = document.createElement("button");
+        b.className = "rb"; b.dataset.c = k;
+        b.setAttribute("aria-label", { r: "Rock", p: "Paper", s: "Scissors" }[k]);
+        b.innerHTML = RPSI[k]; b.onclick = () => rpsPick(k);
+        $("rpsC").appendChild(b);
+      }
+      function rpsRender() {
+        if (!rp) return;
+        const nm = peer || "Partner";
+        $("rpsC").hidden = rp.reveal; $("rpsR").hidden = !rp.reveal;
+        [...$("rpsC").children].forEach((b) => { b.classList.toggle("sel", rp.me === b.dataset.c); b.disabled = !!rp.me || rp.reveal; });
+        $("rpsS").textContent = rp.reveal ? rp.res : rp.me ? "Waiting for " + nm + "…" : rp.them ? nm + " is ready" : "Pick one";
+        $("rpsS").className = rp.reveal && rp.res === "You win!" ? "won" : "";
+        $("rpsSc").textContent = "You " + rp.ws + " · " + rp.ts + " " + nm;
+      }
+      function rpsReveal() {
+        const a = rp.me, b = rp.them;
+        if (a === b) rp.res = "Draw"; else if (RPSW[a] === b) { rp.res = "You win!"; rp.ws++; } else { rp.res = (peer || "Partner") + " wins"; rp.ts++; }
+        rp.reveal = true;
+        $("rpsMine").innerHTML = RPSI[a]; $("rpsTheirs").innerHTML = RPSI[b];
+        rpsRender();
+        if (rp.res === "You win!") for (let j = 0; j < 3; j++) setTimeout(() => floatRx("party", ""), j * 200);
+        clearTimeout(rp.t);
+        rp.t = setTimeout(() => { if (!rp) return; rp.me = null; rp.them = rp.next || null; rp.next = null; rp.reveal = false; rp.res = ""; rpsRender(); }, 2600);
+      }
+      function rpsPick(c) {
+        if (!rp || rp.me || rp.reveal) return;
+        rp.me = c;
+        send({ t: "g", k: "rps", a: "pick", c });
+        if (rp.them) rpsReveal(); else rpsRender();
+      }
+      function rpsOpen(fromPartner) {
+        if (rp) return;
+        if (tg) tttEnd(true);
+        rp = { me: null, them: null, next: null, ws: 0, ts: 0, reveal: false, res: "", t: 0 };
+        gamingSync(); $("rps").hidden = false; rpsRender();
+        if (fromPartner) toast((peer || "Your partner") + " started rock-paper-scissors", "info"); else send({ t: "g", k: "rps", a: "open" });
+      }
+      function rpsEnd(fromPartner) {
+        const had = !!rp;
+        if (rp) clearTimeout(rp.t);
+        rp = null; gamingSync(); $("rps").hidden = true;
+        if (had && !fromPartner) send({ t: "g", k: "rps", a: "end" });
+      }
+      function rpsMsg(m) {
+        if (m.a === "open") { rpsOpen(true); return; }
+        if (!rp) return;
+        if (m.a === "pick" && ["r", "p", "s"].includes(m.c)) {
+          if (rp.reveal) { rp.next = m.c; return; }
+          rp.them = m.c;
+          if (rp.me) rpsReveal(); else rpsRender();
+        } else if (m.a === "end") rpsEnd(true);
+      }
+      $("rpsBtn").onclick = () => (rp ? rpsEnd(false) : rpsOpen(false));
+      $("rpsX").onclick = () => rpsEnd(false);
+      // ---------- quick chats + reading position ----------
+      let lastQuick = 0;
+      function sendQuick(x) {
+        if (!dc || dc.readyState !== "open") { toast("Connect with your partner first", "warn", true); return; }
+        if (Date.now() - lastQuick < 3000) return;
+        lastQuick = Date.now();
+        send({ t: "chat", x, q: 1 });
+        addChat(myName(), x, true);
+        chatToast("You", x, true);
+      }
+      document.querySelectorAll("[data-q]").forEach((b) => (b.onclick = () => sendQuick(b.dataset.q)));
+      $("log").addEventListener("scroll", () => { if (nearBottom($("log"))) $("newpill").hidden = true; });
+      $("newpill").onclick = () => { const l = $("log"); l.scrollTo({ top: l.scrollHeight, behavior: "smooth" }); $("newpill").hidden = true; };
       $("tttBtn").onclick = () => (tg ? tttEnd(false) : tttOpen(false));
       $("tttX").onclick = () => tttEnd(false);
       $("tttAgain").onclick = () => tttAgain(false);
