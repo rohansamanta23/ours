@@ -1181,6 +1181,10 @@
       #log .ev.good{color:var(--ok);font-weight:700;font-size:.8rem}
       #log .ev.good::before{background:var(--ok)}
       #log .ev.good time{font-weight:500}
+      #cb{display:inline-block;margin-top:4px;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:600;background:color-mix(in srgb,var(--tx) 8%,transparent);color:var(--mu)}
+      #cb:empty{display:none}
+      #cb.good{color:var(--ok)}
+      #cb.slow{color:var(--wn)}
     </style>
   </head>
   <body>
@@ -1383,6 +1387,7 @@
           <div>
             <div id="who">Not connected</div>
             <div id="st">Not connected</div>
+            <div id="cb"></div>
           </div>
           <div class="row">
             <button class="ghost ib" id="chg" data-tip="Change video" aria-label="Change video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18M3 14.5h18M8 5v14M16 5v14"/></svg></button>
@@ -1453,6 +1458,7 @@
       let relay = false, relayT, rsid = "", rq = [], rseq = 0, rin = { s: "", i: 0 };
       let curCode = "", forceCode = null, rejoining = false, rejoinWait = false, rejoinTry = false, resumePos = 0, posT, saved = null, inSess = false, sessT, reconn = false, backFlag = false;
       let myFile = { n: "", z: 0 }, bufMine = false, bufTheirs = false, bufResume = false, bufT, wl = null, cdActive = false, cdUsed = false, cdT, brkWas = false, tg = null, actx;
+      let icStat = { host: 0, srflx: 0, relay: 0 }, cbT;
       let onBreak = false, brkT0 = 0, brkTimer, brkTip, hb, discT, lastSeen = 0, everConn = false;
       let pc,
         dc,
@@ -1718,7 +1724,7 @@
         a.classList.toggle("on", on);
         b.classList.toggle("on", !on);
       };
-      const WORDS = ["LOVE", "KISS", "HUGS", "CUTE", "HAGU", "NUDE", "SONU", "SOUL","PODU","SEXY", "FUCK", "BOOB", "TITS"];
+      const WORDS = ["LOVE", "KISS", "HUGS", "CUTE", "MINE", "DEAR", "BABE", "SOUL"];
       const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
       const mkcode = () =>
         rnd(12) === 0
@@ -1878,7 +1884,7 @@
 
       function reset() {
         reconn = false; inSess = false; backFlag = false; rejoining = false; rejoinTry = false; rejoinWait = false; forceCode = null;
-        clearInterval(sessT); clearTimeout(posT); clearTimeout(relayT);
+        clearInterval(sessT); clearTimeout(posT); clearTimeout(relayT); clearInterval(cbT); badge("");
         try { localStorage.removeItem("wt-sess"); } catch {}
         saved = null; $("resume").hidden = true;
         bufMine = bufTheirs = bufResume = false; hideBuf(); cancelCountdown(); tttEnd(true); cdUsed = false; hideJoin();
@@ -1991,7 +1997,7 @@
         setTimeout(() => (busy = false), 500);
         lastP = true;
         ppIcon(true);
-        cancelCountdown(); bufTheirs = false; bufResume = false; hideBuf(); hideJoin();
+        cancelCountdown(); bufTheirs = false; bufResume = false; hideBuf(); hideJoin(); clearInterval(cbT); badge("");
         const n = peer || "Your partner";
         addLog(n + " left the room. Video paused.", "bad");
         showGone(n, why === "bye" || why === "left" ? "Video paused" : "Connection lost. Video paused");
@@ -2004,6 +2010,8 @@
             everConn = true;
             reconn = false; gone = false; hideGone(); inSess = true; saveSess();
             clearInterval(sessT); sessT = setInterval(saveSess, 4000); keepAwake();
+            clearInterval(cbT);
+            if (viaRelay) badge("Relay · small delay", "slow"); else { pollBadge(); cbT = setInterval(pollBadge, 5000); }
             if (rejoining) {
               cdUsed = true;
               clearTimeout(posT);
@@ -2086,12 +2094,38 @@
         room.onPeers((ch) => {
           if (!relay && !everConn && ch.peers.some((x) => !x.isMe && x.presence && x.presence.rl)) startRelay();
         });
+      function netDetail() {
+        const sdp = (pc && pc.remoteDescription && pc.remoteDescription.sdp) || "", r = { host: 0, srflx: 0, relay: 0 };
+        for (const m of sdp.matchAll(/ typ (host|srflx|relay)/g)) r[m[1]]++;
+        const f = (x) => "direct " + x.host + ", STUN " + x.srflx + ", relay " + x.relay;
+        return "You found: " + f(icStat) + ". Your partner found: " + f(r) + ".";
+      }
+      function badge(t, cls) { const e = $("cb"); e.textContent = t; e.className = cls || ""; }
+      async function pollBadge() {
+        if (!pc || relay) return;
+        try {
+          const rs = await pc.getStats();
+          let pair = null;
+          rs.forEach((r) => { if (r.type === "transport" && r.selectedCandidatePairId) pair = rs.get(r.selectedCandidatePairId); });
+          if (!pair) rs.forEach((r) => { if (r.type === "candidate-pair" && r.nominated && r.state === "succeeded") pair = r; });
+          if (!pair) return;
+          const l = rs.get(pair.localCandidateId), rm = rs.get(pair.remoteCandidateId);
+          const relayed = (l && l.candidateType === "relay") || (rm && rm.candidateType === "relay");
+          const ms = Math.round((pair.currentRoundTripTime || 0) * 1000);
+          badge((relayed ? "Relay" : "Direct") + (ms ? " · " + ms + " ms" : ""), relayed || ms > 250 ? "slow" : "good");
+        } catch {}
+      }
       function newPC() {
         pc = new RTCPeerConnection({
           iceServers: iceServers(),
         });
         inc = [];
         gotAns = false;
+        icStat = { host: 0, srflx: 0, relay: 0 };
+        pc.onicecandidate = (e) => {
+          const m = e.candidate && / typ (host|srflx|prflx|relay)/.exec(e.candidate.candidate);
+          if (m) icStat[m[1] === "prflx" ? "srflx" : m[1]]++;
+        };
         pc.ontrack = (e) => inc.push(e);
         pc.onconnectionstatechange = () => {
           const s = pc.connectionState;
@@ -2109,8 +2143,8 @@
             else if (!startRelay()) {
               st(
                 mode === "stream"
-                  ? "Connection failed. Stream mode needs a direct connection, which your networks block. Go back and choose Sync mode, it works over mobile data."
-                  : "Connection failed. Your networks blocked the connection. Leave and try again.",
+                  ? "Connection failed. Stream mode needs a direct connection, which your networks block. Go back and choose Sync mode, it works over mobile data. (" + netDetail() + ")"
+                  : "Connection failed. Your networks blocked the connection. Leave and try again. (" + netDetail() + ")",
               );
               toast("Connection failed", "warn");
             }
@@ -2750,7 +2784,7 @@
         return null;
       }
       function dropConn() {
-        clearInterval(tick); clearTimeout(relayT);
+        clearInterval(tick); clearTimeout(relayT); clearInterval(cbT);
         if (pc) pc.onconnectionstatechange = null;
         if (dc) dc.onclose = dc.onmessage = dc.onopen = null;
         try { pc && pc.close(); } catch {}
