@@ -1360,7 +1360,7 @@
         <div class="foot">
           <details id="net">
             <summary>Mobile data not connecting?</summary>
-            <p class="h">Add free relay credentials (make a free account at dashboard.metered.ca, create an app, generate a credential). Saved on this device only. Do this on the phone.</p>
+            <p class="h">Add free relay credentials from a free account at dashboard.metered.ca (create an app, generate a credential) or expressturn.com. Saved on this device only. Best to do this on both devices.</p>
             <input id="tu" class="txt" placeholder="Relay username" autocomplete="off" autocapitalize="off" spellcheck="false" />
             <input id="tc" class="txt" type="password" placeholder="Relay password" autocomplete="off" />
           </details>
@@ -1510,16 +1510,6 @@
           { urls: "stun:stun.l.google.com:19302" },
           { urls: "stun:stun1.l.google.com:19302" },
           { urls: "stun:stun.relay.metered.ca:80" },
-          {
-            urls: [
-              "turn:eu-0.turn.peerjs.com:3478",
-              "turn:us-0.turn.peerjs.com:3478",
-              "turn:eu-0.turn.peerjs.com:3478?transport=tcp",
-              "turn:us-0.turn.peerjs.com:3478?transport=tcp",
-            ],
-            username: "peerjs",
-            credential: "peerjsp",
-          },
         ];
         if (TURN.username && TURN.credential)
           l.push({
@@ -1531,13 +1521,21 @@
             ],
             username: TURN.username,
             credential: TURN.credential,
+          }, {
+            urls: [
+              "turn:relay1.expressturn.com:3478?transport=udp",
+              "turn:relay1.expressturn.com:3478?transport=tcp",
+              "turns:relay1.expressturn.com:443?transport=tcp",
+            ],
+            username: TURN.username,
+            credential: TURN.credential,
           });
         return l;
       };
       let relay = false, relayT, rsid = "", rq = [], rseq = 0, rin = { s: "", i: 0 };
       let curCode = "", forceCode = null, rejoining = false, rejoinWait = false, rejoinTry = false, resumePos = 0, posT, saved = null, inSess = false, sessT, reconn = false, backFlag = false;
       let myFile = { n: "", z: 0 }, bufMine = false, bufTheirs = false, bufResume = false, bufT, wl = null, cdActive = false, cdUsed = false, cdT, brkWas = false, tg = null, actx;
-      let icStat = { host: 0, srflx: 0, relay: 0 }, cbT;
+      let icStat = { host: 0, srflx: 0, relay: 0 }, icErr = {}, cbT;
       let onBreak = false, brkT0 = 0, brkTimer, brkTip, hb, discT, lastSeen = 0, everConn = false;
       let pc,
         dc,
@@ -2196,8 +2194,11 @@
       function netDetail() {
         const sdp = (pc && pc.remoteDescription && pc.remoteDescription.sdp) || "", r = { host: 0, srflx: 0, relay: 0 };
         for (const m of sdp.matchAll(/ typ (host|srflx|relay)/g)) r[m[1]]++;
-        const f = (x) => "direct " + x.host + ", STUN " + x.srflx + ", relay " + x.relay;
-        return "You found: " + f(icStat) + ". Your partner found: " + f(r) + ".";
+        const f = (x) => "direct " + x.host + ", STUN " + x.srflx + ", relay " + x.relay + (x.srflx > 1 ? " (strict router)" : "");
+        let hint = "";
+        if (!(TURN.username && TURN.credential)) hint = " No relay server is set up: open \"Mobile data not connecting?\" on the start screen and add free relay credentials.";
+        else if (!icStat.relay) hint = icErr[401] || icErr[403] ? " The relay server rejected the username or password." : icErr[701] ? " The relay server could not be reached." : " The relay server gave no result.";
+        return "You found: " + f(icStat) + ". Your partner found: " + f(r) + "." + hint;
       }
       function badge(t, cls) { const e = $("cb"); e.textContent = t; e.className = cls || ""; }
       async function pollBadge() {
@@ -2221,6 +2222,8 @@
         inc = [];
         gotAns = false;
         icStat = { host: 0, srflx: 0, relay: 0 };
+        icErr = {};
+        pc.onicecandidateerror = (e) => { if (e.url && /^turns?:/.test(e.url)) icErr[e.errorCode] = (icErr[e.errorCode] || 0) + 1; };
         pc.onicecandidate = (e) => {
           const m = e.candidate && / typ (host|srflx|prflx|relay)/.exec(e.candidate.candidate);
           if (m) icStat[m[1] === "prflx" ? "srflx" : m[1]]++;
